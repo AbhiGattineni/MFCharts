@@ -31,6 +31,49 @@ router.get("/api/:mutualfundcode", function (req, res) {
   );
 });
 
+//update single mutual fund data
+router.get("/api/update/:mutualfundcode", function (req, res) {
+  fetch(`https://api.mfapi.in/mf/${req.params.mutualfundcode}`).then(
+    (result) => {
+      result.json().then((data) => {
+        var date = new Date().toLocaleDateString("en-GB");
+        date = date.replaceAll("/", "-");
+        MutualFund.findOne({
+          scheme_code: Number(req.params.mutualfundcode),
+        }).then(function (mutualfund) {
+          if (mutualfund.fund_latest_date === date) {
+          } else {
+            let nav = [];
+            data.data.map((mf) => {
+              if (date >= mf.date) {
+                nav.push(mf);
+              } else {
+                return;
+              }
+            });
+            nav = nav.concat(mutualfund.data);
+            var mutual = new MutualFund({
+              scheme_name: mutualfund.meta.scheme_name,
+              scheme_code: mutualfund.meta.scheme_code,
+              scheme_category: mutualfund.meta.scheme_category,
+              scheme_type: mutualfund.meta.scheme_type,
+              fund_house: mutualfund.meta.fund_house,
+              fund_latest_date: nav[0].date,
+              nav: nav,
+            });
+            MutualFund.findByIdAndUpdate(
+              { scheme_code: Number(req.params.mutualfundcode) },
+              mutual
+            ).then(function (data) {
+              res.send(data);
+            });
+          }
+        });
+      });
+    }
+  );
+});
+
 router.post("/ninjas", function (req, res) {
   res.send({ type: " POST" });
 });
