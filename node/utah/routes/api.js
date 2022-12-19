@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
+const moongoose = require("mongoose");
 
 const MutualFund = require("../models/mutualFund.js");
 const MutualFundData = require("../data/mutualfunddatanew");
+const AllMutualFunds = require("../models/allMutualFunds.js");
 
 router.get("/ninjas", function (req, res) {
   res.send({ type: "GET" });
@@ -99,6 +100,25 @@ router.get("/api/update/:mutualfundcode", function (req, res) {
       });
     }
   );
+});
+
+//get all mutual funds key value pairs
+router.get("/api/get/allmutualfunds", function (req, res) {
+  fetch("https://api.mfapi.in/mf").then((result) => {
+    result.json().then((data) => {
+      let nav = [];
+      data.map((mf) => {
+        nav.push(mf);
+      });
+      var allmutualfunds = new AllMutualFunds({
+        all_mutual_funds: nav,
+      });
+
+      allmutualfunds.save().then(function (mutualfund) {
+        res.send(mutualfund);
+      });
+    });
+  });
 });
 
 router.post("/ninjas", function (req, res) {
