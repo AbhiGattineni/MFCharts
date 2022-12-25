@@ -1,10 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const MutualFund = require("../models/mutualFund");
+const AllMutualFunds = require("../models/allmutualFunds");
 
-//get all mutual funds data from DB
+//get all mutual funds from DB which is stored only with nav data
 router.get("/mutualfunds", function (req, res) {
   MutualFund.find({}).then(function (mutualfunds) {
+    res.send(mutualfunds);
+  });
+});
+
+//get all mutual funds from DB which is stored with scheme name and scheme code
+router.get("/allmutualfunds", function (req, res) {
+  AllMutualFunds.find({}).then(function (mutualfunds) {
     res.send(mutualfunds);
   });
 });
