@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function Dropdown({ allMutualFunds }) {
+function Dropdown({ allMutualFunds, setValue }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [options, setOptions] = useState([]);
 
@@ -24,10 +24,18 @@ function Dropdown({ allMutualFunds }) {
         value={searchTerm}
         onChange={handleSearch}
       />
-      <select className="form-select py-2 px-3 block w-full leading-5 rounded-md transition duration-150 ease-in-out border-2">
+      <select
+        onChange={(event) => {
+          setValue(event.target.value);
+        }}
+        className="form-select py-2 px-3 block w-full leading-5 rounded-md transition duration-150 ease-in-out border-2"
+      >
+        <option value="" disabled hidden>
+          Please select an option
+        </option>
         {options.map((option, index) => (
           <option key={index} value={option.schemeName}>
-            {option.schemeName}
+            {option.schemeCode + ":" + option.schemeName}
           </option>
         ))}
       </select>

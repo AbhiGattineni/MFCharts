@@ -11,6 +11,7 @@ const Search = () => {
   const [mutualFundsSearch, setMutualFundsSearch] = useState([]);
   const [value, setValue] = useState("");
 
+  //fetching all mutual funds data for dropdown based on selection
   useEffect(() => {
     fetch("http://127.0.0.1:5000/api/allmutualfunds")
       .then((response) => response.json())
@@ -18,27 +19,27 @@ const Search = () => {
         setAllMutualFunds(data[0].all_mutual_funds);
       });
   }, []);
-  function logValue() {}
-  const setVal = (e) => {
-    setMutualFund(e);
 
-    //fetching searched mutual funds from all the mutual funds based on search input
-    let mutualFundsSearch = [];
-    if (mutualFund.length > 3) {
-      // allMutualFunds.map((mf) => {
-      //   if (mf.schemeName.toLowerCase().includes(mutualFund)) {
-      //     mutualFundsSearch.push(mf);
-      //   }
-      // });
-      // setMutualFundsSearch(mutualFundsSearch);
-      mutualFundsSearch = allMutualFunds.filter((option) =>
-        option.schemeName.toLowerCase().includes(mutualFund)
-      );
-      setMutualFundsSearch(mutualFundsSearch);
-    }
+  //useeffect for fetching mutual fund details ith full nav data based on selection from variable Value
+  useEffect(() => {
+    fetch(`http://127.0.0.1:5000/api/mutualfund/${value}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => console.log("no data found " + error));
+  }, [value]);
+
+  const setVal = (e) => {
+    setValue(e);
   };
   return (
-    <Dropdown allMutualFunds={allMutualFunds} />
+    <div>
+      <Dropdown allMutualFunds={allMutualFunds} setValue={setVal} />
+      <div className="flex flex-grow w-full p-3">
+        <SearchData mutualFundsSearch={allMutualFunds} />
+      </div>
+    </div>
     // <div className="flex flex-col h-screen ">
     //   <div className="flex space-x-4">
     //     <div className="grid justify-items-center">
