@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 
-import { Input } from "../components";
-import { Table } from "../components";
+import { Input, Table } from "../components";
 import Dropdown from "../components/Dropdown/Dropdown";
+import MyChart from "../components/MyChart/MyChart";
+import { FundsDropdown } from "../containers";
 import { SearchData } from "../containers/SearchData/searchdata";
 
 const Search = () => {
@@ -10,35 +11,43 @@ const Search = () => {
   const [allMutualFunds, setAllMutualFunds] = useState([]);
   const [mutualFundsSearch, setMutualFundsSearch] = useState([]);
   const [value, setValue] = useState("");
+  const [navData, setNavData] = useState([]);
 
   //fetching all mutual funds data for dropdown based on selection
   useEffect(() => {
+    let names = [];
     fetch("http://127.0.0.1:5000/api/allmutualfunds")
       .then((response) => response.json())
       .then((data) => {
-        setAllMutualFunds(data[0].all_mutual_funds);
+        console.log(data[0].all_mutual_funds);
+        data[0].all_mutual_funds.map((mf) => {
+          names.push({ value: mf.schemeCode, label: mf.schemeName });
+        });
       });
+    setAllMutualFunds(names);
   }, []);
 
   //useeffect for fetching mutual fund details ith full nav data based on selection from variable Value
-  useEffect(() => {
-    fetch(`http://127.0.0.1:5000/api/mutualfund/${value}`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => console.log("no data found " + error));
-  }, [value]);
+  // useEffect(() => {
+  //   fetch(`http://127.0.0.1:5000/api/mutualfund/${value}`)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //     })
+  //     .catch((error) => console.log("no data found " + error));
+  // }, [value]);
 
   const setVal = (e) => {
     setValue(e);
   };
   return (
     <div>
-      <Dropdown allMutualFunds={allMutualFunds} setValue={setVal} />
-      <div className="flex flex-grow w-full p-3">
-        <SearchData mutualFundsSearch={allMutualFunds} />
-      </div>
+      <FundsDropdown
+        isMulti={true}
+        allMutualFunds={allMutualFunds}
+        setNavData={setNavData}
+      />
+      <MyChart navData={navData} />
     </div>
     // <div className="flex flex-col h-screen ">
     //   <div className="flex space-x-4">
