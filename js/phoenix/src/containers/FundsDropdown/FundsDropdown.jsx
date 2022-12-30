@@ -4,16 +4,18 @@ import AsyncSelect from "react-select/async";
 import { Dropdown } from "../../components";
 
 export function FundsDropdown({ isMulti, allMutualFunds, setNavData }) {
-  const [inputValue, setValue] = useState("");
+  const [inputValue, setValue] = useState([]);
 
   useEffect(() => {
-    console.log(inputValue);
-    fetch(`http://127.0.0.1:5000/api/mutualfund/${inputValue.label}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setNavData(data);
-      })
-      .catch((error) => console.log("no data found " + error));
+    console.log("useeffect", inputValue);
+    if (inputValue.length != 0) {
+      let dropDownValues = [];
+      inputValue.map((value) => {
+        dropDownValues.push(value.value);
+      });
+      console.log("dropdown values", dropDownValues);
+      setNavData(dropDownValues);
+    }
   }, [inputValue]);
 
   const filterOptions = (searchTerm) => {

@@ -65,7 +65,6 @@ router.get("/api/update/:mutualfundcode", function (req, res) {
   //       });
   //     }
   //   });
-
   fetch(`https://api.mfapi.in/mf/${req.params.mutualfundcode}`).then(
     (result) => {
       result.json().then((data) => {
@@ -89,6 +88,7 @@ router.get("/api/update/:mutualfundcode", function (req, res) {
               nav: nav,
               fund_latest_date: nav[0].date,
             }).then(function (data) {
+              console.log(data);
               MutualFund.findOne({
                 scheme_code: Number(req.params.mutualfundcode),
               }).then((data) => {

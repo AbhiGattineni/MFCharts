@@ -7,7 +7,7 @@ export const Dropdown = ({ loadOptions, setValue, isMulti }) => {
     <AsyncSelect
       loadOptions={loadOptions}
       onChange={(event) => setValue(event)}
-      isMulti
+      isMulti={isMulti}
     />
   );
 };

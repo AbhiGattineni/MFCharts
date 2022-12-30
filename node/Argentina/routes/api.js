@@ -18,23 +18,29 @@ router.get("/allmutualfunds", function (req, res) {
 });
 
 //get single mutual fund data from DB
-router.get("/mutualfund/:name", function (req, res) {
+router.get("/mutualfund/:id", function (req, res) {
   MutualFund.findOne({
-    scheme_name: req.params.name,
+    scheme_code: req.params.id,
   })
     .then(function (mutualfund) {
-      res.send(mutualfund);
+      let navdata = [];
+      mutualfund.nav.map((nav) => {
+        navdata.push(Number(nav.nav));
+      });
+      navdata = navdata.reverse();
+      console.log(navdata);
+      res.send(navdata);
     })
     .catch((error) => {
-      res.send("no data available on selected search" + error);
+      res.send("no data available on selected search 3" + error);
     });
 });
 
 //get single mutual fund nav data from DB based on selection in dropdown
 router.get("/mutualfund/nav/:id", function (req, res, next) {
+  console.log(req.params.id);
   MutualFund.findOne({
     scheme_code: Number(req.params.id),
-    scheme_name: req.query.name,
   })
     .then(function (mutualfund) {
       let navdata = [];
@@ -45,7 +51,7 @@ router.get("/mutualfund/nav/:id", function (req, res, next) {
       res.send(navdata);
     })
     .catch((error) => {
-      res.send("no data available on selected search" + error);
+      res.send("no data available on selected search ok" + req.params.id);
     });
 });
 
@@ -64,7 +70,26 @@ router.get("/mutualfund/date/:id", function (req, res, next) {
       res.send(navdate);
     })
     .catch((error) => {
-      res.send("no data available on selected search" + error);
+      res.send("no data available on selected search 1" + error);
+    });
+});
+
+//get single mutual fund nav data from DB for MyCharts Component
+router.get("/mutualfund/navdata/:id", function (req, res, next) {
+  console.log(req.params.id);
+  MutualFund.findOne({
+    scheme_code: Number(req.params.id),
+  })
+    .then(function (mutualfund) {
+      let navdata = [];
+      mutualfund.nav.map((nav) => {
+        navdata.push(Number(nav.nav));
+      });
+      navdata = navdata.reverse();
+      res.send(navdata);
+    })
+    .catch((error) => {
+      res.send("no data available on selected search 2" + error);
     });
 });
 

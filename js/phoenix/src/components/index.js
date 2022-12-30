@@ -7,4 +7,5 @@ export { Separator } from "./Separator/Separator";
 export { Card } from "./Card/Card";
 export { Label } from "./Label/Label";
 export { Table } from "./Table/Table";
-export { Dropdown } from "./Dropdown/Dropdown.jsx";
+export { Dropdown } from "./Dropdown/Dropdown";
+export { Counter } from "./Counter/Counter";

@@ -5,30 +5,32 @@ import HighchartsReact from "highcharts-react-official";
 
 const MyChart = ({ navData }) => {
   const [nav, setNav] = useState([]);
-  const [dates, setDates] = useState([]);
 
   useEffect(() => {
-    fetch(
-      `http://127.0.0.1:5000/api/mutualfund/nav/${navData.scheme_code}?name=${navData.scheme_name}`
-    )
+    console.log("mycharts");
+    console.log(navData);
+    fetch(`http://127.0.0.1:5000/api/mutualfund/${navData}`)
       .then((response) => response.json())
-      .then((data) => setNav(data));
+      .then((data) => setNav(data))
+      .catch((error) => {
+        console.log("no data available on selected search" + error);
+      });
 
-    fetch(
-      `http://127.0.0.1:5000/api/mutualfund/date/${navData.scheme_code}?name=${navData.scheme_name}`
-    )
-      .then((response) => response.json())
-      .then((data) => setDates(data));
+    // fetch(
+    //   `http://127.0.0.1:5000/api/mutualfund/date/${navData.scheme_code}?name=${navData.scheme_name}`
+    // )
+    //   .then((response) => response.json())
+    //   .then((data) => setDates(data));
   }, [navData]);
   const options = {
     chart: {
       type: "line",
     },
     title: {
-      text: navData.scheme_name,
+      text: navData,
     },
     xAxis: {
-      categories: dates,
+      categories: nav,
     },
     yAxis: {
       title: {
@@ -37,7 +39,7 @@ const MyChart = ({ navData }) => {
     },
     series: [
       {
-        name: navData.scheme_name,
+        name: navData,
         data: nav,
       },
     ],
@@ -45,7 +47,7 @@ const MyChart = ({ navData }) => {
 
   return (
     <div>
-      {navData != 0 && (
+      {nav != 0 && (
         <HighchartsReact highcharts={Highcharts} options={options} />
       )}
     </div>
