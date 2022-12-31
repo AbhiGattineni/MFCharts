@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Counter } from "../components";
 import MyChart from "../components/MyChart/MyChart";
-import { FundsDropdown } from "../containers";
+import { FundsDropdown, LineGraph } from "../containers";
 
 const Search = () => {
   const [allMutualFunds, setAllMutualFunds] = useState([]);
@@ -28,13 +28,13 @@ const Search = () => {
         allMutualFunds={allMutualFunds}
         setNavData={setNavData}
       />
-      <Counter />
-      <div>
+      {/* <Counter /> */}
+      {/* <div>
         <pre>{JSON.stringify(navData, null, 2)}</pre>
-      </div>
+      </div> */}
       <div className="">
         {navData.map((mf) => (
-          <MyChart className="" navData={mf} />
+          <LineGraph navData={mf} />
         ))}
       </div>
     </div>
