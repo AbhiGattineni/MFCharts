@@ -1,0 +1,6 @@
+*All API Calls*
+
+GET /api/mutualfunds                mutual funds from DB which is stored only with nav data
+GET /api/allmutualfunds             all mutual funds from DB which is stored with scheme name and scheme code
+GET /api/mutualfund/:id/metadata    mutual fund meta data based on id
+GET /api/mutualfund/:id/navdata     mutual fund nav data based on date selection

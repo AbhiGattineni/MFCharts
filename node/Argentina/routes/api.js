@@ -17,6 +17,65 @@ router.get("/allmutualfunds", function (req, res) {
   });
 });
 
+//get mutual fund meta data based on mutual fund selection
+router.get("/mutualfund/:id/metadata", function (req, res) {
+  MutualFund.findOne({ scheme_code: req.params.id })
+    .then(function (mf) {
+      let mutual = {
+        scheme_name: mf.scheme_name,
+        scheme_code: mf.scheme_code,
+        scheme_category: mf.scheme_category,
+        scheme_type: mf.scheme_type,
+        fund_house: mf.fund_house,
+      };
+      res.send(mutual);
+    })
+    .catch((error) => {
+      res.send("no data available on selected search 3" + error);
+    });
+});
+
+//get mutual fund navdata based on dropdown selection and dates
+router.get("/mutualfund/:id/navdata", function (req, res) {
+  let start_date = req.query.start || null;
+  let end_date = req.query.end || null;
+  let navData = [];
+
+  function reverseDate(date) {
+    const [year, month, day] = date.split("-");
+    return new Date(+year, +month - 1, +day).toLocaleDateString();
+  }
+
+  if (start_date != null) start_date = reverseDate(start_date);
+  if (end_date != null) end_date = reverseDate(end_date);
+  console.log(start_date, end_date);
+
+  MutualFund.findOne({ scheme_code: req.params.id }).then(function (mf) {
+    mf.nav.map((m) => {
+      const [day, month, year] = m.date.split("-");
+      m.date = new Date(+year, +month - 1, +day).toLocaleDateString();
+      //start and end dates are null
+      if ((start_date == null) & (end_date == null)) {
+        navData.push({ [m.date]: m.nav });
+      }
+      //start and end dates are given
+      if ((m.date <= start_date) & (m.date >= end_date)) {
+        navData.push({ [m.date]: m.nav });
+      }
+      //only when start date is given
+      if ((m.date <= start_date) & (end_date == null)) {
+        navData.push({ [m.date]: m.nav });
+      }
+      //only when end date is given
+      if ((start_date == null) & (m.date >= end_date)) {
+        navData.push({ [m.date]: m.nav });
+      }
+      console.log(m.date);
+    });
+    res.send(navData);
+  });
+});
+
 //get single mutual fund data from DB
 router.get("/mutualfund/:id", function (req, res) {
   MutualFund.findOne({
@@ -28,7 +87,6 @@ router.get("/mutualfund/:id", function (req, res) {
         navdata.push(Number(nav.nav));
       });
       navdata = navdata.reverse();
-      console.log(navdata);
       res.send(navdata);
     })
     .catch((error) => {
@@ -37,61 +95,61 @@ router.get("/mutualfund/:id", function (req, res) {
 });
 
 //get single mutual fund nav data from DB based on selection in dropdown
-router.get("/mutualfund/nav/:id", function (req, res, next) {
-  console.log(req.params.id);
-  MutualFund.findOne({
-    scheme_code: Number(req.params.id),
-  })
-    .then(function (mutualfund) {
-      let navdata = [];
-      mutualfund.nav.map((nav) => {
-        navdata.push(Number(nav.nav));
-      });
-      navdata = navdata.reverse();
-      res.send(navdata);
-    })
-    .catch((error) => {
-      res.send("no data available on selected search ok" + req.params.id);
-    });
-});
+// router.get("/mutualfund/nav/:id", function (req, res, next) {
+//   console.log(req.params.id);
+//   MutualFund.findOne({
+//     scheme_code: Number(req.params.id),
+//   })
+//     .then(function (mutualfund) {
+//       let navdata = [];
+//       mutualfund.nav.map((nav) => {
+//         navdata.push(Number(nav.nav));
+//       });
+//       navdata = navdata.reverse();
+//       res.send(navdata);
+//     })
+//     .catch((error) => {
+//       res.send("no data available on selected search ok" + req.params.id);
+//     });
+// });
 
-//get single mutual fund nav data dates from DB based on selection in dropdown
-router.get("/mutualfund/date/:id", function (req, res, next) {
-  MutualFund.findOne({
-    scheme_code: Number(req.params.id),
-    scheme_name: req.query.name,
-  })
-    .then(function (mutualfund) {
-      let navdate = [];
-      mutualfund.nav.map((nav) => {
-        navdate.push(nav.date);
-      });
-      navdate = navdate.reverse();
-      res.send(navdate);
-    })
-    .catch((error) => {
-      res.send("no data available on selected search 1" + error);
-    });
-});
+// //get single mutual fund nav data dates from DB based on selection in dropdown
+// router.get("/mutualfund/date/:id", function (req, res, next) {
+//   MutualFund.findOne({
+//     scheme_code: Number(req.params.id),
+//     scheme_name: req.query.name,
+//   })
+//     .then(function (mutualfund) {
+//       let navdate = [];
+//       mutualfund.nav.map((nav) => {
+//         navdate.push(nav.date);
+//       });
+//       navdate = navdate.reverse();
+//       res.send(navdate);
+//     })
+//     .catch((error) => {
+//       res.send("no data available on selected search 1" + error);
+//     });
+// });
 
-//get single mutual fund nav data from DB for MyCharts Component
-router.get("/mutualfund/navdata/:id", function (req, res, next) {
-  console.log(req.params.id);
-  MutualFund.findOne({
-    scheme_code: Number(req.params.id),
-  })
-    .then(function (mutualfund) {
-      let navdata = [];
-      mutualfund.nav.map((nav) => {
-        navdata.push(Number(nav.nav));
-      });
-      navdata = navdata.reverse();
-      res.send(navdata);
-    })
-    .catch((error) => {
-      res.send("no data available on selected search 2" + error);
-    });
-});
+// //get single mutual fund nav data from DB for MyCharts Component
+// router.get("/mutualfund/navdata/:id", function (req, res, next) {
+//   console.log(req.params.id);
+//   MutualFund.findOne({
+//     scheme_code: Number(req.params.id),
+//   })
+//     .then(function (mutualfund) {
+//       let navdata = [];
+//       mutualfund.nav.map((nav) => {
+//         navdata.push(Number(nav.nav));
+//       });
+//       navdata = navdata.reverse();
+//       res.send(navdata);
+//     })
+//     .catch((error) => {
+//       res.send("no data available on selected search 2" + error);
+//     });
+// });
 
 // //get single mutual fund nav data from DB based on given start and end date
 // router.get("/mutualfund/:id", function (req, res, next) {
