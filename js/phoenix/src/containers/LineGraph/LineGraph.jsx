@@ -17,9 +17,7 @@ export const LineGraph = ({ navData }) => {
   useEffect(() => {
     console.log("mycharts");
     console.log(navData);
-    fetch(
-      `http://127.0.0.1:5000/api/mutualfund/${navData}?start=${state.startDate}&end=${state.endDate}`
-    )
+    fetch(`http://127.0.0.1:5000/api/mutualfund/${navData}/navdata`)
       .then((response) => response.json())
       .then((data) => setNav(data))
       .catch((error) => {

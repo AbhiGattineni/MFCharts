@@ -12,7 +12,7 @@ const MyChart = ({ navData, nav }) => {
       text: navData,
     },
     xAxis: {
-      categories: nav,
+      categories: Object.keys(nav),
     },
     yAxis: {
       title: {
@@ -22,7 +22,7 @@ const MyChart = ({ navData, nav }) => {
     series: [
       {
         name: navData,
-        data: nav,
+        data: Object.values(nav),
       },
     ],
   };

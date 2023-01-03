@@ -70,8 +70,8 @@ router.get("/mutualfund/:id/navdata", function (req, res) {
       if ((start_date == null) & (m.date >= end_date)) {
         navData.push({ [m.date]: m.nav });
       }
-      console.log(m.date);
     });
+    console.log(navData);
     res.send(navData);
   });
 });
