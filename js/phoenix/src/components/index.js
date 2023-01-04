@@ -9,3 +9,5 @@ export { Label } from "./Label/Label";
 export { Table } from "./Table/Table";
 export { Dropdown } from "./Dropdown/Dropdown";
 export { Counter } from "./Counter/Counter";
+export { Modal } from "./Modal/Modal";
+export { Datepicker } from "./Datepicker/Datepicker";
