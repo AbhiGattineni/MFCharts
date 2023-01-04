@@ -2,7 +2,7 @@ import React from "react";
 
 import { Datepicker } from "../../components";
 
-export function Modal() {
+export function Modal({ children }) {
   const [showModal, setShowModal] = React.useState(false);
   return (
     <>
@@ -32,9 +32,7 @@ export function Modal() {
                   </button>
                 </div>
                 {/*body*/}
-                <div className="relative p-6 flex-auto">
-                  <Datepicker />
-                </div>
+                <div className="relative p-6 flex-auto">{children}</div>
                 {/*footer*/}
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                   <button
