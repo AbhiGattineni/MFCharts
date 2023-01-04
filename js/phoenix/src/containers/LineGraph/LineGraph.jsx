@@ -3,6 +3,7 @@ import { DateRangePicker } from "react-date-range";
 import { addDays } from "date-fns";
 
 import MyChart from "../../components/MyChart/MyChart";
+import { Modal } from "../../components";
 
 export const LineGraph = ({ navData }) => {
   const [nav, setNav] = useState([]);
@@ -27,6 +28,7 @@ export const LineGraph = ({ navData }) => {
   return (
     <div>
       <div className="w-full">
+        <Modal />
         {/* <DateRangePicker
           onChange={(item) => setState([item.selection])}
           showSelectionPreview={true}
