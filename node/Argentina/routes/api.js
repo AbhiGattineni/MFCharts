@@ -39,7 +39,7 @@ router.get("/mutualfund/:id/metadata", function (req, res) {
 router.get("/mutualfund/:id/navdata", function (req, res) {
   let start_date = req.query.start || null;
   let end_date = req.query.end || null;
-  let navData = [];
+  let obj = {};
 
   function reverseDate(date) {
     const [year, month, day] = date.split("-");
@@ -56,23 +56,22 @@ router.get("/mutualfund/:id/navdata", function (req, res) {
       m.date = new Date(+year, +month - 1, +day).toLocaleDateString();
       //start and end dates are null
       if ((start_date == null) & (end_date == null)) {
-        navData.push({ [m.date]: m.nav });
+        obj[m.date] = parseFloat(m.nav);
       }
       //start and end dates are given
       if ((m.date <= start_date) & (m.date >= end_date)) {
-        navData.push({ [m.date]: m.nav });
+        obj[m.date] = parseFloat(m.nav);
       }
       //only when start date is given
       if ((m.date <= start_date) & (end_date == null)) {
-        navData.push({ [m.date]: m.nav });
+        obj[m.date] = parseFloat(m.nav);
       }
       //only when end date is given
       if ((start_date == null) & (m.date >= end_date)) {
-        navData.push({ [m.date]: m.nav });
+        obj[m.date] = parseFloat(m.nav);
       }
     });
-    console.log(navData);
-    res.send(navData);
+    res.send(obj);
   });
 });
 

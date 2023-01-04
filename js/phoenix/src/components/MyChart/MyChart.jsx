@@ -3,16 +3,16 @@ import React, { useEffect, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-const MyChart = ({ navData, nav }) => {
+const MyChart = (props) => {
   const options = {
     chart: {
       type: "line",
     },
     title: {
-      text: navData,
+      text: props.navData,
     },
     xAxis: {
-      categories: Object.keys(nav),
+      categories: props.values,
     },
     yAxis: {
       title: {
@@ -21,15 +21,15 @@ const MyChart = ({ navData, nav }) => {
     },
     series: [
       {
-        name: navData,
-        data: Object.values(nav),
+        name: props.navData,
+        data: props.values,
       },
     ],
   };
 
   return (
     <div>
-      {nav != 0 && (
+      {props.values != 0 && (
         <HighchartsReact highcharts={Highcharts} options={options} />
       )}
     </div>
