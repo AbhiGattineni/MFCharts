@@ -12,14 +12,15 @@ export const Datepicker = ({ setRange }) => {
   ]);
 
   useEffect(() => {
+    // const { startDate, endDate } = state;
     let obj = {};
     let startdate = JSON.stringify(state[0].startDate);
     startdate = startdate.substring(1, 11);
 
     let enddate = JSON.stringify(state[0].endDate);
     enddate = enddate.substring(1, 11);
-    obj["startDate"] = startdate;
-    obj["endDate"] = enddate;
+    obj["startDate"] = startDate;
+    obj["endDate"] = endDate;
     setRange(obj);
   }, [state]);
   return (
