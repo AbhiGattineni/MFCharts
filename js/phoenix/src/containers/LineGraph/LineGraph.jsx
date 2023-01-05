@@ -3,10 +3,15 @@ import { DateRangePicker } from "react-date-range";
 import { addDays } from "date-fns";
 
 import MyChart from "../../components/MyChart/MyChart";
-import { Datepicker, Modal } from "../../components";
+import { ModalDatepicker } from "../../components";
 
 export const LineGraph = ({ navData }) => {
   const [nav, setNav] = useState([]);
+  const [date, setDate] = useState();
+  const [range, setRange] = React.useState({
+    startDate: "",
+    endDate: "",
+  });
 
   const [state, setState] = useState([
     {
@@ -17,20 +22,21 @@ export const LineGraph = ({ navData }) => {
   ]);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:5000/api/mutualfund/${navData}/navdata`)
+    console.log(range.startDate);
+    fetch(
+      `http://127.0.0.1:5000/api/mutualfund/${navData}/navdata?start=${range.startDate}&end=${range.endDate}`
+    )
       .then((response) => response.json())
       .then((data) => setNav(data))
       .catch((error) => {
         console.log("no data available on selected search" + error);
       });
-  }, []);
+  }, [range]);
 
   return (
     <div>
       <div className="w-full">
-        <Modal>
-          <Datepicker />
-        </Modal>
+        <ModalDatepicker setRange={setRange} />
         {/* <DateRangePicker
           onChange={(item) => setState([item.selection])}
           showSelectionPreview={true}

@@ -12,7 +12,7 @@ const MyChart = (props) => {
       text: props.navData,
     },
     xAxis: {
-      categories: props.values,
+      categories: props.keys,
     },
     yAxis: {
       title: {
