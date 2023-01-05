@@ -37,43 +37,36 @@ router.get("/mutualfund/:id/metadata", function (req, res) {
 
 //get mutual fund navdata based on dropdown selection and dates
 router.get("/mutualfund/:id/navdata", function (req, res) {
-  let start_date;
-  let end_date;
+  let start_date = req.query.end || null;
+  let end_date = req.query.start || null;
   let obj = {};
 
-  if (req.query.start == undefined) start_date == null;
-  else start_date = req.query.start || null;
-  if (req.query.end == undefined) {
-    end_date == null;
-  } else end_date = req.query.end || null;
-
   function reverseDate(date) {
-    const [year, month, day] = date.split("-");
-    return new Date(+year, +month - 1, +day).toLocaleDateString();
+    return new Date(date);
   }
 
   if (start_date != null) start_date = reverseDate(start_date);
   if (end_date != null) end_date = reverseDate(end_date);
-  console.log(start_date, end_date);
 
   MutualFund.findOne({ scheme_code: req.params.id }).then(function (mf) {
-    mf.nav.map((m) => {
+    mf.nav.map((m, index) => {
       const [day, month, year] = m.date.split("-");
-      m.date = new Date(+year, +month - 1, +day).toLocaleDateString();
+      date = new Date(+year, +month - 1, +day);
+
       //start and end dates are null
       if ((start_date == null) & (end_date == null)) {
         obj[m.date] = parseFloat(m.nav);
       }
       //start and end dates are given
-      if ((m.date <= start_date) & (m.date >= end_date)) {
+      if ((date <= start_date) & (date >= end_date)) {
         obj[m.date] = parseFloat(m.nav);
       }
       //only when start date is given
-      if ((m.date <= start_date) & (end_date == null)) {
+      if ((date <= start_date) & (end_date == null)) {
         obj[m.date] = parseFloat(m.nav);
       }
       //only when end date is given
-      if ((start_date == null) & (m.date >= end_date)) {
+      if ((start_date == null) & (date >= end_date)) {
         obj[m.date] = parseFloat(m.nav);
       }
     });
