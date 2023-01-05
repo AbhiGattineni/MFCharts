@@ -37,9 +37,15 @@ router.get("/mutualfund/:id/metadata", function (req, res) {
 
 //get mutual fund navdata based on dropdown selection and dates
 router.get("/mutualfund/:id/navdata", function (req, res) {
-  let start_date = req.query.start || null;
-  let end_date = req.query.end || null;
+  let start_date;
+  let end_date;
   let obj = {};
+
+  if (req.query.start == undefined) start_date == null;
+  else start_date = req.query.start || null;
+  if (req.query.end == undefined) {
+    end_date == null;
+  } else end_date = req.query.end || null;
 
   function reverseDate(date) {
     const [year, month, day] = date.split("-");

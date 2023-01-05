@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DateRangePicker } from "react-date-range";
 import { addDays } from "date-fns";
 
-export const Datepicker = () => {
+export const Datepicker = ({ setRange }) => {
   const [state, setState] = useState([
     {
       startDate: new Date(),
@@ -10,6 +10,18 @@ export const Datepicker = () => {
       key: "selection",
     },
   ]);
+
+  useEffect(() => {
+    let obj = {};
+    let startdate = JSON.stringify(state[0].startDate);
+    startdate = startdate.substring(1, 11);
+
+    let enddate = JSON.stringify(state[0].endDate);
+    enddate = enddate.substring(1, 11);
+    obj["startDate"] = startdate;
+    obj["endDate"] = enddate;
+    setRange(obj);
+  }, [state]);
   return (
     <DateRangePicker
       onChange={(item) => setState([item.selection])}
