@@ -32,7 +32,7 @@ const Search = () => {
       {/* <div>
         <pre>{JSON.stringify(navData, null, 2)}</pre>
       </div> */}
-      <div className="">
+      <div className="grid grid-cols-1 md:grid-cols-2">
         {navData.map((mf) => (
           <LineGraph navData={mf} />
         ))}
