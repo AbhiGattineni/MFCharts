@@ -1,19 +1,18 @@
 import React from "react";
 
-import { Datepicker } from "../../components";
+import { Button, Datepicker } from "../../components";
 
 export function ModalDatepicker({ setRange }) {
   const [showModal, setShowModal] = React.useState(false);
 
   return (
     <>
-      <button
-        className="w-1/4 bg-slate-200 text-black active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+      <Button
         type="button"
-        onClick={() => setShowModal(true)}
-      >
-        Select Date Range
-      </button>
+        classes={["w-1/2", "bg-slate-300", "text-black"]}
+        handleClick={() => setShowModal(true)}
+        text="Select Date Range"
+      />
       {showModal ? (
         <>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
