@@ -36,7 +36,7 @@ export const LineGraph = ({ navData }) => {
   return (
     <div>
       <div className=" w-full mt-2 md:mt-5 ">
-        <div className="grid place-items-center">
+        <div className="grid justify-items-center">
           <ModalDatepicker setRange={setRange} />
         </div>
         {/* <DateRangePicker
