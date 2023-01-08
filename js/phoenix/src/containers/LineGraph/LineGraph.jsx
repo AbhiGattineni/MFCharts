@@ -7,6 +7,7 @@ import { ModalDatepicker } from "../../components";
 
 export const LineGraph = ({ navData }) => {
   const [nav, setNav] = useState([]);
+  const [name, setName] = useState("");
   const [date, setDate] = useState();
   const [range, setRange] = React.useState({
     startDate: "",
@@ -22,7 +23,6 @@ export const LineGraph = ({ navData }) => {
   ]);
 
   useEffect(() => {
-    console.log(range.startDate);
     fetch(
       `http://127.0.0.1:5000/api/mutualfund/${navData}/navdata?start=${range.startDate}&end=${range.endDate}`
     )
@@ -32,6 +32,15 @@ export const LineGraph = ({ navData }) => {
         console.log("no data available on selected search" + error);
       });
   }, [range]);
+
+  useEffect(() => {
+    fetch(`http://127.0.0.1:5000/api/mutualfund/${navData}/metadata`)
+      .then((response) => response.json())
+      .then((data) => setName(data.scheme_name))
+      .catch((error) => {
+        console.log("no data available on selected search" + error);
+      });
+  });
 
   return (
     <div>
@@ -54,7 +63,7 @@ export const LineGraph = ({ navData }) => {
       <MyChart
         keys={Object.keys(nav)}
         values={Object.values(nav)}
-        navData={navData}
+        name={name}
       />
     </div>
   );
