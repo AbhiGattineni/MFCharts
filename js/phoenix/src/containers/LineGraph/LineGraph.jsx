@@ -43,7 +43,7 @@ export const LineGraph = ({ navData }) => {
   });
 
   return (
-    <div className="border-2 border-slate-400 p-1 m-2 rounded-md">
+    <div className="border-2 border-slate-300 p-1 m-2 rounded-md">
       <div className=" w-full mt-2 md:mt-5 ">
         <div className="grid justify-items-center">
           <ModalDatepicker setRange={setRange} />
