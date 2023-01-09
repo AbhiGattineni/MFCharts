@@ -1,9 +1,11 @@
-import Link from "next/link";
+import { useRouter } from "next/router";
 
 import { Card, Table, Label } from "../components";
 import { Navbar } from "../containers";
 
 const Home = () => {
+  const router = useRouter();
+  const { pathname } = router;
   return (
     <div className="flex flex-col">
       <div className="flex justify-center items-center basis-1/3">
@@ -16,6 +18,7 @@ const Home = () => {
                   text="Abhishek Gattineni"
                   classes={["text-xs , text-white"]}
                 />
+                <p>The current route path is: {pathname}</p>
               </div>
               <div className="m-4">
                 <Label text="Email" classes={["text-3xl , text-white"]} />
