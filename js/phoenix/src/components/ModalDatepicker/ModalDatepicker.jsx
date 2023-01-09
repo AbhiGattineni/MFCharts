@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Button, Datepicker } from "../../components";
 
 export function ModalDatepicker({ setRange }) {
   const [showModal, setShowModal] = React.useState(false);
+
+  useEffect(() => {
+    console.log("range");
+  }, [setRange]);
 
   return (
     <>

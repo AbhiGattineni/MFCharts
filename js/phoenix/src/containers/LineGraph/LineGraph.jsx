@@ -8,19 +8,10 @@ import { ModalDatepicker } from "../../components";
 export const LineGraph = ({ navData }) => {
   const [nav, setNav] = useState([]);
   const [name, setName] = useState("");
-  const [date, setDate] = useState();
   const [range, setRange] = React.useState({
     startDate: "",
     endDate: "",
   });
-
-  const [state, setState] = useState([
-    {
-      startDate: new Date(),
-      endDate: addDays(new Date(), 7),
-      key: "selection",
-    },
-  ]);
 
   useEffect(() => {
     fetch(
