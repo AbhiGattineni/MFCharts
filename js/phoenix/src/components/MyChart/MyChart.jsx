@@ -9,7 +9,7 @@ const MyChart = (props) => {
       type: "line",
     },
     title: {
-      text: props.navData,
+      text: props.name,
     },
     xAxis: {
       categories: props.keys,
@@ -21,7 +21,7 @@ const MyChart = (props) => {
     },
     series: [
       {
-        name: props.navData,
+        name: props.name,
         data: props.values,
       },
     ],

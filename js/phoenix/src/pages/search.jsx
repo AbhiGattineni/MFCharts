@@ -6,17 +6,11 @@ import { FundsDropdown, LineGraph } from "../containers";
 const Search = () => {
   const [allMutualFunds, setAllMutualFunds] = useState([]);
   const [navData, setNavData] = useState([]);
+  const [navData1, setNavData1] = useState([]);
 
   //fetching all mutual funds data for dropdown based on selection
   useEffect(() => {
     let names = [];
-    let storedValue = sessionStorage.getItem("navData");
-    let fruits = storedValue ? storedValue.split(",") : null;
-    if (fruits != null) {
-      fruits = fruits.map(Number);
-      setNavData(fruits);
-    }
-
     fetch("http://127.0.0.1:5000/api/allmutualfunds")
       .then((response) => response.json())
       .then((data) => {
@@ -27,10 +21,6 @@ const Search = () => {
       });
   }, []);
 
-  useEffect(() => {
-    sessionStorage.setItem("navData", navData);
-  }, [navData]);
-
   return (
     <div>
       <FundsDropdown
@@ -40,7 +30,7 @@ const Search = () => {
       />
       {/* <Counter /> */}
       {/* <div>
-        <pre>{JSON.stringify(navData, null, 2)}</pre><div></div
+        <pre>{JSON.stringify(navData, null, 2)}</pre>
       </div> */}
       <div className="grid grid-cols-1 md:grid-cols-2">
         {navData.map((mf) => (
