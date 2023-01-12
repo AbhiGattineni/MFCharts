@@ -12,3 +12,4 @@ export { Counter } from "./Counter/Counter";
 export { Modal } from "./Modal/Modal";
 export { Datepicker } from "./Datepicker/Datepicker";
 export { ModalDatepicker } from "./ModalDatepicker/ModalDatepicker";
+export { Accordion } from "./Accordion/Accordion";
