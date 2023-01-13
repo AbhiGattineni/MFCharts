@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Accordion, Button } from "../components";
+import { Accordion, Button, ModalAddFund } from "../components";
 
 const Portfolio = () => {
   const [open, setOpen] = useState(false);
@@ -39,12 +39,9 @@ const Portfolio = () => {
     setOpen(index);
   };
   return (
-    <div className="container mx-auto ">
-      <div
-        className="grid justify-items-center sm:justify-items-end"
-        classes={["rounded"]}
-      >
-        <Button text={"Add Funds to Portfolio"} />
+    <div className="container mx-auto md:mt-3">
+      <div className="grid justify-items-center">
+        <ModalAddFund />
       </div>
       <div>
         {accordionData.map((data, index) => {
