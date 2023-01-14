@@ -14,3 +14,4 @@ export { Datepicker } from "./Datepicker/Datepicker";
 export { ModalDatepicker } from "./ModalDatepicker/ModalDatepicker";
 export { Accordion } from "./Accordion/Accordion";
 export { ModalAddFund } from "./ModalAddFund/ModalAddFund.jsx";
+export { FetchAllMf } from "./FetchAllMf/FetchAllMf";

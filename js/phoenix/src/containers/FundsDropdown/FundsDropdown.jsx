@@ -8,13 +8,16 @@ export function FundsDropdown({ isMulti, allMutualFunds, setNavData }) {
 
   useEffect(() => {
     console.log("useeffect", inputValue);
-    if (inputValue.length != 0) {
+    if ((inputValue.length != 0) & (isMulti == true)) {
       let dropDownValues = [];
       inputValue.map((value) => {
         dropDownValues.push(value.value);
       });
       console.log("dropdown values", dropDownValues);
       setNavData(dropDownValues);
+    }
+    if (isMulti == false) {
+      setNavData(inputValue);
     }
   }, [inputValue]);
 

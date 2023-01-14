@@ -1,6 +1,9 @@
-import { Input, Label } from "../../components";
+import { FetchAllMf, Input, Label } from "../../components";
+import { useState } from "react";
 
 export const AddPortfolioFunds = () => {
+  const [navData, setNavData] = useState([]);
+
   const date = new Date();
   return (
     <div className="container mx-auto">
@@ -9,7 +12,8 @@ export const AddPortfolioFunds = () => {
           <Label text={`Date: ${date.toDateString()}`} />
         </div>
         <div className="row-span-2">
-          <Input placeholder={"Enter Fund Name"} classes={["rounded"]} />
+          {/* <Input placeholder={"Enter Fund Name"} classes={["rounded"]} /> */}
+          <FetchAllMf setNavData={setNavData} isMulti={false} />
           <div className="grid grid-cols-2">
             <div className="grid justify-items-center m-1">
               <Input placeholder={"Enter quantity"} classes={["rounded"]} />
