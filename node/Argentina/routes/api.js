@@ -70,7 +70,12 @@ router.get("/mutualfund/:id/navdata", function (req, res) {
         obj[m.date] = parseFloat(m.nav);
       }
     });
-    res.send(obj);
+    let invert_obj = {};
+    reverse_obj = Object.keys(obj).reverse();
+    reverse_obj.forEach(function (x) {
+      invert_obj[x] = obj[x];
+    });
+    res.send(invert_obj);
   });
 });
 
