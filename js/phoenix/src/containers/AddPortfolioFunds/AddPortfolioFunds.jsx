@@ -1,8 +1,10 @@
 import { FetchAllMf, Input, Label } from "../../components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const AddPortfolioFunds = () => {
-  const [navData, setNavData] = useState([]);
+  const [navData, setNavData] = useState(0);
+  const [value, setValue] = useState(0);
+  const [quantity, setQuantity] = useState(0);
 
   const date = new Date();
   return (
@@ -16,10 +18,18 @@ export const AddPortfolioFunds = () => {
           <FetchAllMf setNavData={setNavData} isMulti={false} />
           <div className="grid grid-cols-2">
             <div className="grid justify-items-center m-1">
-              <Input placeholder={"Enter quantity"} classes={["rounded"]} />
+              <Input
+                placeholder={"Enter quantity"}
+                classes={["rounded"]}
+                setValue={setQuantity}
+              />
             </div>
             <div className="grid justify-items-center m-1">
-              <Input placeholder={"Enter Value"} classes={["rounded"]} />
+              <Input
+                placeholder={"Enter Value"}
+                classes={["rounded"]}
+                setValue={setValue}
+              />
             </div>
           </div>
         </div>
