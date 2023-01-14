@@ -1,40 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import { Button, Datepicker } from "../../components";
+import { AddPortfolioFunds } from "../../containers";
 
-export function ModalDatepicker({ setDateRange }) {
+export function ModalAddFund({ setRange }) {
   const [showModal, setShowModal] = React.useState(false);
-  const [text, setText] = useState("Date Range");
-  const [range, setRange] = React.useState({
-    startDate: "",
-    endDate: "",
-  });
-
-  const handleClick = () => {
-    setShowModal(false);
-    setDateRange(range);
-    setText(
-      `Date Range ${range.startDate.toDateString()} to ${range.endDate.toDateString()}`
-    );
-  };
 
   return (
     <>
       <Button
         type="button"
-        classes={["w-1/2", "bg-slate-300", "text-black", "text-xs"]}
+        classes={["w-1/2", "blue", "text-black"]}
         handleClick={() => setShowModal(true)}
-        text={text}
+        text="Add funds To Portfolio"
       />
       {showModal ? (
         <>
-          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none mx-3 sm:mx-0">
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
               {/*content*/}
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-3xl font-semibold">Select Date Range</h3>
+                  <h3 className="text-3xl font-semibold">
+                    Add Funds To Portfolio
+                  </h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={() => setShowModal(false)}
@@ -46,7 +36,7 @@ export function ModalDatepicker({ setDateRange }) {
                 </div>
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
-                  <Datepicker setRange={setRange} />
+                  <AddPortfolioFunds />
                 </div>
                 {/*footer*/}
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
@@ -60,9 +50,9 @@ export function ModalDatepicker({ setDateRange }) {
                   <button
                     className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
-                    onClick={handleClick}
+                    onClick={() => setShowModal(false)}
                   >
-                    Save Changes
+                    Add Fund
                   </button>
                 </div>
               </div>

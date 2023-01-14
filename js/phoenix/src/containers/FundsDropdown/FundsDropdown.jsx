@@ -7,14 +7,16 @@ export function FundsDropdown({ isMulti, allMutualFunds, setNavData }) {
   const [inputValue, setValue] = useState([]);
 
   useEffect(() => {
-    console.log("useeffect", inputValue);
-    if (inputValue.length != 0) {
+    if ((inputValue.length != 0) & (isMulti == true)) {
       let dropDownValues = [];
       inputValue.map((value) => {
         dropDownValues.push(value.value);
       });
       console.log("dropdown values", dropDownValues);
       setNavData(dropDownValues);
+    }
+    if (isMulti == false) {
+      setNavData(inputValue);
     }
   }, [inputValue]);
 
@@ -40,29 +42,5 @@ export function FundsDropdown({ isMulti, allMutualFunds, setNavData }) {
         isMulti={isMulti}
       />
     </div>
-    // <div className="relative rounded-md shadow-sm">
-    //   <input
-    //     type="search"
-    //     className="form-input py-2 px-3 block w-full leading-5 rounded-md transition duration-150 ease-in-out border-2"
-    //     placeholder="Search options..."
-    //     value={searchTerm}
-    //     onChange={handleSearch}
-    //   />
-    //   <select
-    //     onChange={(event) => {
-    //       setValue(event.target.value);
-    //     }}
-    //     className="form-select py-2 px-3 block w-full leading-5 rounded-md transition duration-150 ease-in-out border-2"
-    //   >
-    //     <option value="" disabled hidden>
-    //       Please select an option
-    //     </option>
-    //     {options.map((option, index) => (
-    //       <option key={index} value={option.schemeName}>
-    //         {option.schemeCode + ":" + option.schemeName}
-    //       </option>
-    //     ))}
-    //   </select>
-    // </div>
   );
 }

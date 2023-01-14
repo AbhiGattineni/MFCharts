@@ -8,21 +8,21 @@ import { ModalDatepicker } from "../../components";
 export const LineGraph = ({ navData }) => {
   const [nav, setNav] = useState([]);
   const [name, setName] = useState("");
-  const [range, setRange] = React.useState({
+  const [dateRange, setDateRange] = React.useState({
     startDate: "",
     endDate: "",
   });
 
   useEffect(() => {
     fetch(
-      `http://127.0.0.1:5000/api/mutualfund/${navData}/navdata?start=${range.startDate}&end=${range.endDate}`
+      `http://127.0.0.1:5000/api/mutualfund/${navData}/navdata?start=${dateRange.startDate}&end=${dateRange.endDate}`
     )
       .then((response) => response.json())
       .then((data) => setNav(data))
       .catch((error) => {
         console.log("no data available on selected search" + error);
       });
-  }, [range]);
+  }, [dateRange]);
 
   useEffect(() => {
     fetch(`http://127.0.0.1:5000/api/mutualfund/${navData}/metadata`)
@@ -37,7 +37,7 @@ export const LineGraph = ({ navData }) => {
     <div className="border-2 border-slate-300 p-1 m-2 rounded-md">
       <div className=" w-full mt-2 md:mt-5 ">
         <div className="grid justify-items-center">
-          <ModalDatepicker setRange={setRange} />
+          <ModalDatepicker setDateRange={setDateRange} />
         </div>
         {/* <DateRangePicker
           onChange={(item) => setState([item.selection])}
