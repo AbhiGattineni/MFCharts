@@ -1,6 +1,6 @@
 import { Button } from "../../components";
 
-export const DashboardPortfolio = () => {
+export const DashboardWatchlist = () => {
   const mfList = [
     "Tata",
     "Birla",
@@ -22,11 +22,15 @@ export const DashboardPortfolio = () => {
   return (
     <div className="border-2 m-5 ">
       <div className="grid justify-items-center font-bold border-b-2">
-        Portfolio
+        Watchlist
       </div>
       <div className="grid grid-cols-6 p-3">
         {mfList.map((e, index) => {
-          return <li>{e}</li>;
+          return (
+            <div>
+              <Button text={e} classes={["rounded"]} />
+            </div>
+          );
         })}
       </div>
     </div>

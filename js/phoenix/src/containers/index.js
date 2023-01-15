@@ -5,3 +5,6 @@ export { FundsDropdown } from "./FundsDropdown/FundsDropdown.jsx";
 export { LineGraph } from "./LineGraph/LineGraph";
 export { AddPortfolioFunds } from "./AddPortfolioFunds/AddPortfolioFunds";
 export { DashboardPortfolio } from "./DashboardPortfolio/DashboardPortfolio";
+export { DashboardDashboard } from "./DashboardDashboard/DashboardDashboard";
+export { DashboardWatchlist } from "./DashboardWatchlist/DashboardWatchlist";
+export { DashboardSearch } from "./DashboardSearch/DashboardSearch";
