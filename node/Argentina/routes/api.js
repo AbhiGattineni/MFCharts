@@ -48,8 +48,6 @@ router.get("/mutualfund/:id/navdata", function (req, res) {
   if (start_date != null) start_date = reverseDate(start_date);
   if (end_date != null) end_date = reverseDate(end_date);
 
-  console.log(start_date, end_date);
-
   MutualFund.findOne({ scheme_code: req.params.id }).then(function (mf) {
     mf.nav.map((m, index) => {
       const [day, month, year] = m.date.split("-");
