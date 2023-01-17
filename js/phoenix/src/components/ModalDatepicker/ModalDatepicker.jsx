@@ -4,18 +4,9 @@ import { Button, Datepicker } from "../../components";
 
 export function ModalDatepicker({ setDateRange }) {
   const [showModal, setShowModal] = React.useState(false);
-  const [text, setText] = useState("Date Range");
-  const [range, setRange] = React.useState({
-    startDate: "",
-    endDate: "",
-  });
 
   const handleClick = () => {
     setShowModal(false);
-    setDateRange(range);
-    setText(
-      `Date Range ${range.startDate.toDateString()} to ${range.endDate.toDateString()}`
-    );
   };
 
   return (
@@ -24,7 +15,7 @@ export function ModalDatepicker({ setDateRange }) {
         type="button"
         classes={["w-1/2", "bg-slate-300", "text-black", "text-xs"]}
         handleClick={() => setShowModal(true)}
-        text={text}
+        text="Date Range"
       />
       {showModal ? (
         <>
@@ -46,7 +37,7 @@ export function ModalDatepicker({ setDateRange }) {
                 </div>
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
-                  <Datepicker setRange={setRange} />
+                  <Datepicker setRange={setDateRange} />
                 </div>
                 {/*footer*/}
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
