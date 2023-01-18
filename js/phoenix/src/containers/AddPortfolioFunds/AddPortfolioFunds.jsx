@@ -1,11 +1,7 @@
 import { FetchAllMf, Input, Label } from "../../components";
 import { useEffect, useState } from "react";
 
-export const AddPortfolioFunds = () => {
-  const [navData, setNavData] = useState(0);
-  const [value, setValue] = useState(0);
-  const [quantity, setQuantity] = useState(0);
-
+export const AddPortfolioFunds = ({ setNavData, setQuantity, setValue }) => {
   const date = new Date();
   return (
     <div className="container mx-auto">

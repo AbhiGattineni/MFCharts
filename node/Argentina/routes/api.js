@@ -52,6 +52,7 @@ router.get("/mutualfund/:id/navdata", function (req, res) {
     mf.nav.map((m, index) => {
       const [day, month, year] = m.date.split("-");
       date = new Date(+year, +month - 1, +day);
+      date = date.setUTCHours(0, 0, 0, 0);
 
       //start and end dates are null
       if ((start_date == null) & (end_date == null)) {

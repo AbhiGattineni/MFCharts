@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import AsyncSelect from "react-select/async";
 
-export const Dropdown = ({ loadOptions, setValue, isMulti }) => {
+export const Dropdown = ({ options, setValue, isMulti }) => {
   return (
     <AsyncSelect
-      loadOptions={loadOptions}
+      options={options}
       onChange={(event) => setValue(event)}
       isMulti={isMulti}
     />

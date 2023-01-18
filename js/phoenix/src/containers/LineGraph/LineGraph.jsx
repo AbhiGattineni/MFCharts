@@ -5,33 +5,29 @@ import { addDays } from "date-fns";
 import MyChart from "../../components/MyChart/MyChart";
 import { ModalDatepicker } from "../../components";
 
-export const LineGraph = ({ navData }) => {
+export const LineGraph = ({ id, date, setDateRange }) => {
   const [nav, setNav] = useState([]);
   const [name, setName] = useState("");
-  const [dateRange, setDateRange] = React.useState({
-    startDate: "",
-    endDate: "",
-  });
 
   useEffect(() => {
     fetch(
-      `http://127.0.0.1:5000/api/mutualfund/${navData}/navdata?start=${dateRange.startDate}&end=${dateRange.endDate}`
+      `http://127.0.0.1:5000/api/mutualfund/${id}/navdata?start=${date.startDate}&end=${date.endDate}`
     )
       .then((response) => response.json())
       .then((data) => setNav(data))
       .catch((error) => {
         console.log("no data available on selected search" + error);
       });
-  }, [dateRange]);
+  }, [date]);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:5000/api/mutualfund/${navData}/metadata`)
+    fetch(`http://127.0.0.1:5000/api/mutualfund/${id}/metadata`)
       .then((response) => response.json())
       .then((data) => setName(data.scheme_name))
       .catch((error) => {
         console.log("no data available on selected search" + error);
       });
-  });
+  }, []);
 
   return (
     <div className="border-2 border-slate-300 p-1 m-2 rounded-md">
@@ -39,18 +35,7 @@ export const LineGraph = ({ navData }) => {
         <div className="grid justify-items-center">
           <ModalDatepicker setDateRange={setDateRange} />
         </div>
-        {/* <DateRangePicker
-          onChange={(item) => setState([item.selection])}
-          showSelectionPreview={true}
-          moveRangeOnFirstSelection={false}
-          months={1}
-          ranges={state}
-          direction="horizontal"
-          preventSnapRefocus={true}
-          calendarFocus="backwards"
-        /> */}
       </div>
-      <div>{/* <pre>{JSON.stringify(nav, null, 2)}</pre> */}</div>
       <MyChart
         keys={Object.keys(nav)}
         values={Object.values(nav)}
