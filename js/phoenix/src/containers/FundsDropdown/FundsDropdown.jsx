@@ -20,27 +20,15 @@ export function FundsDropdown({ isMulti, allMutualFunds, setNavData }) {
     }
   }, [inputValue]);
 
-  const filterOptions = (searchTerm) => {
-    return allMutualFunds.filter((mf) =>
-      mf.label.toLowerCase().includes(searchTerm)
-    );
-  };
+  const filterOptions = () => {
+    console.log("Here", allMutualFunds);
 
-  const loadOptions = (inputValue, callback) => {
-    if (inputValue.length > 3) {
-      setTimeout(() => {
-        callback(filterOptions(inputValue));
-      }, 1000);
-    }
+    return allMutualFunds.filter((mf) => mf.label.toLowerCase());
   };
 
   return (
     <div>
-      <Dropdown
-        loadOptions={loadOptions}
-        setValue={setValue}
-        isMulti={isMulti}
-      />
+      <Dropdown options={filterOptions} setValue={setValue} isMulti={isMulti} />
     </div>
   );
 }
