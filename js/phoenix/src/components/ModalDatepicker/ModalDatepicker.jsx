@@ -1,12 +1,30 @@
 import React, { useEffect, useState } from "react";
+import { addDays } from "date-fns";
 
 import { Button, Datepicker } from "../../components";
 
 export function ModalDatepicker({ setDateRange }) {
   const [showModal, setShowModal] = React.useState(false);
+  const [range, setRange] = useState({});
+  const [state, setState] = useState([
+    {
+      startDate: new Date(),
+      endDate: addDays(new Date(), 7),
+      key: "selection",
+    },
+  ]);
+
+  useEffect(() => {
+    const { startDate, endDate } = state[0];
+    let obj = {};
+    obj["startDate"] = startDate;
+    obj["endDate"] = endDate;
+    setRange(obj);
+  }, [state]);
 
   const handleClick = () => {
     setShowModal(false);
+    setDateRange(range);
   };
 
   return (
@@ -37,7 +55,7 @@ export function ModalDatepicker({ setDateRange }) {
                 </div>
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
-                  <Datepicker setRange={setDateRange} />
+                  <Datepicker setState={setState} state={state} />
                 </div>
                 {/*footer*/}
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">

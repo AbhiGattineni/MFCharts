@@ -36,13 +36,7 @@ const Search = () => {
             <pre>{JSON.stringify(navData, null, 2)}</pre>
           </div> */}
           {navData != null
-            ? Object.keys(navData).map((mf) => (
-                <LineGraph
-                  id={mf}
-                  date={navData[mf]}
-                  setDateRange={(e) => handleRange(e, mf)}
-                />
-              ))
+            ? Object.keys(navData).map((mf) => <LineGraph id={mf} />)
             : ""}
         </div>
       </div>
