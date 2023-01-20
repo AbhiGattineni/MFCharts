@@ -1,4 +1,3 @@
-import { set } from "date-fns/esm";
 import { useEffect, useState } from "react";
 import { BsSave } from "react-icons/bs";
 
@@ -21,12 +20,17 @@ const Search = () => {
     console.log("handledateRange", navData);
     const temp = {};
     Object.keys(navData).map((navID) => {
-      console.log("there");
-      // setState(prevState=> ({...prevState, []}))
+      if (navID == mf) {
+        setNavData((prevState) => ({
+          ...prevState,
+          [navID]: {
+            ...navData[[navID]],
+            startDate: e.startDate,
+            endDate: e.endDate,
+          },
+        }));
+      }
     });
-
-    console.log("After change", temp);
-    setState(temp);
   };
 
   useEffect(() => {
