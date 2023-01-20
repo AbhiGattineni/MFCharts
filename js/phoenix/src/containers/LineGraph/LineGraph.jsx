@@ -5,13 +5,9 @@ import { addDays } from "date-fns";
 import MyChart from "../../components/MyChart/MyChart";
 import { ModalDatepicker } from "../../components";
 
-export const LineGraph = ({ id }) => {
+export const LineGraph = ({ id, date, setDateRange }) => {
   const [nav, setNav] = useState([]);
   const [name, setName] = useState("");
-  const [date, setDateRange] = useState({
-    startDate: "",
-    endDate: "",
-  });
 
   useEffect(() => {
     fetch(

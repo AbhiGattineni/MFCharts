@@ -1,3 +1,4 @@
+import { set } from "date-fns/esm";
 import { useEffect, useState } from "react";
 import { BsSave } from "react-icons/bs";
 
@@ -7,22 +8,29 @@ import { LineGraph } from "../containers";
 const Search = () => {
   const [navData, setNavData] = useState({});
 
-  const handleClick = () => {};
-
   const handleNavData = (e) => {
     let data = {};
     e.map((value, index) => {
       data[value] = { startDate: "", endDate: "" };
     });
+    console.log("data", data);
     setNavData(data);
   };
 
-  const handleRange = (e, mf) => {
-    navData[mf];
+  const handleDateRange = (e, mf) => {
+    console.log("handledateRange", navData);
+    const temp = {};
+    Object.keys(navData).map((navID) => {
+      console.log("there");
+      // setState(prevState=> ({...prevState, []}))
+    });
+
+    console.log("After change", temp);
+    setState(temp);
   };
 
   useEffect(() => {
-    console.log(navData);
+    console.log("useEffect", navData);
   }, [navData]);
 
   return (
@@ -36,7 +44,13 @@ const Search = () => {
             <pre>{JSON.stringify(navData, null, 2)}</pre>
           </div> */}
           {navData != null
-            ? Object.keys(navData).map((mf) => <LineGraph id={mf} />)
+            ? Object.keys(navData).map((mf) => (
+                <LineGraph
+                  id={mf}
+                  date={navData[mf]}
+                  setDateRange={(e) => handleDateRange(e, mf)}
+                />
+              ))
             : ""}
         </div>
       </div>
