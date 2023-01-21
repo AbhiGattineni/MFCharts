@@ -3,12 +3,13 @@ import React, { useEffect, useState } from "react";
 import { Button, Datepicker, Input } from "../../components";
 import { AddPortfolioFunds } from "../../containers";
 
-export function ModalSave() {
+export function ModalSave({ saveData }) {
   const [showModal, setShowModal] = React.useState(false);
   const [saveLabel, setSaveLabel] = useState("");
 
   const handleClose = () => {
     setShowModal(false);
+    saveData(saveLabel);
   };
 
   return (

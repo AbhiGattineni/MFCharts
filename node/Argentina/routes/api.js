@@ -2,6 +2,20 @@ const express = require("express");
 const router = express.Router();
 const MutualFund = require("../models/mutualFund");
 const AllMutualFunds = require("../models/allmutualFunds");
+const watchlistFunds = require("../models/watchlistFunds");
+
+//post the portfolio data with user Id
+router.post("/watchlistfunds/", function (req, res) {
+  console.log(req.query);
+  console.log(typeof req.params);
+  // var watchlistfunds = new watchlistFunds({
+  //   user_id: req.params.id,
+  //   watchlist_funds: req.params.watchlist,
+  // });
+  // watchlistfunds.save().then(function (watchlist) {
+  //   res.send(watchlist);
+  // });
+});
 
 //get all mutual funds from DB which is stored only with nav data
 router.get("/mutualfunds", function (req, res) {

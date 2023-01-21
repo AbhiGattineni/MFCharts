@@ -37,11 +37,24 @@ const Search = () => {
     console.log("useEffect", navData);
   }, [navData]);
 
+  const saveData = (e) => {
+    const params = new URLSearchParams();
+    Object.entries(navData).forEach(([key, value]) =>
+      params.append(key, value)
+    );
+    console.log("params", params);
+
+    fetch(`http://127.0.0.1:5000/api/watchlistfunds/?${params.toString()}`)
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error(error));
+  };
+
   return (
     <div>
       <FetchAllMf setNavData={(e) => handleNavData(e)} isMulti={true} />
       <div className="mt-1 md:mt-5">
-        {navData != null ? <ModalSave /> : ""}
+        {navData != null ? <ModalSave saveData={(e) => saveData(e)} /> : ""}
 
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* <div>
