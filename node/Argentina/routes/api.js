@@ -6,15 +6,13 @@ const watchlistFunds = require("../models/watchlistFunds");
 
 //post the portfolio data with user Id
 router.post("/watchlistfunds/", function (req, res) {
-  console.log(req.query);
-  console.log(typeof req.params);
-  // var watchlistfunds = new watchlistFunds({
-  //   user_id: req.params.id,
-  //   watchlist_funds: req.params.watchlist,
-  // });
-  // watchlistfunds.save().then(function (watchlist) {
-  //   res.send(watchlist);
-  // });
+  var watchlistfunds = new watchlistFunds({
+    user_id: "1234",
+    watchlist_funds: req.body,
+  });
+  watchlistfunds.save().then(function (watchlist) {
+    res.send(watchlist);
+  });
 });
 
 //get all mutual funds from DB which is stored only with nav data
