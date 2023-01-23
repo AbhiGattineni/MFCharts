@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { FetchAllMf, ModalSave } from "../components";
+import { auth } from "../config/firebase";
 import { LineGraph } from "../containers";
 
 const Search = () => {
@@ -43,7 +44,11 @@ const Search = () => {
     var requestOptions = {
       method: "POST",
       headers: myHeaders,
-      body: JSON.stringify(navData),
+      body: JSON.stringify({
+        userId: auth.currentUser.uid,
+        watchlist_name: e,
+        navData,
+      }),
     };
     fetch("http://127.0.0.1:5000/api/watchlistfunds", requestOptions)
       .then((response) => response.json())
