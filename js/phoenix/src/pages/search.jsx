@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { BsSave } from "react-icons/bs";
 
-import { Button, FetchAllMf, Input, BareIcon, ModalSave } from "../components";
+import { FetchAllMf, ModalSave } from "../components";
 import { LineGraph } from "../containers";
 
 const Search = () => {
@@ -38,13 +37,15 @@ const Search = () => {
   }, [navData]);
 
   const saveData = (e) => {
-    const params = new URLSearchParams();
-    Object.entries(navData).forEach(([key, value]) =>
-      params.append(key, value)
-    );
-    console.log("params", params);
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-    fetch(`http://127.0.0.1:5000/api/watchlistfunds/?${params.toString()}`)
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: JSON.stringify(navData),
+    };
+    fetch("http://127.0.0.1:5000/api/watchlistfunds", requestOptions)
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((error) => console.error(error));
