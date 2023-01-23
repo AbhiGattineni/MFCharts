@@ -6,11 +6,15 @@ const watchlistFunds = require("../models/watchlistFunds");
 
 //post the portfolio data with user Id
 router.post("/watchlistfunds/", function (req, res) {
+  // console.log(req.body.navData);
+  let labels = {};
+  labels[req.body.watchlist_name] = req.body.navData;
   var watchlistfunds = new watchlistFunds({
-    user_id: "1234",
-    watchlist_funds: req.body,
+    user_id: req.body.userId,
+    wlfunds: labels,
   });
   watchlistfunds.save().then(function (watchlist) {
+    console.log(watchlist);
     res.send(watchlist);
   });
 });
