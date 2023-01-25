@@ -7,6 +7,10 @@ Portfolio management tool
 - Here is the documentation for User stories, data modelling, API's
   [Google Doc](https://docs.google.com/document/d/1v8wk0hIdS6WpyUDx7LQsPvHGOFgC3on_GuQvgGMuE3s/edit?usp=sharing)
 
+## Model Diagram
+
+![model Diagram](js/phoenix/public/modaldiagram.png)
+
 ## Installation
 
 ## Main branch restictions
