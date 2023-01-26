@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 
 //creating schema
 const WatchlistFundsSchema = new Schema({
-  user_id: "",
-  wlfunds: {},
+  userId: "",
+  watchlistFunds: [],
 });
 
 //creating model
