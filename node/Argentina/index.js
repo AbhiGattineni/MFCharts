@@ -3,12 +3,15 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+//dotenv configured
+require("dotenv").config();
+
 //setup express app
 const app = express();
 app.use(cors());
 
 //connect to mongodb
-mongoose.connect("mongodb://127.0.0.1:27017");
+mongoose.connect(process.env.MONGOOSE_URL);
 
 app.use(bodyParser.json());
 
