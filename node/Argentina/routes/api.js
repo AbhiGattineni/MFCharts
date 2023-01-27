@@ -13,10 +13,9 @@ router.get("/mutualfunds", function (req, res) {
 
 //post the user data
 router.post("/adduser", function (req, res) {
-  console.log(req.body.userId);
   //checking whether user exists or not
   User.findOne({ userId: req.body.userId }).then(function (data) {
-    if (data === null) {
+    if (!data) {
       //creating User if user does not exists.
       var userDetails = new User({
         userId: req.body.userId,
@@ -27,8 +26,6 @@ router.post("/adduser", function (req, res) {
       userDetails.save().then(function (user) {
         res.send(user);
       });
-    } else {
-      console.log("user exist");
     }
   });
 });
