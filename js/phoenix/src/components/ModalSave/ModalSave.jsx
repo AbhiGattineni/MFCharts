@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { BsSave } from "react-icons/bs";
 
-import { Button, Datepicker, Input } from "../../components";
-import { AddPortfolioFunds } from "../../containers";
+import { BareIcon, Input } from "../../components";
 
 export function ModalSave({ saveData }) {
   const [showModal, setShowModal] = React.useState(false);
@@ -14,12 +14,9 @@ export function ModalSave({ saveData }) {
 
   return (
     <>
-      <Button
-        type="button"
-        classes={["w-1/2", "blue", "text-black"]}
-        handleClick={() => setShowModal(true)}
-        text="Save"
-      />
+      <div onClick={() => setShowModal(true)}>
+        <BareIcon IconComponent={<BsSave />} classes={["cursor-pointer"]} />
+      </div>
       {showModal ? (
         <>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none mx-3 sm:mx-0">
