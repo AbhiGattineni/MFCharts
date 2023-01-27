@@ -26,7 +26,7 @@ export function ModalSave({ saveData }) {
                 {/*header*/}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
                   <h3 className="text-3xl font-semibold">
-                    Enter Portfolio Name To Save
+                    Enter Watchlist Name To Save
                   </h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
@@ -43,6 +43,7 @@ export function ModalSave({ saveData }) {
                     placeholder={"Enter label you want to save"}
                     classes={["rounded"]}
                     setValue={setSaveLabel}
+                    autoFocus={true}
                   />
                 </div>
                 {/*footer*/}

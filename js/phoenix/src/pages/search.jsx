@@ -60,7 +60,11 @@ const Search = () => {
     <div className="container mx-auto md:mt-5">
       <FetchAllMf setNavData={(e) => handleNavData(e)} isMulti={true} />
       <div className="mt-1 md:mt-5">
-        {navData != null ? <ModalSave saveData={(e) => saveData(e)} /> : ""}
+        {Object.keys(navData).length != 0 ? (
+          <ModalSave saveData={(e) => saveData(e)} />
+        ) : (
+          ""
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2">
           {navData != null
             ? Object.keys(navData).map((mf) => (
@@ -68,6 +72,7 @@ const Search = () => {
                   id={mf}
                   date={navData[mf]}
                   setDateRange={(e) => handleDateRange(e, mf)}
+                  key={mf}
                 />
               ))
             : ""}
