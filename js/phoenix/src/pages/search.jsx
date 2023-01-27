@@ -57,7 +57,7 @@ const Search = () => {
   };
 
   return (
-    <div>
+    <div className="container mx-auto md:mt-5">
       <FetchAllMf setNavData={(e) => handleNavData(e)} isMulti={true} />
       <div className="mt-1 md:mt-5">
         {navData != null ? <ModalSave saveData={(e) => saveData(e)} /> : ""}
