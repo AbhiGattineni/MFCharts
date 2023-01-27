@@ -15,7 +15,7 @@ export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { logout } = useAuth();
   const [tabs, setTabs] = useState({
-    dashboard: pathname == "/dashboard" || pathname == "/" ? true : false,
+    dashboard: pathname == "/" ? true : false,
     portfolio: pathname == "/portfolio" ? true : false,
     watchlist: pathname == "/watchlist" ? true : false,
     search: pathname == "/search" ? true : false,
@@ -58,8 +58,7 @@ export const Navbar = () => {
             id="user-menu-button"
             aria-expanded="false"
             data-dropdown-toggle="dropdown"
-            onClick={() => setMenu(!menu)}
-          >
+            onClick={() => setMenu(!menu)}>
             <span className="sr-only">Open user menu</span>
             <BareIcon
               IconComponent={<FaHamburger />}
@@ -77,8 +76,7 @@ export const Navbar = () => {
               position: "absolute",
               inset: "10% 20% 50% 70%",
               margin: "0px",
-            }}
-          >
+            }}>
             <div className="py-3 px-4">
               <span className="block text-sm text-gray-900 dark:text-white">
                 Bonnie Green
@@ -91,24 +89,21 @@ export const Navbar = () => {
               <li>
                 <a
                   href="#"
-                  className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                >
+                  className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                   Dashboard
                 </a>
               </li>
               <li>
                 <a
                   href="#"
-                  className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                >
+                  className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                   Settings
                 </a>
               </li>
               <li>
                 <a
                   href="#"
-                  className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                >
+                  className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                   Earnings
                 </a>
               </li>
@@ -116,8 +111,7 @@ export const Navbar = () => {
                 <a
                   href="#"
                   className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  onClick={handleLogout}
-                >
+                  onClick={handleLogout}>
                   Sign out
                 </a>
               </li>
@@ -126,11 +120,10 @@ export const Navbar = () => {
         </div>
         <div
           className="hidden justify-between items-center w-full md:flex md:w-auto md:order-1"
-          id="mobile-menu-2"
-        >
+          id="mobile-menu-2">
           <ul className="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
             <li>
-              <Link href="/dashboard">
+              <Link href="/">
                 <div>
                   <button
                     href=""
@@ -139,8 +132,7 @@ export const Navbar = () => {
                       "block py-2 pr-4 pl-3   md:border-0  md:p-0 dark:text-gray-400 " +
                       (tabs.dashboard ? "text-blue-700" : "text-gray-700")
                     }
-                    onClick={(e) => handleClick(e)}
-                  >
+                    onClick={(e) => handleClick(e)}>
                     Dashboard
                   </button>
                 </div>
@@ -155,8 +147,7 @@ export const Navbar = () => {
                     "block py-2 pr-4 pl-3   md:border-0  md:p-0 dark:text-gray-400 " +
                     (tabs.portfolio ? "text-blue-700" : "text-gray-700")
                   }
-                  onClick={(e) => handleClick(e)}
-                >
+                  onClick={(e) => handleClick(e)}>
                   Portfolio
                 </button>
               </Link>
@@ -170,8 +161,7 @@ export const Navbar = () => {
                     "block py-2 pr-4 pl-3   md:border-0  md:p-0 dark:text-gray-400 " +
                     (tabs.watchlist ? "text-blue-700" : "text-gray-700")
                   }
-                  onClick={(e) => handleClick(e)}
-                >
+                  onClick={(e) => handleClick(e)}>
                   Watchlist
                 </button>
               </Link>
@@ -185,8 +175,7 @@ export const Navbar = () => {
                     "block py-2 pr-4 pl-3   md:border-0  md:p-0 dark:text-gray-400 " +
                     (tabs.search ? "text-blue-700" : "text-gray-700")
                   }
-                  onClick={(e) => handleClick(e)}
-                >
+                  onClick={(e) => handleClick(e)}>
                   Search
                 </button>
               </Link>
@@ -200,8 +189,7 @@ export const Navbar = () => {
                     "block py-2 pr-4 pl-3   md:border-0  md:p-0 dark:text-gray-400 " +
                     (tabs.contact ? "text-blue-700" : "text-gray-700")
                   }
-                  onClick={(e) => handleClick(e)}
-                >
+                  onClick={(e) => handleClick(e)}>
                   Contact
                 </button>
               </Link>
