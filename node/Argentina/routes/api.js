@@ -2,27 +2,34 @@ const express = require("express");
 const router = express.Router();
 const MutualFund = require("../models/mutualFund");
 const AllMutualFunds = require("../models/allmutualFunds");
-const watchlistFunds = require("../models/watchlistFunds");
-
-//post the portfolio data with user Id
-router.post("/watchlistfunds/", function (req, res) {
-  // console.log(req.body.navData);
-  let labels = {};
-  labels[req.body.watchlist_name] = req.body.navData;
-  var watchlistfunds = new watchlistFunds({
-    user_id: req.body.userId,
-    wlfunds: labels,
-  });
-  watchlistfunds.save().then(function (watchlist) {
-    console.log(watchlist);
-    res.send(watchlist);
-  });
-});
+const User = require("../models/user");
 
 //get all mutual funds from DB which is stored only with nav data
 router.get("/mutualfunds", function (req, res) {
   MutualFund.find({}).then(function (mutualfunds) {
     res.send(mutualfunds);
+  });
+});
+
+//post the user data
+router.post("/adduser", function (req, res) {
+  console.log(req.body.userId);
+  //checking whether user exists or not
+  User.findOne({ userId: req.body.userId }).then(function (data) {
+    if (data === null) {
+      //creating User if user does not exists.
+      var userDetails = new User({
+        userId: req.body.userId,
+        watchlists: [],
+        portfolios: [],
+      });
+
+      userDetails.save().then(function (user) {
+        res.send(user);
+      });
+    } else {
+      console.log("user exist");
+    }
   });
 });
 
