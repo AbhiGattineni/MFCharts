@@ -4,6 +4,7 @@ import { Navbar } from "../containers";
 
 export default function Layout({ children }) {
   useEffect(() => {
+    console.log("Layout");
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -14,7 +15,7 @@ export default function Layout({ children }) {
         userId: auth.currentUser.uid,
       }),
     };
-    fetch("https://127.0.0.1:5000/api/adduser", requestOptions)
+    fetch("http://127.0.0.1:5000/api/adduser", requestOptions)
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((error) => console.error(error));

@@ -13,8 +13,7 @@ router.get("/mutualfunds", function (req, res) {
 
 //post the user data
 router.post("/adduser", function (req, res) {
-  let userNotExist = true;
-
+  console.log(req.body.userId);
   //checking whether user exists or not
   User.findOne({ userId: req.body.userId }).then(function (data) {
     if (data === null) {
