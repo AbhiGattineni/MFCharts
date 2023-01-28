@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const schema = mongoose.Schema;
 
@@ -9,4 +9,4 @@ const watchlistSchema = new schema({
 
 const Watchlist = mongoose.model("Watchlist", watchlistSchema);
 
-export default Watchlist;
+module.exports = Watchlist;
