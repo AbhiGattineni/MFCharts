@@ -34,7 +34,6 @@ const Search = () => {
         }));
       }
     });
-    console.log("handledateRange", e.startDate, e.endDate);
   };
 
   useEffect(() => {
@@ -80,6 +79,7 @@ const Search = () => {
   return (
     <div className="container mx-auto md:mt-5">
       <FetchAllMf setNavData={(e) => handleNavData(e)} isMulti={true} />
+
       <div className="mt-1 md:mt-5">
         {Object.keys(navData).length > 0 && (
           <ModalSave saveData={(e) => saveData(e)} />
