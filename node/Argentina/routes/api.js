@@ -31,6 +31,13 @@ router.post("/adduser", function (req, res) {
   });
 });
 
+//get the watchlist navdata requested by user
+router.get("/wlnavdata/:id", function (req, res) {
+  Watchlist.findById(req.params.id).then(function (data) {
+    res.send(data.watchlistFunds);
+  });
+});
+
 //get all the watchlists of specific users
 router.post("/watchlists", function (req, res) {
   User.findOne({ userId: req.body.userId }).then(function (data) {

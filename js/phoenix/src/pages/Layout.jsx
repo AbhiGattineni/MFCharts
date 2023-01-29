@@ -7,7 +7,6 @@ export default function Layout({ children }) {
   let user = false;
   useEffect(() => {
     if (!user) {
-      console.log("Layout");
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
 

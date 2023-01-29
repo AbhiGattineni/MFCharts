@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 
 import { auth } from "../../config/firebase";
-import { FundsDropdown } from "../../containers";
 
-export const FetchAllWatchlists = ({ setNavData, isMulti }) => {
+export const FetchAllWatchlists = ({ setSelectedWatchlist, isMulti }) => {
   const [allWatchlistNames, setAllWatchlistNames] = useState([]);
-  const [selectedWatchlist, setSelectedWatchlist] = useState("");
 
   //Fetching all watchlist names of user watchlists
   useEffect(() => {
@@ -30,15 +28,12 @@ export const FetchAllWatchlists = ({ setNavData, isMulti }) => {
         setAllWatchlistNames(watchlistValues);
       });
   }, []);
-
-  useEffect(() => {
-    console.log("selectedWatchlist", typeof selectedWatchlist);
-  }, [selectedWatchlist]);
   return (
     <Select
       options={allWatchlistNames}
       onChange={(event) => setSelectedWatchlist(event.value)}
       isMulti={isMulti}
+      placeholder="Enter Name of the Watchlist"
     />
   );
 };

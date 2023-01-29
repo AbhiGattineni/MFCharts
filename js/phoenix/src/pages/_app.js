@@ -23,10 +23,6 @@ function MyApp({ Component, pageProps }) {
         </ProtectedRoute>
       )}
     </AuthContextProvider>
-
-    // <Layout>
-    //   <Component {...pageProps} />
-    // </Layout>
   );
 }
 
