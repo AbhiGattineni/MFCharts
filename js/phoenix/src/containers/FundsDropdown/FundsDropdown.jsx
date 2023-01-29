@@ -14,7 +14,7 @@ export function FundsDropdown({ isMulti, allValues, setNavData }) {
       });
       console.log("dropdown values", dropDownValues);
       setNavData(dropDownValues);
-    } else {
+    } else if (isMulti == true) {
       setNavData(inputValue); //added else condition if no values in search then set navData to empty
     }
     if (isMulti == false) {
