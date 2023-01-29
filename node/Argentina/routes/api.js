@@ -3,6 +3,7 @@ const router = express.Router();
 const MutualFund = require("../models/mutualFund");
 const AllMutualFunds = require("../models/allmutualFunds");
 const User = require("../models/user");
+const Watchlist = require("../models/watchlist");
 
 //get all mutual funds from DB which is stored only with nav data
 router.get("/mutualfunds", function (req, res) {
@@ -27,6 +28,60 @@ router.post("/adduser", function (req, res) {
         res.send(user);
       });
     }
+  });
+});
+
+//get all the watchlists of specific users
+router.post("/watchlists", function (req, res) {
+  User.findOne({ userId: req.body.userId }).then(function (data) {
+    // console.log(data);
+    let wlNames = [];
+    if (data.watchlists.length) {
+      Watchlist.find()
+        .where("_id")
+        .in(data.watchlists)
+        .exec((err, records) => {
+          records.map((data) => {
+            wlNames.push(data.watchlistName);
+          });
+          res.send(wlNames);
+        });
+    } else {
+      res.send(wlNames);
+    }
+  });
+});
+
+//post the watchlist into user watchlists
+router.post("/addwatchlist", function (req, res) {
+  let wlfunds = [];
+
+  Object.keys(req.body.navData).map((value) => {
+    wlfunds.push({ [value]: req.body.navData[value] });
+  });
+
+  //adding watchlist to user watchlists, if not data available in array
+
+  var watchlist = new Watchlist({
+    watchlistName: req.body.watchlist_name,
+    watchlistFunds: wlfunds,
+  });
+
+  watchlist.save().then(function (wl) {
+    User.findOne({ userId: req.body.userId }).then((data) => {
+      let watchlistsIds = data.watchlists;
+      // console.log(wl);
+      // console.log(wl._id);
+      // console.log(typeof wl._id);
+      watchlistsIds.push(wl._id.toString());
+
+      User.updateOne(
+        { userId: req.body.userId },
+        { $set: { watchlists: watchlistsIds } }
+      )
+        .then((data) => res.send(data))
+        .catch((error) => console.log(error));
+    });
   });
 });
 

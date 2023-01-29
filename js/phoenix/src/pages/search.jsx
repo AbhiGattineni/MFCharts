@@ -45,18 +45,35 @@ const Search = () => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    var requestOptions = {
+    var watchlistOptions = {
       method: "POST",
       headers: myHeaders,
       body: JSON.stringify({
         userId: auth.currentUser.uid,
-        watchlist_name: e,
-        navData,
       }),
     };
-    fetch("http://127.0.0.1:5000/api/watchlistfunds", requestOptions)
+
+    fetch("http://127.0.0.1:5000/api/watchlists", watchlistOptions)
       .then((response) => response.json())
-      .then((data) => console.log(data))
+      .then((data) => {
+        if (data.includes(e)) {
+          alert("watchlist name already exists");
+        } else {
+          var requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: JSON.stringify({
+              userId: auth.currentUser.uid,
+              watchlist_name: e,
+              navData,
+            }),
+          };
+          fetch("http://127.0.0.1:5000/api/addwatchlist", requestOptions)
+            .then((response) => response.json())
+            .then((data) => console.log(data))
+            .catch((error) => console.error(error));
+        }
+      })
       .catch((error) => console.error(error));
   };
 
