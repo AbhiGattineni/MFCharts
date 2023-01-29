@@ -10,14 +10,17 @@ const Search = () => {
   const handleNavData = (e) => {
     let data = {};
     e.map((value, index) => {
-      data[value] = { startDate: "", endDate: "" };
+      if (value in navData) {
+        data[value] = navData[value];
+      } else {
+        data[value] = { startDate: "", endDate: "" };
+      }
     });
     console.log("data", data);
     setNavData(data);
   };
 
   const handleDateRange = (e, mf) => {
-    console.log("handledateRange", navData);
     const temp = {};
     Object.keys(navData).map((navID) => {
       if (navID == mf) {
@@ -31,6 +34,7 @@ const Search = () => {
         }));
       }
     });
+    console.log("handledateRange", e.startDate, e.endDate);
   };
 
   useEffect(() => {
@@ -59,6 +63,9 @@ const Search = () => {
   return (
     <div className="container mx-auto md:mt-5">
       <FetchAllMf setNavData={(e) => handleNavData(e)} isMulti={true} />
+      <div>
+        <pre>{JSON.stringify(navData, null, 2)}</pre>
+      </div>
       <div className="mt-1 md:mt-5">
         {Object.keys(navData).length != 0 ? (
           <ModalSave saveData={(e) => saveData(e)} />
@@ -69,6 +76,7 @@ const Search = () => {
           {navData != null
             ? Object.keys(navData).map((mf) => (
                 <LineGraph
+                  key={mf}
                   id={mf}
                   date={navData[mf]}
                   setDateRange={(e) => handleDateRange(e, mf)}
