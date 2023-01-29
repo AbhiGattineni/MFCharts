@@ -51,10 +51,7 @@ const Search = () => {
       .then((response) => response.json())
       .then((watchlistNames) => {
         let labelExists = false;
-        console.log("watchlistnames", watchlistNames);
         watchlistNames.map((watchlist) => {
-          console.log("watchlist label", typeof watchlist.label);
-          console.log("label", typeof e);
           if (watchlist.label === e) {
             labelExists = true;
           }

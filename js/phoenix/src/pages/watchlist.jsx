@@ -1,10 +1,13 @@
+import { useState } from "react";
+
 import { FetchAllWatchlists } from "../components";
 
 const Watchlist = () => {
+  const [navData, setNavData] = useState([]);
   return (
     <div className="container mx-auto">
       <div>
-        <FetchAllWatchlists />
+        <FetchAllWatchlists setNavData={setNavData} />
       </div>
     </div>
   );

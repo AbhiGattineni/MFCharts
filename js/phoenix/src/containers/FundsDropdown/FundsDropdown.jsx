@@ -7,7 +7,6 @@ export function FundsDropdown({ isMulti, allValues, setNavData }) {
   const [inputValue, setValue] = useState([]);
 
   useEffect(() => {
-    console.log(inputValue);
     if ((inputValue.length != 0) & (isMulti == true)) {
       let dropDownValues = [];
       inputValue.map((value) => {
@@ -39,9 +38,14 @@ export function FundsDropdown({ isMulti, allValues, setNavData }) {
 
   return (
     <div>
-      <Dropdown
+      {/* <Dropdown
         loadOptions={loadOptions}
         setValue={setValue}
+        isMulti={isMulti}
+      /> */}
+      <AsyncSelect
+        loadOptions={loadOptions}
+        onChange={(event) => setValue(event)}
         isMulti={isMulti}
       />
     </div>
