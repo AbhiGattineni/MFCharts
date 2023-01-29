@@ -16,7 +16,6 @@ const Search = () => {
         data[value] = { startDate: "", endDate: "" };
       }
     });
-    console.log("data", data);
     setNavData(data);
   };
 
@@ -36,10 +35,6 @@ const Search = () => {
     });
   };
 
-  useEffect(() => {
-    console.log("useEffect", navData);
-  }, [navData]);
-
   const saveData = (e) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -54,8 +49,17 @@ const Search = () => {
 
     fetch("http://127.0.0.1:5000/api/watchlists", watchlistOptions)
       .then((response) => response.json())
-      .then((data) => {
-        if (data.includes(e)) {
+      .then((watchlistNames) => {
+        let labelExists = false;
+        console.log("watchlistnames", watchlistNames);
+        watchlistNames.map((watchlist) => {
+          console.log("watchlist label", typeof watchlist.label);
+          console.log("label", typeof e);
+          if (watchlist.label === e) {
+            labelExists = true;
+          }
+        });
+        if (labelExists) {
           alert("watchlist name already exists");
         } else {
           var requestOptions = {

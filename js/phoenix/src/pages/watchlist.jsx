@@ -1,7 +1,11 @@
+import { FetchAllWatchlists } from "../components";
+
 const Watchlist = () => {
   return (
-    <div className="grid justify-items-center">
-      <div className="place-self-center">This is watchlist page</div>
+    <div className="container mx-auto">
+      <div>
+        <FetchAllWatchlists />
+      </div>
     </div>
   );
 };

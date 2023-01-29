@@ -42,7 +42,8 @@ router.post("/watchlists", function (req, res) {
         .in(data.watchlists)
         .exec((err, records) => {
           records.map((data) => {
-            wlNames.push(data.watchlistName);
+            // wlNames.push(data.watchlistName);
+            wlNames.push({ value: data._id, label: data.watchlistName });
           });
           res.send(wlNames);
         });
