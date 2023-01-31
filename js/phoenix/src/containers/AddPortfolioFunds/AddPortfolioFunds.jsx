@@ -4,12 +4,15 @@ import "react-datepicker/dist/react-datepicker.css";
 import { FetchAllMf, Input, Label } from "../../components";
 import { useEffect, useState } from "react";
 
-export const AddPortfolioFunds = ({ setNavData, setQuantity, setValue }) => {
-  const [date, setDate] = useState(new Date());
-
-  useEffect(() => {
-    console.log(date);
-  }, [date]);
+export const AddPortfolioFunds = ({
+  setNavData,
+  setQuantity,
+  setValue,
+  quantity,
+  date,
+  setDate,
+  value,
+}) => {
   return (
     <div className="container mx-auto">
       <form className="grid grid-rows-3 row-span-1">
@@ -23,21 +26,22 @@ export const AddPortfolioFunds = ({ setNavData, setQuantity, setValue }) => {
           />
         </div>
         <div className="row-span-2">
-          {/* <Input placeholder={"Enter Fund Name"} classes={["rounded"]} /> */}
           <FetchAllMf setNavData={setNavData} isMulti={false} />
-          <div className="grid grid-cols-2">
-            <div className="grid justify-items-center m-1">
+          <div className="grid grid-cols-2 mt-3">
+            <div className="">
               <Input
                 placeholder={"Enter quantity"}
                 classes={["rounded"]}
                 setValue={setQuantity}
+                value={quantity}
               />
             </div>
-            <div className="grid justify-items-center m-1">
+            <div className="">
               <Input
                 placeholder={"Enter Value"}
                 classes={["rounded"]}
                 setValue={setValue}
+                value={value}
               />
             </div>
           </div>

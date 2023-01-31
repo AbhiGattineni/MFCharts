@@ -118,6 +118,31 @@ router.get("/mutualfund/:id/metadata", function (req, res) {
     });
 });
 
+//get single nav value based on date
+router.get("/mutualfund/:id/navdata/:date", function (req, res) {
+  let reqDate = req.params.date || null;
+
+  function reverseDate(date) {
+    return new Date(date);
+  }
+
+  if (reqDate != null) reqDate = reverseDate(req.params.date);
+  reqDate = reqDate.setUTCHours(0, 0, 0, 0);
+  MutualFund.findOne({ scheme_code: req.params.id }).then(function (mf) {
+    mf.nav.map((m) => {
+      const [day, month, year] = m.date.split("-");
+      date = new Date(+year, +month - 1, +day);
+      date = date.setUTCHours(0, 0, 0, 0);
+
+      //start and end dates are equal
+      if (reqDate == date) {
+        console.log(m.nav);
+        res.send(m.nav);
+      }
+    });
+  });
+});
+
 //get mutual fund navdata based on dropdown selection and dates
 router.get("/mutualfund/:id/navdata", function (req, res) {
   let start_date = req.query.end || null;
@@ -130,7 +155,8 @@ router.get("/mutualfund/:id/navdata", function (req, res) {
 
   if (start_date != null) start_date = reverseDate(start_date);
   if (end_date != null) end_date = reverseDate(end_date);
-
+  start_date = start_date.setUTCHours(0, 0, 0, 0);
+  end_date = end_date.setUTCHours(0, 0, 0, 0);
   MutualFund.findOne({ scheme_code: req.params.id }).then(function (mf) {
     mf.nav.map((m, index) => {
       const [day, month, year] = m.date.split("-");
@@ -151,6 +177,10 @@ router.get("/mutualfund/:id/navdata", function (req, res) {
       }
       //only when end date is given
       if ((start_date == null) & (date >= end_date)) {
+        obj[m.date] = parseFloat(m.nav);
+      }
+      //only when end date is given
+      if ((start_date == date) & (date == end_date)) {
         obj[m.date] = parseFloat(m.nav);
       }
     });

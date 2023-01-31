@@ -5,16 +5,34 @@ import { AddPortfolioFunds } from "../../containers";
 
 export function ModalAddFund() {
   const [showModal, setShowModal] = React.useState(false);
-  const [navData, setNavData] = useState(0);
+  const [navData, setNavData] = useState({});
   const [value, setValue] = useState(0);
   const [quantity, setQuantity] = useState(0);
-  const [date, setDate] = useState(0);
+  const [date, setDate] = useState(new Date());
 
   const handleClose = () => {
     setShowModal(false);
-    console.log(navData, value, quantity, date);
+    setQuantity(0);
   };
 
+  const handleNavData = (data) => {
+    setNavData(data);
+    setQuantity(1);
+  };
+
+  useEffect(() => {
+    if (Object.keys(navData).length) {
+      console.log(navData.value);
+      fetch(
+        `http://127.0.0.1:5000/api/mutualfund/${navData.value}/navdata/${date}`
+      )
+        .then((response) => response.json())
+        .then((data) => setValue(data))
+        .catch((error) => {
+          console.log("no data available on selected search" + error);
+        });
+    }
+  }, [navData, date]);
   return (
     <>
       <Button
@@ -46,10 +64,13 @@ export function ModalAddFund() {
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
                   <AddPortfolioFunds
-                    setNavData={setNavData}
+                    setNavData={handleNavData}
                     setQuantity={setQuantity}
                     setValue={setValue}
                     setDate={setDate}
+                    quantity={quantity}
+                    date={date}
+                    value={value}
                   />
                 </div>
                 {/*footer*/}

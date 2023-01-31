@@ -38,11 +38,6 @@ export function FundsDropdown({ isMulti, allValues, setNavData }) {
 
   return (
     <div>
-      {/* <Dropdown
-        loadOptions={loadOptions}
-        setValue={setValue}
-        isMulti={isMulti}
-      /> */}
       <AsyncSelect
         loadOptions={loadOptions}
         onChange={(event) => setValue(event)}
