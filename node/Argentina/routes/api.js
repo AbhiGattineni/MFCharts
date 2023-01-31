@@ -31,6 +31,13 @@ router.post("/adduser", function (req, res) {
   });
 });
 
+//get the watchlist navdata requested by user
+router.get("/wlnavdata/:id", function (req, res) {
+  Watchlist.findById(req.params.id).then(function (data) {
+    res.send(data.watchlistFunds);
+  });
+});
+
 //get all the watchlists of specific users
 router.post("/watchlists", function (req, res) {
   User.findOne({ userId: req.body.userId }).then(function (data) {
@@ -42,7 +49,8 @@ router.post("/watchlists", function (req, res) {
         .in(data.watchlists)
         .exec((err, records) => {
           records.map((data) => {
-            wlNames.push(data.watchlistName);
+            // wlNames.push(data.watchlistName);
+            wlNames.push({ value: data._id, label: data.watchlistName });
           });
           res.send(wlNames);
         });
@@ -54,10 +62,10 @@ router.post("/watchlists", function (req, res) {
 
 //post the watchlist into user watchlists
 router.post("/addwatchlist", function (req, res) {
-  let wlfunds = [];
+  let wlfunds = {};
 
   Object.keys(req.body.navData).map((value) => {
-    wlfunds.push({ [value]: req.body.navData[value] });
+    wlfunds[value] = req.body.navData[value];
   });
 
   //adding watchlist to user watchlists, if not data available in array

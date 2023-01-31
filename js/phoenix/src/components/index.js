@@ -16,3 +16,4 @@ export { Accordion } from "./Accordion/Accordion";
 export { ModalAddFund } from "./ModalAddFund/ModalAddFund.jsx";
 export { FetchAllMf } from "./FetchAllMf/FetchAllMf";
 export { ModalSave } from "./ModalSave/ModalSave";
+export { FetchAllWatchlists } from "./FetchAllWatchlits/FetchAllWatchlists";

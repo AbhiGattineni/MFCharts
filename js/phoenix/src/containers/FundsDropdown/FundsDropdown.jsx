@@ -3,11 +3,10 @@ import { useEffect } from "react";
 import AsyncSelect from "react-select/async";
 import { Dropdown } from "../../components";
 
-export function FundsDropdown({ isMulti, allMutualFunds, setNavData }) {
+export function FundsDropdown({ isMulti, allValues, setNavData }) {
   const [inputValue, setValue] = useState([]);
 
   useEffect(() => {
-    console.log(inputValue);
     if ((inputValue.length != 0) & (isMulti == true)) {
       let dropDownValues = [];
       inputValue.map((value) => {
@@ -15,7 +14,7 @@ export function FundsDropdown({ isMulti, allMutualFunds, setNavData }) {
       });
       console.log("dropdown values", dropDownValues);
       setNavData(dropDownValues);
-    } else {
+    } else if (isMulti == true) {
       setNavData(inputValue); //added else condition if no values in search then set navData to empty
     }
     if (isMulti == false) {
@@ -24,7 +23,7 @@ export function FundsDropdown({ isMulti, allMutualFunds, setNavData }) {
   }, [inputValue]);
 
   const filterOptions = (searchTerm) => {
-    return allMutualFunds.filter((mf) =>
+    return allValues.filter((mf) =>
       mf.label.toLowerCase().includes(searchTerm)
     );
   };
@@ -39,35 +38,16 @@ export function FundsDropdown({ isMulti, allMutualFunds, setNavData }) {
 
   return (
     <div>
-      <Dropdown
+      {/* <Dropdown
         loadOptions={loadOptions}
         setValue={setValue}
         isMulti={isMulti}
+      /> */}
+      <AsyncSelect
+        loadOptions={loadOptions}
+        onChange={(event) => setValue(event)}
+        isMulti={isMulti}
       />
     </div>
-    // <div className="relative rounded-md shadow-sm">
-    //   <input
-    //     type="search"
-    //     className="form-input py-2 px-3 block w-full leading-5 rounded-md transition duration-150 ease-in-out border-2"
-    //     placeholder="Search options..."
-    //     value={searchTerm}
-    //     onChange={handleSearch}
-    //   />
-    //   <select
-    //     onChange={(event) => {
-    //       setValue(event.target.value);
-    //     }}
-    //     className="form-select py-2 px-3 block w-full leading-5 rounded-md transition duration-150 ease-in-out border-2"
-    //   >
-    //     <option value="" disabled hidden>
-    //       Please select an option
-    //     </option>
-    //     {options.map((option, index) => (
-    //       <option key={index} value={option.schemeName}>
-    //         {option.schemeCode + ":" + option.schemeName}
-    //       </option>
-    //     ))}
-    //   </select>
-    // </div>
   );
 }
