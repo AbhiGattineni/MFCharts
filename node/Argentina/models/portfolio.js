@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const schema = mongoose.Schema;
 
@@ -9,4 +9,4 @@ const portfolioSchema = new schema({
 
 const Portfolio = mongoose.model("Portfolio", portfolioSchema);
 
-export default Portfolio;
+module.exports = Portfolio;
