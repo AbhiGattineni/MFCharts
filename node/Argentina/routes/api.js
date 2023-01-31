@@ -211,9 +211,9 @@ router.get("/mutualfund/:id", function (req, res) {
 //post the transaction data to DB
 router.post("/transaction", function (req, res) {
   User.findOne({ userId: req.body.userId }).then((userData) => {
-    if (userData.portfolios.length) {
-      userData.portfolios.map((portfolio) => {
-        Portfolio.findOne({ _id: portfolio }).then((portfolioData) => {
+    if (userData.portfolios.includes(req.body.schemeCode)) {
+      Portfolio.findOne({ schemeCode: req.body.schemeCode }).then(
+        (portfolioData) => {
           let updateTransactions = portfolioData.transactions;
           let pdata = {
             date: req.body.date,
@@ -226,15 +226,15 @@ router.post("/transaction", function (req, res) {
           updateTransactions.push(pdata);
 
           Portfolio.updateOne(
-            { _id: portfolio },
+            { schemeCode: req.body.schemeCode },
             { $set: { transactions: updateTransactions } }
           )
             .then((data) => {
               res.send(data);
             })
             .catch((error) => console.log(error));
-        });
-      });
+        }
+      );
     } else {
       let pdata = {
         date: req.body.date,
@@ -251,7 +251,7 @@ router.post("/transaction", function (req, res) {
       portfolio.save().then((p) => {
         User.findOne({ userId: req.body.userId }).then((data) => {
           let portfolioIds = data.portfolios;
-          portfolioIds.push(p._id.toString());
+          portfolioIds.push(p.schemeCode.toString());
 
           User.updateOne(
             { userId: req.body.userId },
@@ -262,6 +262,11 @@ router.post("/transaction", function (req, res) {
         });
       });
     }
+    // if (userData.portfolios.length) {
+
+    // } else {
+
+    // }
   });
 });
 
