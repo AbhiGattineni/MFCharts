@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Datepicker } from "../../components";
 import { AddPortfolioFunds } from "../../containers";
 
-export function ModalAddFund({ setRange }) {
+export function ModalAddFund() {
   const [showModal, setShowModal] = React.useState(false);
   const [navData, setNavData] = useState(0);
   const [value, setValue] = useState(0);
