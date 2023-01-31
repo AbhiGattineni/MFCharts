@@ -7,39 +7,55 @@ export function ModalAddFund() {
   const [showModal, setShowModal] = React.useState(false);
   const [navData, setNavData] = useState({});
   const [value, setValue] = useState(0);
+  const [navValue, setNavValue] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const [date, setDate] = useState(new Date());
+  const [transactionType, setTransactionType] = useState("Buy");
+
+  useEffect(() => {
+    if (Object.keys(navData).length) {
+      fetch(
+        `http://127.0.0.1:5000/api/mutualfund/${navData.value}/navdata/${date}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setValue(data), setNavValue(data);
+        })
+        .catch((error) => {
+          console.log("no data available on selected search" + error);
+        });
+    }
+  }, [navData, date]);
+
+  useEffect(() => {
+    if (Object.keys(navData).length) {
+      setValue(quantity * navValue);
+    }
+  }, [quantity]);
 
   const handleClose = () => {
     setShowModal(false);
     setQuantity(0);
+    setDate(new Date());
   };
 
   const handleNavData = (data) => {
     setNavData(data);
     setQuantity(1);
   };
+  const onOptionChange = (e) => {
+    setTransactionType(e.target.value);
+  };
 
-  useEffect(() => {
-    if (Object.keys(navData).length) {
-      console.log(navData.value);
-      fetch(
-        `http://127.0.0.1:5000/api/mutualfund/${navData.value}/navdata/${date}`
-      )
-        .then((response) => response.json())
-        .then((data) => setValue(data))
-        .catch((error) => {
-          console.log("no data available on selected search" + error);
-        });
-    }
-  }, [navData, date]);
+  const handleAddFund = () => {};
+
   return (
     <>
       <Button
         type="button"
         classes={["w-1/2", "blue", "text-black"]}
         handleClick={() => setShowModal(true)}
-        text="Add funds To Portfolio"
+        text="Add Transaction"
       />
       {showModal ? (
         <>
@@ -49,9 +65,7 @@ export function ModalAddFund() {
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-3xl font-semibold">
-                    Add Funds To Portfolio
-                  </h3>
+                  <h3 className="text-3xl font-semibold">Add Transactions</h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={() => setShowModal(false)}
@@ -71,6 +85,10 @@ export function ModalAddFund() {
                     quantity={quantity}
                     date={date}
                     value={value}
+                    transactionType={transactionType}
+                    onOptionChange={(e) => {
+                      onOptionChange(e);
+                    }}
                   />
                 </div>
                 {/*footer*/}
@@ -85,7 +103,7 @@ export function ModalAddFund() {
                   <button
                     className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
-                    onClick={handleClose}
+                    onClick={handleAddFund}
                   >
                     Add Fund
                   </button>

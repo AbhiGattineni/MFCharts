@@ -78,9 +78,6 @@ router.post("/addwatchlist", function (req, res) {
   watchlist.save().then(function (wl) {
     User.findOne({ userId: req.body.userId }).then((data) => {
       let watchlistsIds = data.watchlists;
-      // console.log(wl);
-      // console.log(wl._id);
-      // console.log(typeof wl._id);
       watchlistsIds.push(wl._id.toString());
 
       User.updateOne(
@@ -136,7 +133,6 @@ router.get("/mutualfund/:id/navdata/:date", function (req, res) {
 
       //start and end dates are equal
       if (reqDate == date) {
-        console.log(m.nav);
         res.send(m.nav);
       }
     });
