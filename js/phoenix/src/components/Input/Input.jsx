@@ -4,12 +4,13 @@ export const Input = ({
   type,
   classes = [],
   autoFocus,
+  value,
 }) => {
   const inputClassNames = [
     "bg-gray-200",
     "appearance-none",
     "border-2",
-    "border-gray-400",
+    "border-gray-300",
     "rounded-full",
     "w-full",
     "py-2",
@@ -30,6 +31,7 @@ export const Input = ({
       placeholder={placeholder}
       onChange={(event) => setValue(event.target.value)}
       autoFocus={autoFocus}
+      value={value}
     />
   );
 };

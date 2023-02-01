@@ -4,6 +4,7 @@ const MutualFund = require("../models/mutualFund");
 const AllMutualFunds = require("../models/allmutualFunds");
 const User = require("../models/user");
 const Watchlist = require("../models/watchlist");
+const Portfolio = require("../models/portfolio");
 
 //get all mutual funds from DB which is stored only with nav data
 router.get("/mutualfunds", function (req, res) {
@@ -78,9 +79,6 @@ router.post("/addwatchlist", function (req, res) {
   watchlist.save().then(function (wl) {
     User.findOne({ userId: req.body.userId }).then((data) => {
       let watchlistsIds = data.watchlists;
-      // console.log(wl);
-      // console.log(wl._id);
-      // console.log(typeof wl._id);
       watchlistsIds.push(wl._id.toString());
 
       User.updateOne(
@@ -118,6 +116,30 @@ router.get("/mutualfund/:id/metadata", function (req, res) {
     });
 });
 
+//get single nav value based on date
+router.get("/mutualfund/:id/navdata/:date", function (req, res) {
+  let reqDate = req.params.date || null;
+
+  function reverseDate(date) {
+    return new Date(date);
+  }
+
+  if (reqDate != null) reqDate = reverseDate(req.params.date);
+  reqDate = reqDate.setUTCHours(0, 0, 0, 0);
+  MutualFund.findOne({ scheme_code: req.params.id }).then(function (mf) {
+    mf.nav.map((m) => {
+      const [day, month, year] = m.date.split("-");
+      date = new Date(+year, +month - 1, +day);
+      date = date.setUTCHours(0, 0, 0, 0);
+
+      //start and end dates are equal
+      if (reqDate == date) {
+        res.send(m.nav);
+      }
+    });
+  });
+});
+
 //get mutual fund navdata based on dropdown selection and dates
 router.get("/mutualfund/:id/navdata", function (req, res) {
   let start_date = req.query.end || null;
@@ -130,7 +152,8 @@ router.get("/mutualfund/:id/navdata", function (req, res) {
 
   if (start_date != null) start_date = reverseDate(start_date);
   if (end_date != null) end_date = reverseDate(end_date);
-
+  start_date = start_date.setUTCHours(0, 0, 0, 0);
+  end_date = end_date.setUTCHours(0, 0, 0, 0);
   MutualFund.findOne({ scheme_code: req.params.id }).then(function (mf) {
     mf.nav.map((m, index) => {
       const [day, month, year] = m.date.split("-");
@@ -151,6 +174,10 @@ router.get("/mutualfund/:id/navdata", function (req, res) {
       }
       //only when end date is given
       if ((start_date == null) & (date >= end_date)) {
+        obj[m.date] = parseFloat(m.nav);
+      }
+      //only when end date is given
+      if ((start_date == date) & (date == end_date)) {
         obj[m.date] = parseFloat(m.nav);
       }
     });
@@ -181,96 +208,66 @@ router.get("/mutualfund/:id", function (req, res) {
     });
 });
 
-//get single mutual fund nav data from DB based on selection in dropdown
-// router.get("/mutualfund/nav/:id", function (req, res, next) {
-//   console.log(req.params.id);
-//   MutualFund.findOne({
-//     scheme_code: Number(req.params.id),
-//   })
-//     .then(function (mutualfund) {
-//       let navdata = [];
-//       mutualfund.nav.map((nav) => {
-//         navdata.push(Number(nav.nav));
-//       });
-//       navdata = navdata.reverse();
-//       res.send(navdata);
-//     })
-//     .catch((error) => {
-//       res.send("no data available on selected search ok" + req.params.id);
-//     });
-// });
+//post the transaction data to DB
+router.post("/transaction", function (req, res) {
+  User.findOne({ userId: req.body.userId }).then((userData) => {
+    if (userData.portfolios.includes(req.body.schemeCode)) {
+      Portfolio.findOne({ schemeCode: req.body.schemeCode }).then(
+        (portfolioData) => {
+          let updateTransactions = portfolioData.transactions;
+          let pdata = {
+            date: req.body.date,
+            quantity: req.body.quantity,
+            navValue: req.body.navValue,
+            transactionValue: req.body.transactionValue,
+            transactionType: req.body.transactionType,
+          };
 
-// //get single mutual fund nav data dates from DB based on selection in dropdown
-// router.get("/mutualfund/date/:id", function (req, res, next) {
-//   MutualFund.findOne({
-//     scheme_code: Number(req.params.id),
-//     scheme_name: req.query.name,
-//   })
-//     .then(function (mutualfund) {
-//       let navdate = [];
-//       mutualfund.nav.map((nav) => {
-//         navdate.push(nav.date);
-//       });
-//       navdate = navdate.reverse();
-//       res.send(navdate);
-//     })
-//     .catch((error) => {
-//       res.send("no data available on selected search 1" + error);
-//     });
-// });
+          updateTransactions.push(pdata);
 
-// //get single mutual fund nav data from DB for MyCharts Component
-// router.get("/mutualfund/navdata/:id", function (req, res, next) {
-//   console.log(req.params.id);
-//   MutualFund.findOne({
-//     scheme_code: Number(req.params.id),
-//   })
-//     .then(function (mutualfund) {
-//       let navdata = [];
-//       mutualfund.nav.map((nav) => {
-//         navdata.push(Number(nav.nav));
-//       });
-//       navdata = navdata.reverse();
-//       res.send(navdata);
-//     })
-//     .catch((error) => {
-//       res.send("no data available on selected search 2" + error);
-//     });
-// });
+          Portfolio.updateOne(
+            { schemeCode: req.body.schemeCode },
+            { $set: { transactions: updateTransactions } }
+          )
+            .then((data) => {
+              res.send(data);
+            })
+            .catch((error) => console.log(error));
+        }
+      );
+    } else {
+      let pdata = {
+        date: req.body.date,
+        quantity: req.body.quantity,
+        navValue: req.body.navValue,
+        transactionValue: req.body.transactionValue,
+        transactionType: req.body.transactionType,
+      };
+      var portfolio = new Portfolio({
+        schemeCode: req.body.schemeCode,
+        transactions: [pdata],
+      });
 
-// //get single mutual fund nav data from DB based on given start and end date
-// router.get("/mutualfund/:id", function (req, res, next) {
-//   //finding the mutual fund data based on the id
-//   MutualFund.findOne({
-//     scheme_code: Number(req.params.id),
-//   }).then(function (mutualfund) {
-//     let nav = [];
-//     let startreq = req.query.start;
-//     let endreq = req.query.end;
-//     const [startday, startmonth, startyear] = startreq.split("-");
-//     const start = new Date(+startyear, +startmonth - 1, +startday);
+      portfolio.save().then((p) => {
+        User.findOne({ userId: req.body.userId }).then((data) => {
+          let portfolioIds = data.portfolios;
+          portfolioIds.push(p.schemeCode.toString());
 
-//     const [endday, endmonth, endyear] = endreq.split("-");
-//     const end = new Date(+endyear, +endmonth - 1, +endday);
+          User.updateOne(
+            { userId: req.body.userId },
+            { $set: { portfolios: portfolioIds } }
+          )
+            .then((data) => res.send(data))
+            .catch((error) => console.log(error));
+        });
+      });
+    }
+    // if (userData.portfolios.length) {
 
-//     mutualfund.nav.map((data) => {
-//       let date = data.date;
-//       const [day, month, year] = date.split("-");
-//       const datadate = new Date(+year, +month - 1, +day);
-//       if (datadate <= start && datadate >= end) {
-//         nav.push(data);
-//       }
-//     });
-//     var mutual = {
-//       scheme_name: mutualfund.scheme_name,
-//       scheme_code: mutualfund.scheme_code,
-//       scheme_category: mutualfund.scheme_category,
-//       scheme_type: mutualfund.scheme_type,
-//       fund_house: mutualfund.fund_house,
-//       nav: nav,
-//     };
-//     res.send(mutual);
-//   });
-// });
+    // } else {
+
+    // }
+  });
+});
 
 module.exports = router;
