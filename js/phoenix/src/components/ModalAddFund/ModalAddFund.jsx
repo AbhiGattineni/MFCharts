@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Button, Datepicker } from "../../components";
 import { AddPortfolioFunds } from "../../containers";
+import { auth } from "../../config/firebase";
 
 export function ModalAddFund() {
   const [showModal, setShowModal] = React.useState(false);
@@ -47,7 +48,30 @@ export function ModalAddFund() {
     setTransactionType(e.target.value);
   };
 
-  const handleAddFund = () => {};
+  const handleAddFund = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: JSON.stringify({
+        userId: auth.currentUser.uid,
+        schemeCode: navData.value,
+        quantity: quantity,
+        transactionType: transactionType,
+        date: date,
+        navValue: navValue,
+        transactionValue: value,
+      }),
+    };
+    fetch("http://127.0.0.1:5000/api/transaction", requestOptions)
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error(error));
+
+    setShowModal(false);
+  };
 
   return (
     <>
