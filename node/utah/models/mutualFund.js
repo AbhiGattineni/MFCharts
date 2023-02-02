@@ -41,6 +41,7 @@ const MutualFundSchema = new Schema({
   scheme_type: String,
   fund_house: String,
   fund_latest_date: String,
+  fund_latest_nav: Number,
   nav: [],
 });
 
