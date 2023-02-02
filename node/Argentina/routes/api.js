@@ -273,9 +273,7 @@ router.get("/userPortfolio/:id", async function (req, res) {
       const portfolioData = await Portfolio.findOne({ schemeCode: portfolio });
       let quantity = 0,
         holdingValue = 0,
-        marketValue = 0,
-        averageValue = 0,
-        tProfitLoss = 0;
+        marketValue = 0;
       const mutualFundData = await MutualFund.findOne({
         scheme_code: portfolio,
       });
@@ -283,20 +281,21 @@ router.get("/userPortfolio/:id", async function (req, res) {
         if (transaction.transactionType === "Buy") {
           quantity += transaction.quantity;
           holdingValue += transaction.transactionValue;
-          averageValue = holdingValue / quantity;
-          marketValue = quantity * mutualFundData.nav[0].nav;
         } else {
           quantity -= transaction.quantity;
           holdingValue -= transaction.transactionValue;
         }
       }
       portfolioFunds[portfolioData.schemeCode] = {
+        schemeName: mutualFundData.scheme_name,
         quantity: quantity,
-        holdingValue: holdingValue,
-        marketValue: marketValue,
-        averageValue: holdingValue / quantity,
-        marketValue: quantity * mutualFundData.nav[0].nav,
-        tProfitLoss: marketValue - holdingValue,
+        holdingValue: holdingValue.toFixed(2),
+        averageValue: (holdingValue / quantity).toFixed(2),
+        marketValue: (quantity * mutualFundData.nav[0].nav).toFixed(2),
+        tProfitLoss: (
+          quantity * mutualFundData.nav[0].nav -
+          holdingValue
+        ).toFixed(2),
       };
     }
     res.send(portfolioFunds);

@@ -22,7 +22,7 @@ export const Accordion = ({
       >
         <div className="text-[22px] font-semibold">
           <div className="text-center">
-            <text className="text-xs sm:text-xl">{fund}</text>
+            <text className="text-xs">{fund}</text>
           </div>
           <div className="border-t-2 border-gray-400  w-full"></div>
           <div className="grid grid-cols-2">
