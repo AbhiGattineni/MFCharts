@@ -262,12 +262,40 @@ router.post("/transaction", function (req, res) {
         });
       });
     }
-    // if (userData.portfolios.length) {
-
-    // } else {
-
-    // }
   });
+});
+
+router.get("/userPortfolio/:id", async function (req, res) {
+  let portfolioFunds = {};
+  try {
+    const data = await User.findOne({ userId: req.params.id });
+    for (const portfolio of data.portfolios) {
+      const portfolioData = await Portfolio.findOne({ schemeCode: portfolio });
+      let quantity = 0,
+        holdingValue = 0,
+        marketValue = 0,
+        avgValue = 0,
+        tProfitLoss = 0;
+      for (const transaction of portfolioData.transactions) {
+        if (transaction.transactionType === "Buy") {
+          quantity += transaction.quantity;
+          holdingValue += transaction.transactionValue;
+        } else {
+          quantity -= transaction.quantity;
+          holdingValue -= transaction.transactionValue;
+        }
+      }
+      portfolioFunds[portfolioData.schemeCode] = {
+        quantity: quantity,
+        holdingValue: holdingValue,
+        marketValue: marketValue,
+      };
+    }
+    res.send(portfolioFunds);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);
+  }
 });
 
 module.exports = router;

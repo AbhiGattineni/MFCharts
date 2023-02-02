@@ -33,6 +33,9 @@ const Portfolio = () => {
     },
   ];
   const toggle = (index) => {
+    console.log(index);
+    console.log(open);
+    console.log(open === index);
     if (open === index) {
       return setOpen(null);
     }
@@ -40,26 +43,31 @@ const Portfolio = () => {
   };
   return (
     <div className="container mx-auto md:mt-3">
-      <div className="grid justify-items-center">
-        <ModalAddFund />
-      </div>
-      <div>
-        {accordionData.map((data, index) => {
-          return (
-            <Accordion
-              key={index}
-              open={index === open}
-              fund={data.title}
-              toggle={() => toggle(index)}
-              desc={data.desc}
-              qty={data.qty}
-              avg={data.avg_price}
-              holding={data.holding_val}
-              market={data.market_val}
-              today={data.today_pl}
-            />
-          );
-        })}
+      <div className="grid grid-cols-4">
+        <div className="col-span-1">
+          <div className="grid justify-items-center">
+            <ModalAddFund />
+          </div>
+          <div>
+            {accordionData.map((data, index) => {
+              return (
+                <Accordion
+                  key={index}
+                  open={index === open}
+                  fund={data.title}
+                  toggle={() => toggle(index)}
+                  desc={data.desc}
+                  qty={data.qty}
+                  avg={data.avg_price}
+                  holding={data.holding_val}
+                  market={data.market_val}
+                  today={data.today_pl}
+                />
+              );
+            })}
+          </div>
+        </div>
+        <div className="col-span-3"></div>
       </div>
     </div>
   );
