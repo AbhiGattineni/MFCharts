@@ -25,6 +25,7 @@ router.get("/api/:mutualfundcode", function (req, res) {
           scheme_type: data.meta.scheme_type,
           fund_house: data.meta.fund_house,
           fund_latest_date: nav[0].date,
+          fund_latest_nav: nav[0].nav,
           nav: nav,
         });
         mutual.save().then(function (mutualfund) {

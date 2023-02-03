@@ -1,38 +1,23 @@
+import { useEffect } from "react";
 import { useState } from "react";
 import { Accordion, Button, ModalAddFund } from "../components";
+import { auth } from "../config/firebase";
 
 const Portfolio = () => {
   const [open, setOpen] = useState(false);
-  const accordionData = [
-    {
-      title: "Tata",
-      qty: "20",
-      avg_price: "2.64",
-      holding_val: "1776.32",
-      market_val: "3028.85",
-      today_pl: "2994",
-      desc: "none",
-    },
-    {
-      title: "Reliance",
-      qty: "20",
-      avg_price: "2.64",
-      holding_val: "1776.32",
-      market_val: "3028.85",
-      today_pl: "2994",
-      desc: "node",
-    },
-    {
-      title: "Vedantha",
-      qty: "20",
-      avg_price: "2.64",
-      holding_val: "1776.32",
-      market_val: "3028.85",
-      today_pl: "2994",
-      desc: "three",
-    },
-  ];
+  const [portfolioData, setPortfolioData] = useState({});
+
+  useEffect(() => {
+    fetch(`http://127.0.0.1:5000/api/userPortfolio/${auth.currentUser.uid}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setPortfolioData(data);
+      });
+  }, []);
   const toggle = (index) => {
+    console.log(index);
+    console.log(open);
+    console.log(open === index);
     if (open === index) {
       return setOpen(null);
     }
@@ -40,26 +25,31 @@ const Portfolio = () => {
   };
   return (
     <div className="container mx-auto md:mt-3">
-      <div className="grid justify-items-center">
-        <ModalAddFund />
-      </div>
-      <div>
-        {accordionData.map((data, index) => {
-          return (
-            <Accordion
-              key={index}
-              open={index === open}
-              fund={data.title}
-              toggle={() => toggle(index)}
-              desc={data.desc}
-              qty={data.qty}
-              avg={data.avg_price}
-              holding={data.holding_val}
-              market={data.market_val}
-              today={data.today_pl}
-            />
-          );
-        })}
+      <div className="grid grid-cols-4">
+        <div className="col-span-1">
+          <div className="grid justify-items-center">
+            <ModalAddFund />
+          </div>
+          <div>
+            {Object.keys(portfolioData).map((data, index) => {
+              return (
+                <Accordion
+                  key={index}
+                  open={index === open}
+                  fund={portfolioData[data].schemeName}
+                  toggle={() => toggle(index)}
+                  desc={data.desc}
+                  qty={portfolioData[data].quantity}
+                  avg={portfolioData[data].averageValue}
+                  holding={portfolioData[data].holdingValue}
+                  market={portfolioData[data].marketValue}
+                  today={portfolioData[data].tProfitLoss}
+                />
+              );
+            })}
+          </div>
+        </div>
+        <div className="col-span-3"></div>
       </div>
     </div>
   );

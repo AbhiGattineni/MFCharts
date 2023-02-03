@@ -77,7 +77,7 @@ export function ModalAddFund() {
     <>
       <Button
         type="button"
-        classes={["w-1/2", "blue", "text-black"]}
+        classes={["w-1/2", "blue", "text-black", "rounded"]}
         handleClick={() => setShowModal(true)}
         text="Add Transaction"
       />
