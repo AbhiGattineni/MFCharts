@@ -34,6 +34,12 @@ export function ModalAddFund() {
     }
   }, [quantity]);
 
+  useEffect(() => {
+    if (Object.keys(navData).length) {
+      setQuantity(value / navValue);
+    }
+  }, [value]);
+
   const handleClose = () => {
     setShowModal(false);
     setQuantity(0);
