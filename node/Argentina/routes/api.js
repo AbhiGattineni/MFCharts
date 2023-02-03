@@ -222,12 +222,30 @@ router.post("/transaction", function (req, res) {
             transactionValue: req.body.transactionValue,
             transactionType: req.body.transactionType,
           };
-
           updateTransactions.push(pdata);
 
+          var quantity = (portfolioData.quantity + req.body.quantity).toFixed(
+            2
+          );
+          var holdingValue = (
+            portfolioData.holdingValue + req.body.transactionValue
+          ).toFixed(2);
+          var averageFundValue = (holdingValue / quantity).toFixed(2);
+          var marketValue =
+            (portfolioData.quantity + req.body.quantity) * req.body.navValue;
+          var totalProfitAndLoss = (holdingValue - marketValue).toFixed(2);
           Portfolio.updateOne(
             { schemeCode: req.body.schemeCode },
-            { $set: { transactions: updateTransactions } }
+            {
+              $set: {
+                transactions: updateTransactions,
+                quantity: quantity,
+                holdingValue: holdingValue,
+                averageFundValue: averageFundValue,
+                marketValue: marketValue,
+                totalProfitAndLoss: totalProfitAndLoss,
+              },
+            }
           )
             .then((data) => {
               res.send(data);
@@ -245,6 +263,11 @@ router.post("/transaction", function (req, res) {
       };
       var portfolio = new Portfolio({
         schemeCode: req.body.schemeCode,
+        quantity: req.body.quantity,
+        holdingValue: (req.body.quantity * req.body.navValue).toFixed(2),
+        averageFundValue: req.body.navValue,
+        marketValue: req.body.transactionValue,
+        totalProfitAndLoss: 0,
         transactions: [pdata],
       });
 
@@ -264,6 +287,8 @@ router.post("/transaction", function (req, res) {
     }
   });
 });
+
+//get user portfolio data for cards
 
 router.get("/userPortfolio/:id", async function (req, res) {
   let portfolioFunds = {};
