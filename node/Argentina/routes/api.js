@@ -240,7 +240,7 @@ router.post("/transaction", function (req, res) {
             ).toFixed(2);
           }
           var averageFundValue = (holdingValue / quantity).toFixed(2);
-          var marketValue = quantity * req.body.navValue;
+          var marketValue = (quantity * req.body.navValue).toFixed(2);
           var totalProfitAndLoss = 0;
           Portfolio.updateOne(
             { schemeCode: req.body.schemeCode },
@@ -314,6 +314,7 @@ router.get("/userPortfolio/:id", async function (req, res) {
         averageValue: portfolioData.averageFundValue,
         marketValue: portfolioData.marketValue,
         tProfitLoss: portfolioData.totalProfitAndLoss,
+        transactions: portfolioData.transactions,
       };
     }
     res.send(portfolioFunds);
