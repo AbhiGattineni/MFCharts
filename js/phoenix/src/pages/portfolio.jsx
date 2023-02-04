@@ -1,11 +1,18 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { Accordion, Button, ModalAddFund } from "../components";
+import {
+  Accordion,
+  Button,
+  FetchAllPortfolios,
+  FetchAllWatchlists,
+  ModalAddFund,
+} from "../components";
 import { auth } from "../config/firebase";
 
 const Portfolio = () => {
   const [open, setOpen] = useState(false);
   const [portfolioData, setPortfolioData] = useState({});
+  const [selectedPortfolio, setSelectedPortfolio] = useState({});
 
   useEffect(() => {
     fetch(`http://127.0.0.1:5000/api/userPortfolio/${auth.currentUser.uid}`)
@@ -31,6 +38,7 @@ const Portfolio = () => {
             <ModalAddFund />
           </div>
           <div>
+            <FetchAllPortfolios setSelectedPortfolio={setSelectedPortfolio} />
             {Object.keys(portfolioData).map((data, index) => {
               return (
                 <Accordion

@@ -224,16 +224,24 @@ router.post("/transaction", function (req, res) {
           };
           updateTransactions.push(pdata);
 
-          var quantity = (portfolioData.quantity + req.body.quantity).toFixed(
-            2
-          );
-          var holdingValue = (
-            portfolioData.holdingValue + req.body.transactionValue
-          ).toFixed(2);
+          if (req.body.transactionType === "Buy") {
+            var quantity = (portfolioData.quantity + req.body.quantity).toFixed(
+              2
+            );
+            var holdingValue = (
+              portfolioData.holdingValue + req.body.transactionValue
+            ).toFixed(2);
+          } else {
+            var quantity = (portfolioData.quantity - req.body.quantity).toFixed(
+              2
+            );
+            var holdingValue = (
+              portfolioData.holdingValue - req.body.transactionValue
+            ).toFixed(2);
+          }
           var averageFundValue = (holdingValue / quantity).toFixed(2);
-          var marketValue =
-            (portfolioData.quantity + req.body.quantity) * req.body.navValue;
-          var totalProfitAndLoss = (holdingValue - marketValue).toFixed(2);
+          var marketValue = quantity * req.body.navValue;
+          var totalProfitAndLoss = 0;
           Portfolio.updateOne(
             { schemeCode: req.body.schemeCode },
             {
@@ -296,31 +304,16 @@ router.get("/userPortfolio/:id", async function (req, res) {
     const data = await User.findOne({ userId: req.params.id });
     for (const portfolio of data.portfolios) {
       const portfolioData = await Portfolio.findOne({ schemeCode: portfolio });
-      let quantity = 0,
-        holdingValue = 0,
-        marketValue = 0;
       const mutualFundData = await MutualFund.findOne({
         scheme_code: portfolio,
       });
-      for (const transaction of portfolioData.transactions) {
-        if (transaction.transactionType === "Buy") {
-          quantity += transaction.quantity;
-          holdingValue += transaction.transactionValue;
-        } else {
-          quantity -= transaction.quantity;
-          holdingValue -= transaction.transactionValue;
-        }
-      }
       portfolioFunds[portfolioData.schemeCode] = {
         schemeName: mutualFundData.scheme_name,
-        quantity: quantity,
-        holdingValue: holdingValue.toFixed(2),
-        averageValue: (holdingValue / quantity).toFixed(2),
-        marketValue: (quantity * mutualFundData.nav[0].nav).toFixed(2),
-        tProfitLoss: (
-          quantity * mutualFundData.nav[0].nav -
-          holdingValue
-        ).toFixed(2),
+        quantity: portfolioData.quantity,
+        holdingValue: portfolioData.holdingValue,
+        averageValue: portfolioData.averageFundValue,
+        marketValue: portfolioData.marketValue,
+        tProfitLoss: portfolioData.totalProfitAndLoss,
       };
     }
     res.send(portfolioFunds);
@@ -328,6 +321,22 @@ router.get("/userPortfolio/:id", async function (req, res) {
     console.error(err);
     res.status(500).send(err);
   }
+});
+
+//fetch only portfolio data with id and label
+router.get("/userPortfolioData/:id", async function (req, res) {
+  var pfFunds = [];
+  const data = await User.findOne({ userId: req.params.id });
+  for (const portfolio of data.portfolios) {
+    const mutualFundData = await MutualFund.findOne({
+      scheme_code: portfolio,
+    });
+    pfFunds.push({
+      value: mutualFundData.scheme_code,
+      label: mutualFundData.scheme_name,
+    });
+  }
+  res.send(pfFunds);
 });
 
 module.exports = router;
