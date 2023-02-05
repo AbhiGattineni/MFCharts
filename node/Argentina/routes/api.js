@@ -39,10 +39,9 @@ router.get("/wlnavdata/:id", function (req, res) {
   });
 });
 
-//get all the watchlists of specific users
+//get all the watchlists of specific user
 router.get("/watchlists/:userId", function (req, res) {
   User.findOne({ userId: req.params.userId }).then(function (data) {
-    // console.log(data);
     let wlNames = [];
     if (data.watchlists.length) {
       Watchlist.find()
@@ -50,7 +49,6 @@ router.get("/watchlists/:userId", function (req, res) {
         .in(data.watchlists)
         .exec((err, records) => {
           records.map((data) => {
-            // wlNames.push(data.watchlistName);
             wlNames.push({ value: data._id, label: data.watchlistName });
           });
           res.send(wlNames);

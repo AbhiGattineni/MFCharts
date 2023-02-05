@@ -8,6 +8,7 @@ export const FetchAllWatchlists = ({ setSelectedWatchlist, isMulti }) => {
 
   //Fetching all watchlist names of user watchlists
   useEffect(() => {
+    let watchlistValues = [];
     fetch(`http://127.0.0.1:5000/api/watchlists/${auth.currentUser.uid}`)
       .then((response) => response.json())
       .then((allWatchlistNames) => {
