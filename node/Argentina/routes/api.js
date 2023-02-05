@@ -338,4 +338,30 @@ router.get("/userPortfolioData/:id", async function (req, res) {
   res.send(pfFunds);
 });
 
+//get user invested, current and profit and loss data
+router.get("/overallPortfolioStat/:id", function (req, res) {
+  let totalHoldingValue = 0;
+  let totalMarketValue = 0;
+  let totalProfitAndLoss = 0;
+  User.find({ userId: req.params.id }).then(async (data) => {
+    for (const portfolio of data[0].portfolios) {
+      const mutualFundData = await Portfolio.findOne({
+        schemeCode: portfolio,
+      });
+      totalHoldingValue += mutualFundData.holdingValue;
+      totalMarketValue += mutualFundData.marketValue;
+      if (totalMarketValue > totalHoldingValue) {
+        totalProfitAndLoss = totalMarketValue - totalHoldingValue;
+      } else {
+        totalProfitAndLoss = totalHoldingValue - totalMarketValue;
+      }
+    }
+    res.send({
+      totalHoldingValue: totalHoldingValue,
+      totalMarketValue: totalMarketValue,
+      totalProfitAndLoss: totalProfitAndLoss.toFixed(2),
+    });
+  });
+});
+
 module.exports = router;

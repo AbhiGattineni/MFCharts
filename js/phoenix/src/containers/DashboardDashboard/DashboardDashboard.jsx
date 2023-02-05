@@ -1,17 +1,35 @@
+import { useEffect, useState } from "react";
+import { auth } from "../../config/firebase";
 import { Label, Separator } from "../../components";
 
 export const DashboardDashboard = () => {
+  const [dashboardData, setDashboardData] = useState({});
+  useEffect(() => {
+    fetch(
+      `http://127.0.0.1:5000/api/overallPortfolioStat/${auth.currentUser.uid}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setDashboardData(data);
+      });
+  }, []);
   return (
     <div className="grid grid-cols-2 md:m-5 border-2 justify-items-center">
       <div className="w-full place-self-center">
         <div className="grid grid-cols-2 justify-items-center">
           <div>
             <Label text={"Invested"} classes={["text-xs", "font-light"]} />
-            <Label text={"1,00,000"} classes={["text-xl", "font-bold"]} />
+            <Label
+              text={dashboardData.totalHoldingValue}
+              classes={["text-xl", "font-bold"]}
+            />
           </div>
           <div>
             <Label text={"Current"} classes={["text-xs", "font-light"]} />
-            <Label text={"10,00,000"} classes={["text-xl", "font-bold"]} />
+            <Label
+              text={dashboardData.totalMarketValue}
+              classes={["text-xl", "font-bold"]}
+            />
           </div>
         </div>
         <div className="grid justify-items-center">
@@ -24,7 +42,7 @@ export const DashboardDashboard = () => {
               classes={["text-xs", "font-light", "place-self-center"]}
             />
             <Label
-              text={"9,00,000"}
+              text={dashboardData.totalProfitAndLoss}
               classes={["text-xl", "font-bold", "place-self-center"]}
             />
           </div>
