@@ -148,10 +148,15 @@ router.get("/mutualfund/:id/navdata", function (req, res) {
     return new Date(date);
   }
 
-  if (start_date != null) start_date = reverseDate(start_date);
-  if (end_date != null) end_date = reverseDate(end_date);
-  start_date = start_date.setUTCHours(0, 0, 0, 0);
-  end_date = end_date.setUTCHours(0, 0, 0, 0);
+  if (start_date != null) {
+    start_date = reverseDate(start_date);
+    start_date = start_date.setUTCHours(0, 0, 0, 0);
+  }
+  if (end_date != null) {
+    end_date = reverseDate(end_date);
+    end_date = end_date.setUTCHours(0, 0, 0, 0);
+  }
+
   MutualFund.findOne({ scheme_code: req.params.id }).then(function (mf) {
     mf.nav.map((m, index) => {
       const [day, month, year] = m.date.split("-");
