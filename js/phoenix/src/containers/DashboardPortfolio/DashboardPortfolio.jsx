@@ -17,7 +17,7 @@ export const DashboardPortfolio = () => {
       <div className="grid justify-items-center font-bold border-b-2">
         Portfolio Funds
       </div>
-      <div className="grid grid-cols-1 p-3">
+      <div className="grid grid-cols-2 p-3">
         {Object.keys(portfolioNames).map((e, index) => {
           return <li>{portfolioNames[e].schemeName}</li>;
         })}
