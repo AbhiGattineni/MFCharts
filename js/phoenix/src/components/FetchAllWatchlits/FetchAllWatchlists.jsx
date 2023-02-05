@@ -8,18 +8,7 @@ export const FetchAllWatchlists = ({ setSelectedWatchlist, isMulti }) => {
 
   //Fetching all watchlist names of user watchlists
   useEffect(() => {
-    let watchlistValues = [];
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    var watchlistOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: JSON.stringify({
-        userId: auth.currentUser.uid,
-      }),
-    };
-    fetch("http://127.0.0.1:5000/api/watchlists", watchlistOptions)
+    fetch(`http://127.0.0.1:5000/api/watchlists/${auth.currentUser.uid}`)
       .then((response) => response.json())
       .then((allWatchlistNames) => {
         allWatchlistNames.map((wl) => {

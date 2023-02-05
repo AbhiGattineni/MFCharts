@@ -26,7 +26,7 @@ export const Accordion = ({
             <text className="text-xxl">{fund}</text>
           </div>
           <div className="border-t-2 border-gray-400  w-full"></div>
-          <div className="grid grid-cols-5">
+          <div className="grid grid-cols-6">
             <div className="">
               <text className="text-xs ">Quantity:</text>
               <text className="text-xs">{qty}</text>
@@ -58,11 +58,15 @@ export const Accordion = ({
         <div className="border-t-2 border-gray-400  w-full "></div>
         {transactions.map((transaction, index) => (
           <div className="grid grid-cols-5 truncate p-3">
-            <div className="bg-white">{transaction.date}</div>
-            <div className="bg-white">{transaction.transactionType}</div>
-            <div className="bg-white">{transaction.quantity}</div>
-            <div className="bg-white">{transaction.navValue}</div>
-            <div className="bg-white">{transaction.transactionValue}</div>
+            <div className="bg-white text-xs">{transaction.date}</div>
+            <div className="bg-white text-xs">
+              {transaction.transactionType}
+            </div>
+            <div className="bg-white text-xs">{transaction.quantity}</div>
+            <div className="bg-white text-xs">{transaction.navValue}</div>
+            <div className="bg-white text-xs">
+              {transaction.transactionValue.toFixed(3)}
+            </div>
           </div>
         ))}
       </Collapse>

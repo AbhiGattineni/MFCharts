@@ -40,8 +40,8 @@ router.get("/wlnavdata/:id", function (req, res) {
 });
 
 //get all the watchlists of specific users
-router.post("/watchlists", function (req, res) {
-  User.findOne({ userId: req.body.userId }).then(function (data) {
+router.get("/watchlists/:userId", function (req, res) {
+  User.findOne({ userId: req.params.userId }).then(function (data) {
     // console.log(data);
     let wlNames = [];
     if (data.watchlists.length) {
