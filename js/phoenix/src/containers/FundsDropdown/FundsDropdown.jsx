@@ -12,7 +12,6 @@ export function FundsDropdown({ isMulti, allValues, setNavData }) {
       inputValue.map((value) => {
         dropDownValues.push(value.value);
       });
-      console.log("dropdown values", dropDownValues);
       setNavData(dropDownValues);
     } else if (isMulti == true) {
       setNavData(inputValue); //added else condition if no values in search then set navData to empty
