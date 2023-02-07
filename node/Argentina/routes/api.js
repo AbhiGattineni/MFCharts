@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
+
 const MutualFund = require("../models/mutualFund");
 const AllMutualFunds = require("../models/allmutualFunds");
 const User = require("../models/user");
@@ -285,7 +287,7 @@ router.post("/transaction", function (req, res) {
       portfolio.save().then((p) => {
         User.findOne({ userId: req.body.userId }).then((data) => {
           let portfolioIds = data.portfolios;
-          portfolioIds.push(p.schemeCode.toString());
+          portfolioIds.push(p._id.toString());
 
           User.updateOne(
             { userId: req.body.userId },
@@ -306,11 +308,14 @@ router.get("/userPortfolio/:id", async function (req, res) {
   try {
     const data = await User.findOne({ userId: req.params.id });
     for (const portfolio of data.portfolios) {
-      const portfolioData = await Portfolio.findOne({ schemeCode: portfolio });
+      const portfolioData = await Portfolio.findOne({
+        _id: mongoose.Types.ObjectId(portfolio),
+      });
       const mutualFundData = await MutualFund.findOne({
-        scheme_code: portfolio,
+        scheme_code: portfolioData.schemeCode,
       });
       portfolioFunds[portfolioData.schemeCode] = {
+        schemeCode: mutualFundData.scheme_code,
         schemeName: mutualFundData.scheme_name,
         quantity: portfolioData.quantity,
         holdingValue: portfolioData.holdingValue,
