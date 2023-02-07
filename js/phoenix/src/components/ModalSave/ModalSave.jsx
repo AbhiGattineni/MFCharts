@@ -14,8 +14,14 @@ export function ModalSave({ saveData }) {
 
   return (
     <>
-      <div onClick={() => setShowModal(true)}>
-        <BareIcon IconComponent={<BsSave />} classes={["cursor-pointer"]} />
+      <div
+        onClick={() => setShowModal(true)}
+        className="grid grid-cols-12 cursor-pointer"
+      >
+        <div className="grid grid-cols-2 justify-items-center bg-slate-200 rounded-md">
+          <div className="place-self-center">SAVE</div>
+          <BareIcon IconComponent={<BsSave />} classes={[""]} />
+        </div>
       </div>
       {showModal ? (
         <>
