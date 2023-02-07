@@ -7,7 +7,6 @@ export const Accordion = ({
   open,
   toggle,
   fund,
-  desc,
   qty,
   avg,
   holding,

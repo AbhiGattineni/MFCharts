@@ -356,7 +356,7 @@ router.get("/overallPortfolioStat/:id", function (req, res) {
   User.find({ userId: req.params.id }).then(async (data) => {
     for (const portfolio of data[0].portfolios) {
       const mutualFundData = await Portfolio.findOne({
-        schemeCode: portfolio,
+        _id: portfolio,
       });
       totalHoldingValue += mutualFundData.holdingValue;
       totalMarketValue += mutualFundData.marketValue;

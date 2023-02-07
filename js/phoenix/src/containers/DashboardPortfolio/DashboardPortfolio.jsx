@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { auth } from "../../config/firebase";
 import { Button } from "../../components";
 
-export const DashboardPortfolio = () => {
+export const DashboardPortfolio = ({ setDashboardPortfolio }) => {
   const [portfolioNames, setPortfolioNames] = useState({});
   useEffect(() => {
     fetch(`http://127.0.0.1:5000/api/userPortfolio/${auth.currentUser.uid}`)
@@ -20,7 +20,11 @@ export const DashboardPortfolio = () => {
       <div className="grid grid-cols-1 p-3">
         {Object.keys(portfolioNames).map((e, index) => {
           return (
-            <Button text={portfolioNames[e].schemeName} classes={["rounded"]} />
+            <Button
+              text={portfolioNames[e].schemeName}
+              classes={["rounded"]}
+              handleClick={() => setDashboardPortfolio(portfolioNames[e])}
+            />
           );
         })}
       </div>
