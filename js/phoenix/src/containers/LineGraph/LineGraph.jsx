@@ -30,7 +30,7 @@ export const LineGraph = ({ id, date, setDateRange }) => {
   }, []);
 
   return (
-    <div className="border-2 border-slate-300 p-1 m-2 rounded-md">
+    <div className="border-2 border-slate-300 py-1 my-2 rounded-md">
       <div className=" w-full mt-2 md:mt-5 ">
         <div className="grid justify-items-center">
           <ModalDatepicker setDateRange={setDateRange} />

@@ -7,15 +7,25 @@ export function ModalSave({ saveData }) {
   const [showModal, setShowModal] = React.useState(false);
   const [saveLabel, setSaveLabel] = useState("");
 
-  const handleClose = () => {
+  const handleSave = () => {
     setShowModal(false);
     saveData(saveLabel);
   };
 
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
   return (
     <>
-      <div onClick={() => setShowModal(true)}>
-        <BareIcon IconComponent={<BsSave />} classes={["cursor-pointer"]} />
+      <div
+        onClick={() => setShowModal(true)}
+        className="grid grid-cols-12 cursor-pointer"
+      >
+        <div className="grid grid-cols-2 justify-items-center bg-slate-200 rounded-md">
+          <div className="place-self-center">SAVE</div>
+          <BareIcon IconComponent={<BsSave />} classes={[""]} />
+        </div>
       </div>
       {showModal ? (
         <>
@@ -58,7 +68,7 @@ export function ModalSave({ saveData }) {
                   <button
                     className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
-                    onClick={handleClose}
+                    onClick={handleSave}
                   >
                     Save
                   </button>
