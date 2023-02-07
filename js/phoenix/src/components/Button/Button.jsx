@@ -10,7 +10,6 @@ export const Button = ({ text, handleClick, type, classes = [] }) => {
     "px-4",
     "rounded-full",
     "mb-6",
-    "w-40",
     ...classes,
   ].join(" ");
   return (
