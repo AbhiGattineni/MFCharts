@@ -19,7 +19,7 @@ export const DashboardWatchlist = () => {
       <div className="grid justify-items-center font-bold border-b-2">
         Watchlist
       </div>
-      <div className="grid grid-cols-6 p-3">
+      <div className="grid grid-cols-2 md:grid-cols-6 p-3">
         {watchListNames.map((e, index) => {
           return (
             <div>

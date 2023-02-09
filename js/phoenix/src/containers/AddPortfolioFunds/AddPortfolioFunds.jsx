@@ -18,7 +18,7 @@ export const AddPortfolioFunds = ({
   return (
     <div className="container mx-auto">
       <form className="grid grid-rows-4 ">
-        <div className="grid grid-cols-12 row-span-1">
+        <div className="grid grid-cols-6 md:grid-cols-12 row-span-1">
           <Label text="Date:" />
           <DatePicker
             selected={date}
@@ -48,7 +48,7 @@ export const AddPortfolioFunds = ({
             </div>
           </div>
         </div>
-        <div className="row-span-1">
+        <div className=" row-span-1">
           <input
             type="radio"
             name="transactionType"

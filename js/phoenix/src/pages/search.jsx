@@ -70,7 +70,7 @@ const Search = () => {
   };
 
   return (
-    <div className="container mx-auto md:mt-5">
+    <div className="container mx-auto md:mt-5 px-4 sm:px-0">
       <FetchAllMf setNavData={(e) => handleNavData(e)} isMulti={true} />
 
       <div className="mt-1 md:mt-5">

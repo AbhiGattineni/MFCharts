@@ -4,7 +4,7 @@ import { BsLinkedin, BsGoogle, BsGithub } from "react-icons/bs";
 
 const Signup = () => {
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row h-screen">
       <div className="basis-1 md:basis-2/3  flex flex-col justify-center items-center">
         <h1 className="font-bold text-3xl">Add Details to Signup</h1>
         <SignupForm />
