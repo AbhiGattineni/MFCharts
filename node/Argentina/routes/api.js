@@ -367,8 +367,8 @@ router.get("/overallPortfolioStat/:id", function (req, res) {
       }
     }
     res.send({
-      totalHoldingValue: totalHoldingValue,
-      totalMarketValue: totalMarketValue,
+      totalHoldingValue: totalHoldingValue.toFixed(2),
+      totalMarketValue: totalMarketValue.toFixed(2),
       totalProfitAndLoss: totalProfitAndLoss.toFixed(2),
     });
   });

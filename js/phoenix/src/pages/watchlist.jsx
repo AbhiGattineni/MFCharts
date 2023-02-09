@@ -34,11 +34,11 @@ const Watchlist = () => {
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto px-4 sm:px-0">
       <div>
         <FetchAllWatchlists setSelectedWatchlist={setSelectedWatchlist} />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 ">
         {wlNavData &&
           Object.keys(wlNavData).map((mf) => (
             <LineGraph

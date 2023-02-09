@@ -14,7 +14,7 @@ export const DashboardDashboard = () => {
       });
   }, []);
   return (
-    <div className="grid grid-cols-2 md:m-5 border-2 justify-items-center">
+    <div className="grid grid-cols-1 md:grid-cols-2 border-2 justify-items-center mx-2 sm:mx-0">
       <div className="w-full place-self-center">
         <div className="grid grid-cols-2 justify-items-center">
           <div>
