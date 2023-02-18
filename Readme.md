@@ -3,6 +3,7 @@
 Portfolio management tool
 
 nothing did today, just don't want to get demotivated by loosing streak.
+yes
 
 ## Documentation
 
