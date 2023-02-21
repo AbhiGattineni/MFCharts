@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { LoginForm } from "../../src/containers";
 import { BareIcon, Separator } from "../../src/components";
 import { BsLinkedin, BsGoogle, BsFacebook } from "react-icons/bs";
@@ -50,7 +52,9 @@ const Login = () => {
           className="mt-6 shadow bg-white hover:bg-gray-100 focus:shadow-outline focus:outline-none text-black font-bold py-2 px-4 rounded-full mb-6"
           type="button"
         >
-          Sign Up
+          <Link href="/signup">
+            <a>Sign Up</a>
+          </Link>
         </button>
       </div>
     </div>

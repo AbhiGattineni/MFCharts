@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { SignupForm } from "../containers";
 import { BareIcon, Separator } from "../../src/components";
 import { BsLinkedin, BsGoogle, BsGithub } from "react-icons/bs";
@@ -25,11 +27,10 @@ const Signup = () => {
         <button
           className="mt-6 shadow bg-white hover:bg-gray-100 focus:shadow-outline focus:outline-none text-black font-bold py-2 px-4 rounded-full mb-6"
           type="button"
-          onClick={() => {
-            console.log("Sign In");
-          }}
         >
-          Sign In
+          <Link href="/login">
+            <a>Sign In</a>
+          </Link>
         </button>
       </div>
     </div>
