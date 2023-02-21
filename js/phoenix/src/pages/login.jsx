@@ -24,7 +24,9 @@ const Login = () => {
       <div className="md:basis-2/3 flex flex-col justify-center items-center mx-2 md:mx-0">
         <h1 className="font-bold text-3xl">Login to Your Account</h1>
         <LoginForm />
-        <Separator />
+        <div className="w-1/3">
+          <Separator />
+        </div>
         <div className="font-bold text-xs">Login with</div>
         <div className="flex flex-row">
           <div onClick={handleSigninWithGoogle}>
@@ -40,6 +42,17 @@ const Login = () => {
             />
           </div>
           <BareIcon IconComponent={<BsLinkedin />} />
+        </div>
+        <div className="w-full bg-bgColor md:hidden flex items-center justify-center p-2 rounded-md">
+          <div className="font-bold">New Here?</div>
+          <button
+            className="shadow bg-white hover:bg-gray-100 focus:shadow-outline focus:outline-none text-black font-bold py-2 px-4 rounded-full"
+            type="button"
+          >
+            <Link href="/signup">
+              <a>Sign Up</a>
+            </Link>
+          </button>
         </div>
       </div>
       <div className="md:basis-1/3 md:bg-bgColor hidden md:flex md:flex-col md:justify-center md:items-center">
