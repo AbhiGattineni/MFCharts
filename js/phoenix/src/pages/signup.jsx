@@ -12,7 +12,7 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   return (
     <div className="flex flex-row h-screen">
-      <div className="basis-1 md:basis-2/3  flex flex-col justify-center items-center">
+      <div className="md:basis-2/3  flex flex-col justify-center items-center mx-2 md:mx-0">
         <h1 className="font-bold text-3xl">Add Details to Signup</h1>
         <SignupForm
           setEmail={(e) => setEmail(e)}

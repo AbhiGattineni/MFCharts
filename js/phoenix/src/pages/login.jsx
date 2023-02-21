@@ -20,8 +20,8 @@ const Login = () => {
     });
   };
   return (
-    <div className="flex flex-row h-screen">
-      <div className="md:w-2/3 flex flex-col justify-center items-center">
+    <div className="flex flex-row justify-center h-screen">
+      <div className="md:basis-2/3 flex flex-col justify-center items-center mx-2 md:mx-0">
         <h1 className="font-bold text-3xl">Login to Your Account</h1>
         <LoginForm />
         <Separator />
@@ -42,7 +42,7 @@ const Login = () => {
           <BareIcon IconComponent={<BsLinkedin />} />
         </div>
       </div>
-      <div className="md:w-1/3 md:bg-bgColor hidden md:flex md:flex-col md:justify-center md:items-center">
+      <div className="md:basis-1/3 md:bg-bgColor hidden md:flex md:flex-col md:justify-center md:items-center">
         <div className="font-bold text-2xl">New Here?</div>
         <div className="mt-6 font-bold">
           <div>Sign up and discover a great</div>
