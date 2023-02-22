@@ -21,32 +21,34 @@ const Login = () => {
   };
   return (
     <div className="flex flex-row justify-center h-screen">
-      <div className="md:basis-2/3 flex flex-col justify-center items-center mx-2 md:mx-0">
-        <h1 className="font-bold text-3xl">Login to Your Account</h1>
-        <LoginForm />
-        <div className="w-1/3">
-          <Separator />
-        </div>
-        <div className="font-bold text-xs">Login with</div>
-        <div className="flex flex-row">
-          <div onClick={handleSigninWithGoogle}>
-            <BareIcon
-              IconComponent={<BsGoogle />}
-              classes={["cursor-pointer"]}
-            />
+      <div className="w-full md:basis-2/3 flex flex-col justify-between items-center mx-2 md:mx-0">
+        <div className="flex flex-col flex-auto justify-center items-center">
+          <h1 className="font-bold text-3xl">Login to Your Account</h1>
+          <LoginForm />
+          <div className="w-1/3">
+            <Separator />
           </div>
-          <div onClick={handleSigninWithFacebook}>
-            <BareIcon
-              IconComponent={<BsFacebook />}
-              classes={["cursor-pointer"]}
-            />
+          <div className="font-bold text-xs">Login with</div>
+          <div className="flex flex-row">
+            <div onClick={handleSigninWithGoogle}>
+              <BareIcon
+                IconComponent={<BsGoogle />}
+                classes={["cursor-pointer"]}
+              />
+            </div>
+            <div onClick={handleSigninWithFacebook}>
+              <BareIcon
+                IconComponent={<BsFacebook />}
+                classes={["cursor-pointer"]}
+              />
+            </div>
+            <BareIcon IconComponent={<BsLinkedin />} />
           </div>
-          <BareIcon IconComponent={<BsLinkedin />} />
         </div>
-        <div className="w-full bg-bgColor md:hidden flex items-center justify-center p-2 rounded-md">
+        <div className="w-full bg-bgColor md:hidden flex items-center justify-evenly p-2 rounded-md">
           <div className="font-bold">New Here?</div>
           <button
-            className="shadow bg-white hover:bg-gray-100 focus:shadow-outline focus:outline-none text-black font-bold py-2 px-4 rounded-full"
+            className="shadow bg-white hover:bg-gray-100 focus:shadow-outline focus:outline-none text-black font-bold py-2 px-4 rounded-lg"
             type="button"
           >
             <Link href="/signup">
