@@ -25,7 +25,7 @@ const Signup = () => {
             password={password}
             setPassword={(e) => setPassword(e)}
           />
-          <div className="w-1/3">
+          <div className="w-2/3">
             <Separator />
           </div>
           <div className="font-bold text-xs">Signup with</div>

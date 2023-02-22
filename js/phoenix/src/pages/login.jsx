@@ -25,7 +25,7 @@ const Login = () => {
         <div className="flex flex-col flex-auto justify-center items-center">
           <h1 className="font-bold text-3xl">Login to Your Account</h1>
           <LoginForm />
-          <div className="w-1/3">
+          <div className="w-2/3">
             <Separator />
           </div>
           <div className="font-bold text-xs">Login with</div>
