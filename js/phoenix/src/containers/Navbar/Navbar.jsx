@@ -207,6 +207,15 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
+            <li>
+              <a
+                href="#"
+                className="block py-2 pr-4 pl-3 md:border-0  md:p-0 dark:text-gray-400 text-gray-700"
+                onClick={handleLogout}
+              >
+                Sign out
+              </a>
+            </li>
           </ul>
         </div>
       </div>

@@ -1,30 +1,16 @@
 import Link from "next/link";
-import { useState } from "react";
 
 import { SignupForm } from "../containers";
 import { BareIcon, Separator } from "../../src/components";
 import { BsLinkedin, BsGoogle, BsGithub } from "react-icons/bs";
 
 const Signup = () => {
-  const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
   return (
     <div className="flex flex-row h-screen">
       <div className="w-full md:basis-2/3 flex flex-col justify-between items-center mx-2 md:mx-0">
         <div className="flex flex-col flex-auto justify-center items-center">
           <h1 className="font-bold text-3xl">Add Details to Signup</h1>
-          <SignupForm
-            setEmail={(e) => setEmail(e)}
-            email={email}
-            firstName={firstName}
-            setFirstName={(e) => setFirstName(e)}
-            lastName={lastName}
-            setLastName={(e) => setLastName(e)}
-            password={password}
-            setPassword={(e) => setPassword(e)}
-          />
+          <SignupForm />
           <div className="w-2/3">
             <Separator />
           </div>
