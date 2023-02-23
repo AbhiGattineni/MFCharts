@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { SignupForm } from "../containers";
 import { BareIcon, Separator } from "../../src/components";
-import { BsLinkedin, BsGoogle, BsGithub } from "react-icons/bs";
+import { BsLinkedin, BsGoogle, BsGithub, BsFacebook } from "react-icons/bs";
 
 const Signup = () => {
   return (
@@ -16,9 +16,11 @@ const Signup = () => {
           </div>
           <div className="font-bold text-xs">Signup with</div>
           <div className="flex flex-row">
-            <BareIcon IconComponent={<BsGoogle />} classes={["text-red-500"]} />
-            <BareIcon IconComponent={<BsGithub />} />
+            <BareIcon IconComponent={<BsGoogle />} />
+            <BareIcon IconComponent={<BsFacebook />} />
+
             <BareIcon IconComponent={<BsLinkedin />} />
+            <BareIcon IconComponent={<BsGithub />} />
           </div>
         </div>
         <div className="w-full bg-bgColor md:hidden flex items-center justify-evenly p-2 rounded-md">
