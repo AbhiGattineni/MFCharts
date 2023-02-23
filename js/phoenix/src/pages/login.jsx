@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { LoginForm } from "../../src/containers";
 import { BareIcon, Separator } from "../../src/components";
-import { BsLinkedin, BsGoogle, BsFacebook } from "react-icons/bs";
+import { BsLinkedin, BsGoogle, BsGithub, BsFacebook } from "react-icons/bs";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
 
@@ -37,12 +37,10 @@ const Login = () => {
               />
             </div>
             <div onClick={handleSigninWithFacebook}>
-              <BareIcon
-                IconComponent={<BsFacebook />}
-                classes={["cursor-pointer"]}
-              />
+              <BareIcon IconComponent={<BsFacebook />} />
             </div>
             <BareIcon IconComponent={<BsLinkedin />} />
+            <BareIcon IconComponent={<BsGithub />} />
           </div>
         </div>
         <div className="w-full bg-bgColor md:hidden flex items-center justify-evenly p-2 rounded-md">

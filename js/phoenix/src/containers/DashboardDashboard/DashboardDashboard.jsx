@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { auth } from "../../config/firebase";
 import { Label, Separator } from "../../components";
+import { PortfolioGraph } from "../PortfolioGraph/PortfolioGraph";
 
 export const DashboardDashboard = () => {
   const [dashboardData, setDashboardData] = useState({});
@@ -48,7 +49,9 @@ export const DashboardDashboard = () => {
           </div>
         </div>
       </div>
-      <div className="place-self-center">Graph</div>
+      <div className="place-self-center">
+        <PortfolioGraph />
+      </div>
     </div>
   );
 };

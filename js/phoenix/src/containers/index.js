@@ -8,3 +8,4 @@ export { DashboardPortfolio } from "./DashboardPortfolio/DashboardPortfolio";
 export { DashboardDashboard } from "./DashboardDashboard/DashboardDashboard";
 export { DashboardWatchlist } from "./DashboardWatchlist/DashboardWatchlist";
 export { DashboardSearch } from "./DashboardSearch/DashboardSearch";
+export { PortfolioGraph } from "./PortfolioGraph/PortfolioGraph";
