@@ -19,7 +19,7 @@ export const DashboardDashboard = () => {
       <div className="w-full place-self-center">
         <div className="grid grid-cols-2 justify-items-center">
           <div>
-            <Label text={"Invested"} classes={["text-xs", "font-light"]} />
+            <Label text={"Investd"} classes={["text-xs", "font-light"]} />
             <Label
               text={dashboardData.totalHoldingValue}
               classes={["text-xl", "font-bold"]}
