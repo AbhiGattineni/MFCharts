@@ -15,9 +15,14 @@ export const SignupForm = () => {
 
   const userSignUp = (e) => {
     e.preventDefault();
-    signup(email, password).then(() => {
-      router.push("/");
-    });
+    if (firstName.length > 3 && lastName.length > 3) {
+      signup(email, password).then(() => {
+        router.push("/");
+      });
+    } else {
+      if (firstName.length < 3) alert("Invalid First Name");
+      if (lastName.length < 3) alert("Invalid Last Name");
+    }
   };
 
   return (
