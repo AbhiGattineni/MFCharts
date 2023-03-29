@@ -14,6 +14,11 @@ export const DashboardDashboard = () => {
         setDashboardData(data);
       });
   }, []);
+
+  useEffect(() => {
+    console.log("dd", dashboardData);
+  }, [dashboardData]);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 border-2 justify-items-center mx-2 sm:mx-0">
       <div className="w-full place-self-center">
