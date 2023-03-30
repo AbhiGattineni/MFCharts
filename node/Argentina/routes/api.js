@@ -45,18 +45,20 @@ router.get("/wlnavdata/:id", function (req, res) {
 router.get("/watchlists/:userId", function (req, res) {
   User.findOne({ userId: req.params.userId }).then(function (data) {
     let wlNames = [];
-    if (data.watchlists.length) {
-      Watchlist.find()
-        .where("_id")
-        .in(data.watchlists)
-        .exec((err, records) => {
-          records.map((data) => {
-            wlNames.push({ value: data._id, label: data.watchlistName });
+    if (data) {
+      if (data.watchlists.length) {
+        Watchlist.find()
+          .where("_id")
+          .in(data.watchlists)
+          .exec((err, records) => {
+            records.map((data) => {
+              wlNames.push({ value: data._id, label: data.watchlistName });
+            });
+            res.send(wlNames);
           });
-          res.send(wlNames);
-        });
-    } else {
-      res.send(wlNames);
+      } else {
+        res.send(wlNames);
+      }
     }
   });
 });
@@ -354,23 +356,33 @@ router.get("/overallPortfolioStat/:id", function (req, res) {
   let totalMarketValue = 0;
   let totalProfitAndLoss = 0;
   User.find({ userId: req.params.id }).then(async (data) => {
-    for (const portfolio of data[0].portfolios) {
-      const mutualFundData = await Portfolio.findOne({
-        _id: portfolio,
-      });
-      totalHoldingValue += mutualFundData.holdingValue;
-      totalMarketValue += mutualFundData.marketValue;
-      if (totalMarketValue > totalHoldingValue) {
-        totalProfitAndLoss = totalMarketValue - totalHoldingValue;
+    if (data[0]) {
+      if (data[0].portfolios.length) {
+        for (const portfolio of data[0].portfolios) {
+          const mutualFundData = await Portfolio.findOne({
+            _id: portfolio,
+          });
+          totalHoldingValue += mutualFundData.holdingValue;
+          totalMarketValue += mutualFundData.marketValue;
+          if (totalMarketValue > totalHoldingValue) {
+            totalProfitAndLoss = totalMarketValue - totalHoldingValue;
+          } else {
+            totalProfitAndLoss = totalHoldingValue - totalMarketValue;
+          }
+        }
+        res.send({
+          totalHoldingValue: totalHoldingValue.toFixed(2),
+          totalMarketValue: totalMarketValue.toFixed(2),
+          totalProfitAndLoss: totalProfitAndLoss.toFixed(2),
+        });
       } else {
-        totalProfitAndLoss = totalHoldingValue - totalMarketValue;
+        res.send({
+          totalHoldingValue: totalHoldingValue,
+          totalMarketValue: totalMarketValue,
+          totalProfitAndLoss: totalProfitAndLoss,
+        });
       }
     }
-    res.send({
-      totalHoldingValue: totalHoldingValue.toFixed(2),
-      totalMarketValue: totalMarketValue.toFixed(2),
-      totalProfitAndLoss: totalProfitAndLoss.toFixed(2),
-    });
   });
 });
 
