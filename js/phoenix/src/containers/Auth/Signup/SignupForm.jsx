@@ -15,7 +15,7 @@ export const SignupForm = () => {
 
   const userSignUp = (e) => {
     e.preventDefault();
-    if (firstName.length > 3 && lastName.length > 3) {
+    if (firstName.length > 3 && lastName.length > 3 && validateEmail(email)) {
       signup(email, password).then(() => {
         router.push("/");
       });
@@ -23,7 +23,17 @@ export const SignupForm = () => {
       if (firstName.length < 3) alert("Invalid First Name");
       if (lastName.length < 3) alert("Invalid Last Name");
     }
-  };
+    };
+    function validateEmail(inputtext) {
+    const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        if(!this.state.email || regex.test(this.state.email) === false){
+            this.setState({
+                error: "Email is not valid"
+            });
+            return false;
+        }
+        return true
+  }
 
   return (
     <form className="mt-6 flex flex-col justify-center">
