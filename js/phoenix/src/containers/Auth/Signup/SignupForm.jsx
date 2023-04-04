@@ -15,24 +15,30 @@ export const SignupForm = () => {
 
   const userSignUp = (e) => {
     e.preventDefault();
-    if (firstName.length > 3 && lastName.length > 3 && validateEmail(email)) {
+    const emailError = validateEmail(email);
+    if (
+      firstName.length > 3 &&
+      lastName.length > 3 &&
+      emailError &&
+      password.length >= 6
+    ) {
       signup(email, password).then(() => {
         router.push("/");
       });
     } else {
       if (firstName.length < 3) alert("Invalid First Name");
       if (lastName.length < 3) alert("Invalid Last Name");
+      if (!emailError) alert("Invalid Email");
+      if (password.length < 6) alert("Invalid Password");
     }
-    };
-    function validateEmail(inputtext) {
-    const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-        if(!this.state.email || regex.test(this.state.email) === false){
-            this.setState({
-                error: "Email is not valid"
-            });
-            return false;
-        }
-        return true
+  };
+  function validateEmail(inputtext) {
+    const regex =
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    if (!inputtext || regex.test(inputtext) === false) {
+      return false;
+    }
+    return true;
   }
 
   return (
