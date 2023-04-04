@@ -162,38 +162,42 @@ router.get("/mutualfund/:id/navdata", function (req, res) {
   }
 
   MutualFund.findOne({ scheme_code: req.params.id }).then(function (mf) {
-    mf.nav.map((m, index) => {
-      const [day, month, year] = m.date.split("-");
-      date = new Date(+year, +month - 1, +day);
-      date = date.setUTCHours(0, 0, 0, 0);
+    if (mf) {
+      mf.nav.map((m, index) => {
+        const [day, month, year] = m.date.split("-");
+        date = new Date(+year, +month - 1, +day);
+        date = date.setUTCHours(0, 0, 0, 0);
 
-      //start and end dates are null
-      if ((start_date == null) & (end_date == null)) {
-        obj[m.date] = parseFloat(m.nav);
-      }
-      //start and end dates are given
-      if ((date <= start_date) & (date >= end_date)) {
-        obj[m.date] = parseFloat(m.nav);
-      }
-      //only when start date is given
-      if ((date <= start_date) & (end_date == null)) {
-        obj[m.date] = parseFloat(m.nav);
-      }
-      //only when end date is given
-      if ((start_date == null) & (date >= end_date)) {
-        obj[m.date] = parseFloat(m.nav);
-      }
-      //only when end date is given
-      if ((start_date == date) & (date == end_date)) {
-        obj[m.date] = parseFloat(m.nav);
-      }
-    });
-    let invert_obj = {};
-    reverse_obj = Object.keys(obj).reverse();
-    reverse_obj.forEach(function (x) {
-      invert_obj[x] = obj[x];
-    });
-    res.send(invert_obj);
+        //start and end dates are null
+        if ((start_date == null) & (end_date == null)) {
+          obj[m.date] = parseFloat(m.nav);
+        }
+        //start and end dates are given
+        if ((date <= start_date) & (date >= end_date)) {
+          obj[m.date] = parseFloat(m.nav);
+        }
+        //only when start date is given
+        if ((date <= start_date) & (end_date == null)) {
+          obj[m.date] = parseFloat(m.nav);
+        }
+        //only when end date is given
+        if ((start_date == null) & (date >= end_date)) {
+          obj[m.date] = parseFloat(m.nav);
+        }
+        //only when end date is given
+        if ((start_date == date) & (date == end_date)) {
+          obj[m.date] = parseFloat(m.nav);
+        }
+      });
+      let invert_obj = {};
+      reverse_obj = Object.keys(obj).reverse();
+      reverse_obj.forEach(function (x) {
+        invert_obj[x] = obj[x];
+      });
+      res.send(invert_obj);
+    } else {
+      res.send({});
+    }
   });
 });
 
