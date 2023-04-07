@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
-
+import { onAuthStateChanged } from "firebase/auth";
 import { useAuth } from "../../../src/context/AuthContext";
 import { BsGraphUp } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
+import {auth} from "../../config/firebase";
 import { BareIcon } from "../../components";
 import classNames from "classnames/bind";
 
@@ -15,6 +15,21 @@ export const Navbar = () => {
   const [menu, setMenu] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { logout } = useAuth();
+  const [userName, setUserName] = useState(null);
+  const [email, setEmail] = useState(null);
+  useEffect(()=>{
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const uid = user.uid;
+          setUserName(user.displayName);
+          setEmail(user.email);
+          console.log("uid", user.displayName);
+        } else {
+          console.log("user is logged out")
+        }
+      });
+     
+}, [])
   const [tabs, setTabs] = useState({
     dashboard: pathname == "/" ? true : false,
     portfolio: pathname == "/portfolio" ? true : false,
@@ -82,10 +97,10 @@ export const Navbar = () => {
           >
             <div className="py-3 px-4">
               <span className="block text-sm text-gray-900 dark:text-white">
-                Bonnie Green
+                {userName}
               </span>
               <span className="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">
-                name@flowbite.com
+                {email}
               </span>
             </div>
             <ul className="py-1" aria-labelledby="dropdown">
