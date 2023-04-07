@@ -55,7 +55,7 @@ export const Navbar = () => {
 
   return (
     <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800">
-      <div className="container flex flex-wrap justify-between items-center mx-auto">
+      <div className="container flex flex-wrap justify-between items-center mx-auto relative">
         <Link href="/">
           <a href="https://flowbite.com" className="flex items-center">
             <BareIcon
@@ -86,12 +86,10 @@ export const Navbar = () => {
           <div
             className={classNames(
               { hidden: !menu },
-              "z-50 my-4 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
+              "z-50 my-4 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600 absolute top-10 right-10"
             )}
             id="dropdown"
             style={{
-              position: "absolute",
-              inset: "10% 20% 50% 70%",
               margin: "0px",
             }}
           >
