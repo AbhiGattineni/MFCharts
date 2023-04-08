@@ -1,4 +1,5 @@
 import { Input, Button, Label } from "../components";
+import { Textarea } from "../components/TextArea/Textarea";
 
 const Contact = () => {
   return (
@@ -21,8 +22,8 @@ const Contact = () => {
           </div>
         </div>
         <div className="grid grid-cols-1">
-          <textarea className="bg-gray-200 appearance-none border-2 border-gray-300 rounded-full w-full py-2 px-4 bg-inherit text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-bgColor mb-6" placeholder="write your queries here..."/>
-          <input className="m-2" type="file"/>
+          <Textarea placeholder="write your queries here ..."/>
+          <Input type="file" classes="file:bg-bgColor file:p-2 file:rounded-full file:text-white file:font-bold file:cursor-pointer"/>
         </div>
       </form>
       <div className="flex justify-center">

@@ -2,7 +2,7 @@ export const Input = ({
   placeholder,
   setValue,
   type,
-  classes = [],
+  classes,
   autoFocus,
   value,
 }) => {
@@ -22,7 +22,7 @@ export const Input = ({
     "focus:bg-white",
     "focus:border-bgColor",
     "mb-6",
-    ...classes,
+    classes,
   ].join(" ");
   return (
     <input
