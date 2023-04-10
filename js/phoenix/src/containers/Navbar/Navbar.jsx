@@ -86,7 +86,7 @@ export const Navbar = () => {
           <div
             className={classNames(
               { hidden: !menu },
-              "z-50 my-4 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600 absolute top-10 right-10"
+              "z-50 my-4 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600 absolute top-12 right-0"
             )}
             id="dropdown"
             style={{
