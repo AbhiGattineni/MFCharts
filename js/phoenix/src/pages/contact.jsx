@@ -23,7 +23,7 @@ const Contact = () => {
         </div>
         <div className="grid grid-cols-1">
           <Textarea placeholder="write your queries here ..."/>
-          <Input type="file" classes="file:bg-bgColor file:p-2 file:rounded-full file:text-white file:font-bold file:cursor-pointer"/>
+          <Input type="file" classes="file:bg-bgColor file:p-2 file:rounded-l-full file:text-white file:font-bold file:cursor-pointer px-0 py-0 file:border-0"/>
         </div>
       </form>
       <div className="flex justify-center">
