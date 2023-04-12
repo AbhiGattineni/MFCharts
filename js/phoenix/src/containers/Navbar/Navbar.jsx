@@ -28,11 +28,10 @@ export const Navbar = () => {
         setEmail(user.email);
         console.log("uid", user.displayName);
       } else {
-        console.log("user is logged out")
+        console.log("user is logged out");
       }
     });
-
-  }, [])
+  }, []);
   const [tabs, setTabs] = useState({
     dashboard: pathname == "/" ? true : false,
     portfolio: pathname == "/portfolio" ? true : false,
@@ -45,7 +44,7 @@ export const Navbar = () => {
     e.preventDefault();
 
     logout()
-      .then((authUser) => { })
+      .then((authUser) => {})
       .catch((error) => {
         console.log(error.message);
         alert("Logout Not successfull");
@@ -138,8 +137,14 @@ export const Navbar = () => {
                   Sign out
                 </a>
                 {showModal ? (
-                  <Modal confirmMsg={handleLogout} head="Confirm Sign Out?" visible={showModal} onClose={()=>setShowModal(false)}>Are you sure you want to sign out?</Modal>
-
+                  <Modal
+                    confirmMsg={handleLogout}
+                    head="Confirm Sign Out?"
+                    visible={showModal}
+                    onClose={() => setShowModal(false)}
+                  >
+                    Are you sure you want to sign out?
+                  </Modal>
                 ) : null}
               </li>
             </ul>
@@ -231,14 +236,20 @@ export const Navbar = () => {
               <a
                 href="#"
                 className="block py-2 pr-4 pl-3 md:border-0  md:p-0 dark:text-gray-400 text-gray-700"
-                onClick={()=>setShowModal(true)}
+                onClick={() => setShowModal(true)}
               >
                 Sign out
               </a>
               {showModal ? (
-
-                  <Modal confirmMsg={handleLogout} head="Confirm Sign Out?" visible={showModal} onClose={()=>setShowModal(false)}>Are you sure you want to sign out?</Modal>
-
+                <Modal
+                  confirmMsg={handleLogout}
+                  head="Confirm Sign Out?"
+                  visible={showModal}
+                  onClose={() => setShowModal(false)}
+                >
+                  Are you sure you want to sign out?
+                </Modal>
+              ) : null}
             </li>
           </ul>
         </div>
