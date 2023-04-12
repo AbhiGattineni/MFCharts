@@ -5,9 +5,10 @@ import { BsGraphUp } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {auth} from "../../config/firebase";
-import { BareIcon } from "../../components";
+import { auth } from "../../config/firebase";
+import { BareIcon, Modal } from "../../components";
 import classNames from "classnames/bind";
+// import { Alert } from "../../components/Alert/Alert";
 
 export const Navbar = () => {
   const router = useRouter();
@@ -17,19 +18,21 @@ export const Navbar = () => {
   const { logout } = useAuth();
   const [userName, setUserName] = useState(null);
   const [email, setEmail] = useState(null);
-  useEffect(()=>{
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const uid = user.uid;
-          setUserName(user.displayName);
-          setEmail(user.email);
-          console.log("uid", user.displayName);
-        } else {
-          console.log("user is logged out")
-        }
-      });
-     
-}, [])
+      if (user) {
+        const uid = user.uid;
+        setUserName(user.displayName);
+        setEmail(user.email);
+        console.log("uid", user.displayName);
+      } else {
+        console.log("user is logged out")
+      }
+    });
+
+  }, [])
   const [tabs, setTabs] = useState({
     dashboard: pathname == "/" ? true : false,
     portfolio: pathname == "/portfolio" ? true : false,
@@ -42,7 +45,7 @@ export const Navbar = () => {
     e.preventDefault();
 
     logout()
-      .then((authUser) => {})
+      .then((authUser) => { })
       .catch((error) => {
         console.log(error.message);
         alert("Logout Not successfull");
@@ -130,10 +133,13 @@ export const Navbar = () => {
                 <a
                   href="#"
                   className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  onClick={handleLogout}
+                  onClick={() => setShowModal(true)}
                 >
                   Sign out
                 </a>
+                {showModal ? (
+                  <Modal confirmMsg={handleLogout} head="Confirm Sign Out?" visible={showModal} onClose={()=>setShowModal(false)}>Are you sure you want to sign out?</Modal>
+                ) : null}
               </li>
             </ul>
           </div>
@@ -224,10 +230,13 @@ export const Navbar = () => {
               <a
                 href="#"
                 className="block py-2 pr-4 pl-3 md:border-0  md:p-0 dark:text-gray-400 text-gray-700"
-                onClick={handleLogout}
+                onClick={()=>setShowModal(true)}
               >
                 Sign out
               </a>
+              {showModal ? (
+                  <Modal confirmMsg={handleLogout} head="Confirm Sign Out?" visible={showModal} onClose={()=>setShowModal(false)}>Are you sure you want to sign out?</Modal>
+                ) : null}
             </li>
           </ul>
         </div>
