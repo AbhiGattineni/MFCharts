@@ -8,7 +8,7 @@ import Link from "next/link";
 import { auth } from "../../config/firebase";
 import { BareIcon, Modal } from "../../components";
 import classNames from "classnames/bind";
-// import { Alert } from "../../components/Alert/Alert";
+import { Alert } from "../../components/Alert/Alert";
 
 export const Navbar = () => {
   const router = useRouter();
@@ -139,6 +139,7 @@ export const Navbar = () => {
                 </a>
                 {showModal ? (
                   <Modal confirmMsg={handleLogout} head="Confirm Sign Out?" visible={showModal} onClose={()=>setShowModal(false)}>Are you sure you want to sign out?</Modal>
+
                 ) : null}
               </li>
             </ul>
@@ -235,8 +236,9 @@ export const Navbar = () => {
                 Sign out
               </a>
               {showModal ? (
+
                   <Modal confirmMsg={handleLogout} head="Confirm Sign Out?" visible={showModal} onClose={()=>setShowModal(false)}>Are you sure you want to sign out?</Modal>
-                ) : null}
+
             </li>
           </ul>
         </div>
