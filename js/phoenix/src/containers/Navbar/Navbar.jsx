@@ -138,7 +138,8 @@ export const Navbar = () => {
                   Sign out
                 </a>
                 {showModal ? (
-                  <Alert confirmMsg={handleLogout} main="Confirm Sign Out?" visible={showModal} onClose={()=>setShowModal(false)}>Are you sure you want to sign out?</Alert>
+                  <Modal confirmMsg={handleLogout} head="Confirm Sign Out?" visible={showModal} onClose={()=>setShowModal(false)}>Are you sure you want to sign out?</Modal>
+
                 ) : null}
               </li>
             </ul>
@@ -235,8 +236,9 @@ export const Navbar = () => {
                 Sign out
               </a>
               {showModal ? (
-                  <Alert confirmMsg={handleLogout} main="Confirm Sign Out?" visible={showModal} onClose={()=>setShowModal(false)}>Are you sure you want to sign out?</Alert>
-                ) : null}
+
+                  <Modal confirmMsg={handleLogout} head="Confirm Sign Out?" visible={showModal} onClose={()=>setShowModal(false)}>Are you sure you want to sign out?</Modal>
+
             </li>
           </ul>
         </div>
