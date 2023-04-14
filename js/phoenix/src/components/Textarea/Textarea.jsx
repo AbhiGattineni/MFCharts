@@ -1,15 +1,17 @@
-export const Textarea = ({ 
+export const Textarea = ({
     placeholder,
-    setValue,
-    classes = [],
+    onChange,
+    classes,
     autoFocus,
     value,
- }) => {
+    name,
+    error
+}) => {
     const inputClassNames = [
         "bg-gray-200",
         "appearance-none",
         "border-2",
-        "border-gray-300",
+        `${error?"border-red-500":"border-gray-300"}`,
         "rounded-3xl",
         "w-full",
         "py-2",
@@ -20,15 +22,20 @@ export const Textarea = ({
         "focus:outline-none",
         "focus:bg-white",
         "focus:border-bgColor",
-        "mb-6",
-        ...classes,
+        "mt-6",
+        classes,
     ].join(" ")
     return (
-        <textarea 
-        className={inputClassNames}
-        placeholder={placeholder}
-        onChange={(event) => setValue(event.target.value)}
-        autoFocus={autoFocus}
-        value={value}/>
+        <div className="">
+            <textarea
+                className={inputClassNames}
+                placeholder={placeholder}
+                name={name}
+                onChange={onChange}
+                autoFocus={autoFocus}
+                value={value}
+            />
+            <p className={"text-red-500 px-3 text-sm"}>{error}</p>
+        </div>
     );
 }

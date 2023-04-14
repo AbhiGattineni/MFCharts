@@ -9,7 +9,7 @@ export const Button = ({ text, handleClick, type, classes = [] }) => {
     "py-2",
     "px-4",
     "rounded-full",
-    "mb-6",
+    "mt-6",
     ...classes,
   ].join(" ");
   return (
