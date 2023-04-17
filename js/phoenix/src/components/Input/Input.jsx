@@ -1,16 +1,19 @@
 export const Input = ({
   placeholder,
-  setValue,
   type,
   classes,
   autoFocus,
   value,
+  error,
+  name,
+  onChange,
+  disabled
 }) => {
   const inputClassNames = [
     "bg-gray-200",
     "appearance-none",
     "border-2",
-    "border-gray-300",
+    `${error?"border-red-500":"border-gray-300"}`,
     "rounded-full",
     "w-full",
     "py-2",
@@ -21,17 +24,22 @@ export const Input = ({
     "focus:outline-none",
     "focus:bg-white",
     "focus:border-bgColor",
-    "mb-6",
+    "mt-6",
     classes,
   ].join(" ");
   return (
-    <input
-      className={inputClassNames}
-      type={type}
-      placeholder={placeholder}
-      onChange={(event) => setValue(event.target.value)}
-      autoFocus={autoFocus}
-      value={value}
-    />
+    <div className="">
+      <input
+        className={inputClassNames}
+        type={type}
+        name={name}
+        placeholder={placeholder}
+        onChange={onChange}
+        autoFocus={autoFocus}
+        value={value}
+        disabled={disabled}
+      />
+      <p className="text-red-500 px-3 text-sm">{error}</p>
+    </div>
   );
 };

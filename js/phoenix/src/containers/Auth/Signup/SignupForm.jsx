@@ -3,67 +3,132 @@ import { useRouter } from "next/router";
 
 import { Button, Input } from "../../../components";
 import { useAuth } from "../../../context/AuthContext";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { error } from "highcharts";
 
 export const SignupForm = () => {
   const router = useRouter();
   const { signup } = useAuth();
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  function togglePasswordVisibility() {
+    setIsPasswordVisible((prevState) => !prevState);
+  }
 
-  const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
-
-  const userSignUp = (e) => {
+  const [values, setValues] = useState({
+    fname: "",
+    lname: "",
+    email: "",
+    password: ""
+  })
+  const [errors, setErrors] = useState({});
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const emailError = validateEmail(email);
-    if (
-      firstName.length > 3 &&
-      lastName.length > 3 &&
-      emailError &&
-      password.length >= 6
-    ) {
-      signup(email, password).then(() => {
+    setErrors(validate(values));
+    if (!errors.email && !errors.password) {
+      signup(values.email, values.password).then(() => {
         router.push("/");
-      });
-    } else {
-      if (firstName.length < 3) alert("Invalid First Name");
-      if (lastName.length < 3) alert("Invalid Last Name");
-      if (!emailError) alert("Invalid Email");
-      if (password.length < 6) alert("Invalid Password");
+        alert("success")
+      })
+        .catch((error) => {
+          // console.log(error.code)
+          if (error.code === "auth/email-already-in-use") {
+            const errors = {}
+            errors.email = "Email is already exits";
+            setErrors(errors);
+          }
+        })
     }
-  };
-  function validateEmail(inputtext) {
-    const regex =
-      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    if (!inputtext || regex.test(inputtext) === false) {
-      return false;
+  }
+
+
+  const validate = (values) => {
+    const errors = {};
+    const p_name = /[^A-Za-z]/g
+    const p_email = /^[^\s@]+@[^\s@]+\.[^\s@]{2,6}$/
+    const p_password = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/
+    if (values.fname === "") {
+      errors.fname = "FirstName is required"
     }
-    return true;
+    else if (values.fname.length < 4) {
+      errors.fname = "First name should contain minimum 4 characters"
+    }
+    else if (p_name.test(values.fname)) {
+      errors.fname = "First name should not contain special characters"
+    }
+    if (values.lname === "") {
+      errors.lname = "LastName is required"
+    }
+    else if (values.lname.length < 4) {
+      errors.lname = "Last name should contain minimum 4 characters"
+    }
+    else if (p_name.test(values.lname)) {
+      errors.lname = "Last name should not contain special characters"
+    }
+    if (values.email === "") {
+      errors.email = "Email is requried"
+    }
+    else if (!p_email.test(values.email)) {
+      errors.email = "Enter valid email"
+    }
+    if (values.password === "") {
+      errors.password = "password is requried"
+    }
+    else if (!p_password.test(values.password)) {
+      errors.password = "Password should be strong"
+    }
+
+    return errors;
+  }
+  const handleChange = (e) => {
+    const newObj = { ...values, [e.target.name]: e.target.value }
+    setValues(newObj);
   }
 
   return (
-    <form className="mt-6 flex flex-col justify-center">
+    <form className="mt-6 flex flex-col justify-center" onSubmit={handleSubmit}>
       <div className="flex flex-row">
         <Input
           placeholder="First Name"
-          setValue={setFirstName}
-          value={firstName}
+          value={values.fname}
+          name="fname"
+          error={errors.fname}
+          onChange={handleChange}
         />
         <Input
           placeholder="Last Name"
-          setValue={setLastName}
-          value={lastName}
+          value={values.lname}
+          name="lname"
+          error={errors.lname}
+          onChange={handleChange}
         />
       </div>
-      <Input placeholder="Email" setValue={setEmail} value={email} />
-      <Input
-        placeholder="Password"
-        type="password"
-        setValue={setPassword}
-        value={password}
-      />
+      <Input placeholder="Email"
+        value={values.email}
+        name="email"
+        error={errors.email}
+        onChange={handleChange} />
+      <div className="relative">
+        <Input
+          placeholder="Password"
+          type={isPasswordVisible ? "text" : "password"}
+          value={values.password}
+          name="password"
+          error={errors.password}
+          onChange={handleChange}
+        />
+        <div
+          className="absolute top-0 right-0 flex items-center px-4 text-gray-600 mt-9"
+          onClick={togglePasswordVisibility}
+        >
+          {isPasswordVisible ? (
+            <AiFillEye />
+          ) : (
+            <AiFillEyeInvisible />
+          )}
+        </div>
+      </div>
       <div className="flex justify-center">
-        <Button text="Sign Up" handleClick={userSignUp} />
+        <Button text="Sign Up" />
       </div>
     </form>
   );
