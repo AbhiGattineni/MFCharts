@@ -392,4 +392,74 @@ router.get("/overallPortfolioStat/:id", function (req, res) {
   });
 });
 
+// get user portfolio with fund names, quantity, category, P/L %, P/L Amount, Invested
+router.get("/allPortfolioFunds/:id", async function (req, res) {
+  let portfolioFunds = {};
+  try {
+    const data = await User.findOne({ userId: req.params.id });
+    for (const portfolio of data.portfolios) {
+      const portfolioData = await Portfolio.findOne({
+        _id: mongoose.Types.ObjectId(portfolio),
+      });
+      const mutualFundData = await MutualFund.findOne({
+        scheme_code: portfolioData.schemeCode,
+      });
+      portfolioFunds[portfolioData.schemeCode] = {
+        schemeCode: mutualFundData.scheme_code,
+        schemeName: mutualFundData.scheme_name,
+        quantity: portfolioData.quantity,
+        category: "Category",
+        pAndLPercentage: "100%",
+        holdingValue: portfolioData.holdingValue,
+        averageValue: portfolioData.averageFundValue,
+        marketValue: portfolioData.marketValue,
+        tProfitLoss: portfolioData.totalProfitAndLoss,
+        transactions: portfolioData.transactions,
+      };
+    }
+    res.send(portfolioFunds);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);
+  }
+});
+
+//post or save fund timeline in portfolios in timeline's array of portfolios
+router.post("/addFundTimeline", function (req, res) {
+  User.findOne({ userId: req.body.user_id })
+    .then((data) => {
+      if (data.portfolios.length) {
+        Portfolio.findOne({ _id: req.body._id })
+          .then((portfolioData) => {
+            const timelineObject = {
+              date: req.body.date,
+              description: req.body.description,
+              link: req.body.link,
+            };
+            Portfolio.updateOne(
+              { _id: portfolioData._id },
+              { $push: { timeline: timelineObject } }
+            )
+              .then((data) => {
+                res.send("Data updated successfully"); // send response when operation is done
+              })
+              .catch((error) => {
+                console.log(error);
+                res.status(500).send("Error", error); // send response when there is an error
+              });
+          })
+          .catch((error) => {
+            // Handle the error
+            console.log(error);
+            res.status(500).send("error", error);
+          });
+      } else res.status(404).send("No portfolio found for this fund");
+    })
+    .catch((error) => {
+      // Handle the error
+      console.log(error);
+      res.status(500).send("error", error);
+    });
+});
+
 module.exports = router;
