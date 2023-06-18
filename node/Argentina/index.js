@@ -17,6 +17,7 @@ app.use(bodyParser.json());
 
 //initialize routes
 app.use("/api", require("./routes/api"));
+app.use("/watchlistapi", require("./routes/watchlistapi"));
 
 //listen for requests
 app.listen(process.env.port || 5000, function () {

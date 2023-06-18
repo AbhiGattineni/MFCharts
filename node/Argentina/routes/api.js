@@ -7,6 +7,24 @@ const AllMutualFunds = require("../models/allmutualFunds");
 const User = require("../models/user");
 const Watchlist = require("../models/watchlist");
 const Portfolio = require("../models/portfolio");
+const XYZ = require("../models/xyz");
+
+router.use(express.json());
+
+// post the example data
+router.post("/addxyzdata", async (req, res) => {
+  try {
+    const newData = new XYZ({
+      Name: req.body.Name,
+      Phone: req.body.Phone,
+    });
+    await newData.save();
+    return res.send(await XYZ.find());
+  }
+  catch (err) {
+    console.log(err.message);
+  }
+})
 
 //get all mutual funds from DB which is stored only with nav data
 router.get("/mutualfunds", function (req, res) {
