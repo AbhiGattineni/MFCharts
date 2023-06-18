@@ -222,59 +222,65 @@ router.get("/mutualfund/:id", function (req, res) {
 });
 
 //post the transaction data to DB
-router.post("/transaction", function (req, res) {
-  User.findOne({ userId: req.body.userId }).then((userData) => {
-    if (userData.portfolios.includes(req.body.schemeCode)) {
-      Portfolio.findOne({ schemeCode: req.body.schemeCode }).then(
-        (portfolioData) => {
-          let updateTransactions = portfolioData.transactions;
-          let pdata = {
-            date: req.body.date,
-            quantity: req.body.quantity,
-            navValue: req.body.navValue,
-            transactionValue: req.body.transactionValue,
-            transactionType: req.body.transactionType,
-          };
-          updateTransactions.push(pdata);
+router.post("/transaction", async function (req, res) {
+  try {
+    let portfolioCreated = false;
+    let userData = await User.findOne({ userId: req.body.userId });
 
-          if (req.body.transactionType === "Buy") {
-            var quantity = (portfolioData.quantity + req.body.quantity).toFixed(
-              2
-            );
-            var holdingValue = (
-              portfolioData.holdingValue + req.body.transactionValue
-            ).toFixed(2);
-          } else {
-            var quantity = (portfolioData.quantity - req.body.quantity).toFixed(
-              2
-            );
-            var holdingValue = (
-              portfolioData.holdingValue - req.body.transactionValue
-            ).toFixed(2);
-          }
-          var averageFundValue = (holdingValue / quantity).toFixed(2);
-          var marketValue = (quantity * req.body.navValue).toFixed(2);
-          var totalProfitAndLoss = 0;
-          Portfolio.updateOne(
-            { schemeCode: req.body.schemeCode },
-            {
-              $set: {
-                transactions: updateTransactions,
-                quantity: quantity,
-                holdingValue: holdingValue,
-                averageFundValue: averageFundValue,
-                marketValue: marketValue,
-                totalProfitAndLoss: totalProfitAndLoss,
-              },
-            }
-          )
-            .then((data) => {
-              res.send(data);
-            })
-            .catch((error) => console.log(error));
+    for (let portfolioId of userData.portfolios) {
+      let portfolioData = await Portfolio.findOne({
+        _id: portfolioId,
+        schemeCode: req.body.schemeCode,
+      });
+
+      if (portfolioData) {
+        let updateTransactions = portfolioData.transactions;
+        let pdata = {
+          date: req.body.date,
+          quantity: req.body.quantity,
+          navValue: req.body.navValue,
+          transactionValue: req.body.transactionValue,
+          transactionType: req.body.transactionType,
+        };
+        updateTransactions.push(pdata);
+
+        if (req.body.transactionType === "Buy") {
+          var quantity = (portfolioData.quantity + req.body.quantity).toFixed(
+            2
+          );
+          var holdingValue = (
+            portfolioData.holdingValue + req.body.transactionValue
+          ).toFixed(2);
+        } else {
+          var quantity = (portfolioData.quantity - req.body.quantity).toFixed(
+            2
+          );
+          var holdingValue = (
+            portfolioData.holdingValue - req.body.transactionValue
+          ).toFixed(2);
         }
-      );
-    } else {
+        var averageFundValue = (holdingValue / quantity).toFixed(2);
+        var marketValue = (quantity * req.body.navValue).toFixed(2);
+        var totalProfitAndLoss = 0;
+        await Portfolio.updateOne(
+          { _id: portfolioId },
+          {
+            $set: {
+              transactions: updateTransactions,
+              quantity: quantity,
+              holdingValue: holdingValue,
+              averageFundValue: averageFundValue,
+              marketValue: marketValue,
+              totalProfitAndLoss: totalProfitAndLoss,
+            },
+          }
+        );
+        portfolioCreated = true;
+        break;
+      }
+    }
+
+    if (!portfolioCreated) {
       let pdata = {
         date: req.body.date,
         quantity: req.body.quantity,
@@ -292,22 +298,118 @@ router.post("/transaction", function (req, res) {
         transactions: [pdata],
       });
 
-      portfolio.save().then((p) => {
-        User.findOne({ userId: req.body.userId }).then((data) => {
-          let portfolioIds = data.portfolios;
-          portfolioIds.push(p._id.toString());
-
-          User.updateOne(
-            { userId: req.body.userId },
-            { $set: { portfolios: portfolioIds } }
-          )
-            .then((data) => res.send(data))
-            .catch((error) => console.log(error));
-        });
-      });
+      let p = await portfolio.save();
+      await User.updateOne(
+        { userId: req.body.userId },
+        { $push: { portfolios: p._id.toString() } }
+      );
+      res.send("successfully posted data");
+    } else if (portfolioCreated) {
+      res.send("portfolio updated successfully");
     }
-  });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("error", error);
+  }
 });
+
+// router.post("/transaction", function (req, res) {
+//   console.log(req.body);
+//   let portfolioCreated = false;
+//   User.findOne({ userId: req.body.userId })
+//     .then((userData) => {
+//       // if (userData.portfolios.includes(req.body.schemeCode)) {
+//       userData.portfolios.length &&
+//         userData.portfolios.map((portfolio) => {
+//           console.log("portfolio", portfolio);
+//           Portfolio.findOne({ _id: portfolio }).then((portfolioData) => {
+//             let updateTransactions = portfolioData.transactions;
+//             let pdata = {
+//               date: req.body.date,
+//               quantity: req.body.quantity,
+//               navValue: req.body.navValue,
+//               transactionValue: req.body.transactionValue,
+//               transactionType: req.body.transactionType,
+//             };
+//             updateTransactions.push(pdata);
+
+//             if (req.body.transactionType === "Buy") {
+//               var quantity = (
+//                 portfolioData.quantity + req.body.quantity
+//               ).toFixed(2);
+//               var holdingValue = (
+//                 portfolioData.holdingValue + req.body.transactionValue
+//               ).toFixed(2);
+//             } else {
+//               var quantity = (
+//                 portfolioData.quantity - req.body.quantity
+//               ).toFixed(2);
+//               var holdingValue = (
+//                 portfolioData.holdingValue - req.body.transactionValue
+//               ).toFixed(2);
+//             }
+//             var averageFundValue = (holdingValue / quantity).toFixed(2);
+//             var marketValue = (quantity * req.body.navValue).toFixed(2);
+//             var totalProfitAndLoss = 0;
+//             Portfolio.updateOne(
+//               { _id: portfolio },
+//               {
+//                 $set: {
+//                   transactions: updateTransactions,
+//                   quantity: quantity,
+//                   holdingValue: holdingValue,
+//                   averageFundValue: averageFundValue,
+//                   marketValue: marketValue,
+//                   totalProfitAndLoss: totalProfitAndLoss,
+//                 },
+//               }
+//             )
+//               .then((data) => {
+//                 portfolioCreated = true;
+//                 res.send("successfully posted data");
+//               })
+//               .catch((error) => console.log(error));
+//           });
+//         });
+//       // else {
+//       if (!portfolioCreated) {
+//         console.log("else");
+//         let pdata = {
+//           date: req.body.date,
+//           quantity: req.body.quantity,
+//           navValue: req.body.navValue,
+//           transactionValue: req.body.transactionValue,
+//           transactionType: req.body.transactionType,
+//         };
+//         var portfolio = new Portfolio({
+//           schemeCode: req.body.schemeCode,
+//           quantity: req.body.quantity,
+//           holdingValue: (req.body.quantity * req.body.navValue).toFixed(2),
+//           averageFundValue: req.body.navValue,
+//           marketValue: req.body.transactionValue,
+//           totalProfitAndLoss: 0,
+//           transactions: [pdata],
+//         });
+
+//         portfolio.save().then((p) => {
+//           console.log("p", p);
+//           User.findOne({ userId: req.body.userId }).then((data) => {
+//             User.updateOne(
+//               { userId: req.body.userId },
+//               { $push: { portfolios: p._id.toString() } }
+//             )
+//               .then((data) => res.send("successfully posted data"))
+//               .catch((error) => console.log(error));
+//           });
+//         });
+//       }
+//       // }
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//       res.status(500).send("error", error);
+//     });
+// });
 
 //get user portfolio data for cards
 
@@ -315,23 +417,25 @@ router.get("/userPortfolio/:id", async function (req, res) {
   let portfolioFunds = {};
   try {
     const data = await User.findOne({ userId: req.params.id });
-    for (const portfolio of data.portfolios) {
-      const portfolioData = await Portfolio.findOne({
-        _id: mongoose.Types.ObjectId(portfolio),
-      });
-      const mutualFundData = await MutualFund.findOne({
-        scheme_code: portfolioData.schemeCode,
-      });
-      portfolioFunds[portfolioData.schemeCode] = {
-        schemeCode: mutualFundData.scheme_code,
-        schemeName: mutualFundData.scheme_name,
-        quantity: portfolioData.quantity,
-        holdingValue: portfolioData.holdingValue,
-        averageValue: portfolioData.averageFundValue,
-        marketValue: portfolioData.marketValue,
-        tProfitLoss: portfolioData.totalProfitAndLoss,
-        transactions: portfolioData.transactions,
-      };
+    if (data.portfolios.length) {
+      for (const portfolio of data.portfolios) {
+        const portfolioData = await Portfolio.findOne({
+          _id: mongoose.Types.ObjectId(portfolio),
+        });
+        const mutualFundData = await MutualFund.findOne({
+          scheme_code: portfolioData.schemeCode,
+        });
+        portfolioFunds[portfolioData.schemeCode] = {
+          schemeCode: mutualFundData.scheme_code,
+          schemeName: mutualFundData.scheme_name,
+          quantity: portfolioData.quantity,
+          holdingValue: portfolioData.holdingValue,
+          averageValue: portfolioData.averageFundValue,
+          marketValue: portfolioData.marketValue,
+          tProfitLoss: portfolioData.totalProfitAndLoss,
+          transactions: portfolioData.transactions,
+        };
+      }
     }
     res.send(portfolioFunds);
   } catch (err) {
@@ -392,7 +496,7 @@ router.get("/overallPortfolioStat/:id", function (req, res) {
   });
 });
 
-// get user portfolio with fund names, quantity, category, P/L %, P/L Amount, Invested
+// 2.1 -> get user portfolio with fund names, quantity, category, P/L %, P/L Amount, Invested
 router.get("/allPortfolioFunds/:id", async function (req, res) {
   let portfolioFunds = {};
   try {
@@ -415,6 +519,7 @@ router.get("/allPortfolioFunds/:id", async function (req, res) {
         marketValue: portfolioData.marketValue,
         tProfitLoss: portfolioData.totalProfitAndLoss,
         transactions: portfolioData.transactions,
+        timeline: portfolioData.timeline,
       };
     }
     res.send(portfolioFunds);
@@ -424,7 +529,7 @@ router.get("/allPortfolioFunds/:id", async function (req, res) {
   }
 });
 
-//post or save fund timeline in portfolios in timeline's array of portfolios
+// 2.2 -> post or save fund timeline in portfolios in timeline's array of portfolios
 router.post("/addFundTimeline", function (req, res) {
   User.findOne({ userId: req.body.user_id })
     .then((data) => {
@@ -460,6 +565,14 @@ router.post("/addFundTimeline", function (req, res) {
       console.log(error);
       res.status(500).send("error", error);
     });
+});
+
+// 2.3 -> GET all mutual and equity fund names for adding a transaction
+
+router.get("/allFundNames", function (req, res) {
+  AllMutualFunds.find({}).then(function (mutualfunds) {
+    res.send(mutualfunds);
+  });
 });
 
 module.exports = router;
