@@ -5,7 +5,7 @@ const Watchlist = require("../models/watchlist");
 
 router.use(express.json());
 
-// get all the watchlist data under dropdown
+// GET all the watchlist data under dropdown
 router.get("/allWatchlist", async (req, res) => {
     try {
         const allWatchlist = await Watchlist.find();
@@ -17,7 +17,7 @@ router.get("/allWatchlist", async (req, res) => {
     }
 })
 
-// get a specific watchlist selected by the user 
+// GET a specific watchlist selected by the user 
 router.get("/getWatchlist/:id", async (req, res) => {
     try {
         const watchlist = await Watchlist.findById(req.params.id);
@@ -30,23 +30,24 @@ router.get("/getWatchlist/:id", async (req, res) => {
     }
 })
 
-// delete a specific fund in allWatchlist 
-router.put("/getWatchlisttest/:id", async (req, res) => {
+// PUT to delete a specific fund in allWatchlist 
+router.put("/deleteWatchlist/:id/:watchlistid", async (req, res) => {
     try {
         const watchlist = await Watchlist.findById(req.params.id);
         const arr = watchlist.watchlistFunds;
-        if(arr.hasOwnProperty('100414')){
-            delete arr['100414'];
+        if(arr.hasOwnProperty(req.params.watchlistid)){
+            delete arr[req.params.watchlistid];
         }
-        console.log(Object.keys(arr));
-        return res.json(watchlist);
+        const update = await Watchlist.findByIdAndUpdate(req.params.id,{$set : {watchlistFunds : arr}});
+        await update.save();
+        return res.json(arr);
     }
     catch (err) {
         console.log(err.message);
     }
 })
 
-// delete a watclist in watchlist page 
+// DELETE a watclist in watchlist page 
 router.delete("/deleteallWatclist/:id", async (req, res) => {
     try {
         await Watchlist.findByIdAndDelete(req.params.id);
@@ -56,7 +57,6 @@ router.delete("/deleteallWatclist/:id", async (req, res) => {
         console.log(err.message);
     }
 })
-
 
 
 module.exports = router;
