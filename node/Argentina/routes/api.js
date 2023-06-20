@@ -8,6 +8,8 @@ const User = require("../models/user");
 const Watchlist = require("../models/watchlist");
 const Portfolio = require("../models/portfolio");
 
+router.use(express.json());
+
 //get all mutual funds from DB which is stored only with nav data
 router.get("/mutualfunds", function (req, res) {
   MutualFund.find({}).then(function (mutualfunds) {
