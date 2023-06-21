@@ -17,23 +17,45 @@ router.get("/mutualfunds", function (req, res) {
   });
 });
 
-//post the user data
-router.post("/adduser", function (req, res) {
-  //checking whether user exists or not
-  User.findOne({ userId: req.body.userId }).then(function (data) {
-    if (!data) {
-      //creating User if user does not exists.
-      var userDetails = new User({
-        userId: req.body.userId,
+// POST request to add a new user and fetch the user's details
+router.post("/adduser", async (req, res) => {
+  const { userId, firstName, lastName, email, phoneNumber, profilePic } =
+    req.body;
+
+  try {
+    // Check if user exists
+    let user = await User.findOne({ userId });
+
+    // If user does not exist, create a new user
+    if (!user) {
+      const userDetails = new User({
+        userId,
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        profilePic,
         watchlists: [],
         portfolios: [],
       });
 
-      userDetails.save().then(function (user) {
-        res.send(user);
-      });
+      user = await userDetails.save();
     }
-  });
+
+    // Return the saved user details
+    res.json({
+      userId: user.userId,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      profilePic: user.profilePic,
+      watchlists: user.watchlists,
+      portfolios: user.portfolios,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.toString() });
+  }
 });
 
 //get the watchlist navdata requested by user
