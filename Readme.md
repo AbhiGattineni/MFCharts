@@ -8,6 +8,9 @@ nothing did today, just don't want to get demotivated by loosing streak.
 
 - Here is the documentation for User stories, data modelling, API's
   [Google Doc](https://docs.google.com/document/d/1v8wk0hIdS6WpyUDx7LQsPvHGOFgC3on_GuQvgGMuE3s/edit?usp=sharing)
+  [V2 Google Doc](https://docs.google.com/document/d/1ITYOjA_5ysMa3fWEa2ednI_jYain99E7xaSf74KPCz4/edit)
+  [tradingview.com] (https://www.tradingview.com/rest-api-spec/#operation/getSymbolInfo)
+  [Google Finance]
 
 ## Model Diagram
 

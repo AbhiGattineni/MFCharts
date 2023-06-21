@@ -221,117 +221,29 @@ router.get("/mutualfund/:id", function (req, res) {
     });
 });
 
-//post the transaction data to DB
-router.post("/transaction", function (req, res) {
-  User.findOne({ userId: req.body.userId }).then((userData) => {
-    if (userData.portfolios.includes(req.body.schemeCode)) {
-      Portfolio.findOne({ schemeCode: req.body.schemeCode }).then(
-        (portfolioData) => {
-          let updateTransactions = portfolioData.transactions;
-          let pdata = {
-            date: req.body.date,
-            quantity: req.body.quantity,
-            navValue: req.body.navValue,
-            transactionValue: req.body.transactionValue,
-            transactionType: req.body.transactionType,
-          };
-          updateTransactions.push(pdata);
-
-          if (req.body.transactionType === "Buy") {
-            var quantity = (portfolioData.quantity + req.body.quantity).toFixed(
-              2
-            );
-            var holdingValue = (
-              portfolioData.holdingValue + req.body.transactionValue
-            ).toFixed(2);
-          } else {
-            var quantity = (portfolioData.quantity - req.body.quantity).toFixed(
-              2
-            );
-            var holdingValue = (
-              portfolioData.holdingValue - req.body.transactionValue
-            ).toFixed(2);
-          }
-          var averageFundValue = (holdingValue / quantity).toFixed(2);
-          var marketValue = (quantity * req.body.navValue).toFixed(2);
-          var totalProfitAndLoss = 0;
-          Portfolio.updateOne(
-            { schemeCode: req.body.schemeCode },
-            {
-              $set: {
-                transactions: updateTransactions,
-                quantity: quantity,
-                holdingValue: holdingValue,
-                averageFundValue: averageFundValue,
-                marketValue: marketValue,
-                totalProfitAndLoss: totalProfitAndLoss,
-              },
-            }
-          )
-            .then((data) => {
-              res.send(data);
-            })
-            .catch((error) => console.log(error));
-        }
-      );
-    } else {
-      let pdata = {
-        date: req.body.date,
-        quantity: req.body.quantity,
-        navValue: req.body.navValue,
-        transactionValue: req.body.transactionValue,
-        transactionType: req.body.transactionType,
-      };
-      var portfolio = new Portfolio({
-        schemeCode: req.body.schemeCode,
-        quantity: req.body.quantity,
-        holdingValue: (req.body.quantity * req.body.navValue).toFixed(2),
-        averageFundValue: req.body.navValue,
-        marketValue: req.body.transactionValue,
-        totalProfitAndLoss: 0,
-        transactions: [pdata],
-      });
-
-      portfolio.save().then((p) => {
-        User.findOne({ userId: req.body.userId }).then((data) => {
-          let portfolioIds = data.portfolios;
-          portfolioIds.push(p._id.toString());
-
-          User.updateOne(
-            { userId: req.body.userId },
-            { $set: { portfolios: portfolioIds } }
-          )
-            .then((data) => res.send(data))
-            .catch((error) => console.log(error));
-        });
-      });
-    }
-  });
-});
-
-//get user portfolio data for cards
-
 router.get("/userPortfolio/:id", async function (req, res) {
   let portfolioFunds = {};
   try {
     const data = await User.findOne({ userId: req.params.id });
-    for (const portfolio of data.portfolios) {
-      const portfolioData = await Portfolio.findOne({
-        _id: mongoose.Types.ObjectId(portfolio),
-      });
-      const mutualFundData = await MutualFund.findOne({
-        scheme_code: portfolioData.schemeCode,
-      });
-      portfolioFunds[portfolioData.schemeCode] = {
-        schemeCode: mutualFundData.scheme_code,
-        schemeName: mutualFundData.scheme_name,
-        quantity: portfolioData.quantity,
-        holdingValue: portfolioData.holdingValue,
-        averageValue: portfolioData.averageFundValue,
-        marketValue: portfolioData.marketValue,
-        tProfitLoss: portfolioData.totalProfitAndLoss,
-        transactions: portfolioData.transactions,
-      };
+    if (data.portfolios.length) {
+      for (const portfolio of data.portfolios) {
+        const portfolioData = await Portfolio.findOne({
+          _id: mongoose.Types.ObjectId(portfolio),
+        });
+        const mutualFundData = await MutualFund.findOne({
+          scheme_code: portfolioData.schemeCode,
+        });
+        portfolioFunds[portfolioData.schemeCode] = {
+          schemeCode: mutualFundData.scheme_code,
+          schemeName: mutualFundData.scheme_name,
+          quantity: portfolioData.quantity,
+          holdingValue: portfolioData.holdingValue,
+          averageValue: portfolioData.averageFundValue,
+          marketValue: portfolioData.marketValue,
+          tProfitLoss: portfolioData.totalProfitAndLoss,
+          transactions: portfolioData.transactions,
+        };
+      }
     }
     res.send(portfolioFunds);
   } catch (err) {
