@@ -41,11 +41,13 @@ export const LineGraph = ({ id, date, setDateRange }) => {
                 <ModalDatepicker setDateRange={setDateRange} />
               </div>
             </div>
+            <div className="grid justify-items-center">
             <MyChart
               keys={Object.keys(nav)}
               values={Object.values(nav)}
               name={name}
             />
+            </div>
           </div>
         </div>
       ) : (
