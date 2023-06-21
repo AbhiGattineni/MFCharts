@@ -19,6 +19,7 @@ app.use(bodyParser.json());
 app.use("/api", require("./routes/api"));
 app.use("/watchlistapi", require("./routes/watchlistapi"));
 app.use("/api/portfolio", require("./routes/portfolio_apis"));
+app.use("/api/timeline", require("./routes/timeline_api"));
 
 //listen for requests
 app.listen(process.env.port || 5000, function () {
