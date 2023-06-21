@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FetchAllMf, ModalSave } from "../components";
 import { auth } from "../config/firebase";
 import { LineGraph } from "../containers";
+import { Radio } from "../components/Radio/Radio";
 
 const Search = () => {
   const [navData, setNavData] = useState({});
@@ -68,16 +69,19 @@ const Search = () => {
       })
       .catch((error) => console.error(error));
   };
-
   return (
-    <div className="container mx-auto md:mt-5 px-4 sm:px-0">
+    <div className="container mx-auto md:mt-3 px-4 sm:px-0">
+      <div className="flex items-center">
+        <div className="w-10/12">
       <FetchAllMf setNavData={(e) => handleNavData(e)} isMulti={true} />
-
-      <div className="mt-1 md:mt-5">
+      </div>
+      <Radio styles="p-3"></Radio>
+      </div>
+      <div className=" mt-3">
         {Object.keys(navData).length > 0 && (
           <ModalSave saveData={(e) => saveData(e)} />
         )}
-        <div className="grid grid-cols-1 md:grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-12 ml-2">
           {navData &&
             Object.keys(navData).map((mf) => (
               <LineGraph

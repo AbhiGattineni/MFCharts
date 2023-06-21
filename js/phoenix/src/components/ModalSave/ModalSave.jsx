@@ -22,9 +22,9 @@ export function ModalSave({ saveData }) {
         onClick={() => setShowModal(true)}
         className="grid grid-cols-3 md:grid-cols-12 cursor-pointer"
       >
-        <div className="grid grid-cols-2 justify-items-center bg-slate-200 rounded-md md:p-1">
-          <div className="place-self-center">SAVE</div>
-          <BareIcon IconComponent={<BsSave />} classes={[""]} />
+        <div className="justify-items-center bg-blue-200 rounded-md md:p-1 absolute right-3 w-48 text-center">
+          <div className="py-2">Add Watchlist</div>
+          {/* <BareIcon IconComponent={<BsSave />} classes={[""]} /> */}
         </div>
       </div>
       {showModal ? (
