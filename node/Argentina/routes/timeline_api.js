@@ -13,26 +13,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// POST endpoint to create a new timeline
-router.post("/", async (req, res) => {
-  const { schemeCode, userId, date, description, url } = req.body;
-
-  const newTimeline = new Timeline({
-    schemeCode,
-    userId,
-    date,
-    description,
-    url,
-  });
-
-  try {
-    const savedTimeline = await newTimeline.save();
-    res.status(201).json(savedTimeline);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
-
 // GET endpoint to fetch timeline based on userId
 router.get("/user/:userId", async (req, res) => {
   try {

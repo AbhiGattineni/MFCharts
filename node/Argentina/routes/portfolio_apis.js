@@ -7,6 +7,7 @@ const AllMutualFunds = require("../models/allmutualFunds");
 const User = require("../models/user");
 const Watchlist = require("../models/watchlist");
 const Portfolio = require("../models/portfolio");
+const Timeline = require("../models/timeline");
 
 // 2.1 -> get user portfolio with fund names, quantity, category, P/L %, P/L Amount, Invested
 router.get("/allPortfolioFunds/:id", async function (req, res) {
@@ -176,6 +177,26 @@ router.post("/transaction", async function (req, res) {
   } catch (error) {
     console.log(error);
     res.status(500).send("error", error);
+  }
+});
+
+//2.5 POST endpoint to create a new timeline
+router.post("/addtimeline", async (req, res) => {
+  const { schemeCode, userId, date, description, url } = req.body;
+
+  const newTimeline = new Timeline({
+    schemeCode,
+    userId,
+    date,
+    description,
+    url,
+  });
+
+  try {
+    const savedTimeline = await newTimeline.save();
+    res.status(201).json(savedTimeline);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 });
 
