@@ -10,11 +10,7 @@ router.use(express.json());
 router.get("/allWatchlist/:id", async (req, res) => {
     try {
         const data = await User.findOne({ userId: req.params.id });
-        const watchlistNames = [];
-        for (const name of data.watchlists) {
-            watchlistNames.push(name);
-        }
-        return res.send(watchlistNames);
+        return res.send(data.watchlists);
     }
     catch (err) {
         res.send(err.message);
