@@ -10,19 +10,10 @@ router.use(express.json());
 router.get("/allWatchlist/:id", async (req, res) => {
     try {
         const data = await User.findOne({ userId: req.params.id });
-        const watchlistNames = [];
-        for (const name of data.watchlists) {
-            const allWatchlist = await Watchlist.findById(name);
-            // console.log(allWatchlist.watchlistName);
-            const watchlistdata = {};
-            watchlistdata.watchlistid = name;
-            watchlistdata.wlname = allWatchlist.watchlistName;
-            watchlistNames.push(watchlistdata);
-        }
-        return res.send(watchlistNames);
+        return res.send(data.watchlists);
     }
     catch (err) {
-        console.log(err.message);
+        res.send(err.message);
     }
 })
 
@@ -32,14 +23,15 @@ router.get("/getWatchlist/:id/:watchlistid", async (req, res) => {
         const data = await User.findOne({ userId: req.params.id });
         let watchlistData;
         for (const name of data.watchlists) {
-            if (name === req.params.watchlistid) {
-                watchlistData = await Watchlist.findById(name);
+            const watchlistid = name.watchlistid.toString();
+            if (watchlistid === req.params.watchlistid) {
+                watchlistData = await Watchlist.findById(watchlistid);
             }
         }
         return res.send(watchlistData);
     }
     catch (err) {
-        console.log(err.message);
+        res.send(err.message);
     }
 })
 
@@ -48,21 +40,30 @@ router.put("/deleteWatchlist/:id/:watchlistid/:fundid", async (req, res) => {
     try {
         const data = await User.findOne({ userId: req.params.id });
         let watchlist;
+        let message;
         for (const name of data.watchlists) {
-            if (name === req.params.watchlistid) {
-                watchlist = await Watchlist.findById(name);
+            const watchlistid = name.watchlistid.toString();
+            if (watchlistid === req.params.watchlistid) {
+                watchlist = await Watchlist.findById(watchlistid);
             }
         }
-        const arr = watchlist.watchlistFunds;
-        if (req.params.fundid in arr) {
-            delete arr[req.params.fundid];
+        const watchlistFunds = watchlist.watchlistFunds;
+        let funds = Object.keys(watchlist.watchlistFunds);
+        for (let fundid of funds) {
+            if (req.params.fundid == fundid) {
+                delete watchlistFunds[req.params.fundid];
+                message = "Deleted successfull"
+            }
+            else{
+                message = "Already deleted"
+            }
         }
-        const update = await Watchlist.findByIdAndUpdate(req.params.watchlistid, { $set: { watchlistFunds: arr } });
+        const update = await Watchlist.findByIdAndUpdate(req.params.watchlistid, { $set: { watchlistFunds: watchlistFunds } });
         await update.save();
-        return res.send(arr);
+        return res.send(message);
     }
     catch (err) {
-        console.log(err.message);
+        res.send(err.message);
     }
 })
 
@@ -71,21 +72,25 @@ router.delete("/deleteallWatclist/:id/:watchlistid", async (req, res) => {
     try {
         const data = await User.findOne({ userId: req.params.id });
         const watchlist = data.watchlists;
-        console.log(watchlist);
+        let message;
         for (const name of data.watchlists) {
-            if (name === req.params.watchlistid) {
-                const index = watchlist.indexOf(name);
+            const watchlistid = name.watchlistid.toString();
+            if (watchlistid === req.params.watchlistid) {
+                const index = watchlist.indexOf(watchlistid);
                 watchlist.splice(index, 1);
-                console.log(watchlist);
-                const deletewl = await User.findOneAndUpdate({ userId : req.params.id}, { $set: { watchlists: watchlist } });
+                const deletewl = await User.findOneAndUpdate({ userId: req.params.id }, { $set: { watchlists: watchlist } });
                 await deletewl.save();
                 await Watchlist.findByIdAndDelete(req.params.watchlistid);
+                message="Deleted successfull"
+            }
+            else{
+                message ="watclist already deleted"
             }
         }
-        return res.send(watchlist);
+        return res.send(message);
     }
     catch (err) {
-        console.log(err.message);
+        res.send(err.message);
     }
 })
 
