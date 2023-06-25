@@ -4,6 +4,11 @@ const schema = mongoose.Schema;
 
 const portfolioSchema = new schema({
   schemeCode: { type: String, required: true },
+  category: {
+    type: String,
+    required: true,
+    enum: ["mutual fund", "equity fund"],
+  },
   quantity: { type: Number, default: 0 },
   holdingValue: { type: Number, default: 0 },
   averageFundValue: { type: Number, default: 0 },
