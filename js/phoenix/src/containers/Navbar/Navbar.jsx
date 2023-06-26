@@ -38,13 +38,14 @@ export const Navbar = () => {
     watchlist: pathname == "/watchlist" ? true : false,
     search: pathname == "/search" ? true : false,
     contact: pathname == "/contact" ? true : false,
+    profile: pathname == "/profile" ? true : false,
   });
 
   const handleLogout = (e) => {
     e.preventDefault();
 
     logout()
-      .then((authUser) => {})
+      .then((authUser) => { })
       .catch((error) => {
         console.log(error.message);
         alert("Logout Not successfull");
@@ -72,17 +73,14 @@ export const Navbar = () => {
         <div className="flex items-center md:order-2">
           <button
             type="button"
-            className="flex mr-3 text-sm  rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+            className="flex mr-3 text-sm rounded-full md:mr-0"
             id="user-menu-button"
             aria-expanded="false"
             data-dropdown-toggle="dropdown"
             onClick={() => setMenu(!menu)}
           >
             <span className="sr-only">Open user menu</span>
-            <BareIcon
-              IconComponent={<GiHamburgerMenu />}
-              classes={["cursor-pointer"]}
-            />
+            <img class="w-10 h-10 rounded-full bg-gray-500" src="https://www.html.am/images/html-codes/links/boracay-white-beach-sunset-300x225.jpg" alt="Rounded avatar" />
           </button>
 
           <div
@@ -105,28 +103,14 @@ export const Navbar = () => {
             </div>
             <ul className="py-1" aria-labelledby="dropdown">
               <li>
-                <a
-                  href="#"
-                  className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                >
-                  Dashboard
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                >
-                  Settings
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                >
-                  Earnings
-                </a>
+                <Link href="/profile">
+                  <a
+                    href="#"
+                    className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >
+                    Profile
+                  </a>
+                </Link>
               </li>
               <li>
                 <a
@@ -188,21 +172,6 @@ export const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link href="/watchlist">
-                <button
-                  href=""
-                  value="watchlist"
-                  className={
-                    "block py-2 pr-4 pl-3   md:border-0  md:p-0 dark:text-gray-400 " +
-                    (tabs.watchlist ? "text-blue-700" : "text-gray-700")
-                  }
-                  onClick={(e) => handleClick(e)}
-                >
-                  Watchlist
-                </button>
-              </Link>
-            </li>
-            <li>
               <Link href="/search">
                 <button
                   href=""
@@ -214,6 +183,21 @@ export const Navbar = () => {
                   onClick={(e) => handleClick(e)}
                 >
                   Search
+                </button>
+              </Link>
+            </li>
+            <li>
+              <Link href="/watchlist">
+                <button
+                  href=""
+                  value="watchlist"
+                  className={
+                    "block py-2 pr-4 pl-3   md:border-0  md:p-0 dark:text-gray-400 " +
+                    (tabs.watchlist ? "text-blue-700" : "text-gray-700")
+                  }
+                  onClick={(e) => handleClick(e)}
+                >
+                  Watchlist
                 </button>
               </Link>
             </li>

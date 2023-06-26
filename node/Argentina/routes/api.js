@@ -66,26 +66,32 @@ router.get("/wlnavdata/:id", function (req, res) {
 });
 
 //get all the watchlists of specific user
-router.get("/watchlists/:userId", function (req, res) {
-  User.findOne({ userId: req.params.userId }).then(function (data) {
+router.get("/watchlists/:userId", async function (req, res) {
+  try {
+    const user = await User.findOne({ userId: req.params.userId });
     let wlNames = [];
-    if (data) {
-      if (data.watchlists.length) {
-        Watchlist.find()
+
+    if (user) {
+      if (user.watchlists.length) {
+        const records = await Watchlist.find()
           .where("_id")
-          .in(data.watchlists)
-          .exec((err, records) => {
-            records.map((data) => {
-              wlNames.push({ value: data._id, label: data.watchlistName });
-            });
-            res.send(wlNames);
-          });
-      } else {
-        res.send(wlNames);
+          .in(user.watchlists)
+          .exec();
+
+        wlNames = records.map((record) => ({
+          value: record._id,
+          label: record.watchlistName
+        }));
       }
     }
-  });
+
+    res.send(wlNames);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
 
 //post the watchlist into user watchlists
 router.post("/addwatchlist", function (req, res) {
