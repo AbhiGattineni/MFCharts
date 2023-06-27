@@ -252,12 +252,18 @@ router.get("/userPortfolio/:id", async function (req, res) {
         const portfolioData = await Portfolio.findOne({
           _id: mongoose.Types.ObjectId(portfolio),
         });
-        const mutualFundData = await MutualFund.findOne({
-          scheme_code: portfolioData.schemeCode,
-        });
+        // const mutualFundData = await MutualFund.findOne({
+        //   scheme_code: portfolioData.schemeCode,
+        // });
+
+        const response = await fetch(
+          `https://api.mfapi.in/mf/${portfolioData.schemeCode}`
+        );
+        const jsonData = await response.json();
+
         portfolioFunds[portfolioData.schemeCode] = {
-          schemeCode: mutualFundData.scheme_code,
-          schemeName: mutualFundData.scheme_name,
+          schemeCode: jsonData.meta.scheme_code,
+          schemeName: jsonData.meta.scheme_name,
           quantity: portfolioData.quantity,
           holdingValue: portfolioData.holdingValue,
           averageValue: portfolioData.averageFundValue,

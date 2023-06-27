@@ -52,7 +52,7 @@ export function ModalSave({ saveData }) {
                   <Input
                     placeholder={"Enter label you want to save"}
                     classes={["rounded"]}
-                    setValue={setSaveLabel}
+                    onChange={(e) => setSaveLabel(e.target.value)}
                     autoFocus={true}
                   />
                 </div>
