@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 //creating scheme name and code schema
 const AllMutualFundsSchema = new Schema({
   all_mutual_funds: [],
+  all_equity_funds: [],
 });
 
 //creating model
