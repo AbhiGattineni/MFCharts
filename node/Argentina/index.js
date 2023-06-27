@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const dashBoardApi = require('./routes/dashBoardApi')
 
 //dotenv configured
 require("dotenv").config();
@@ -18,8 +19,14 @@ app.use(bodyParser.json());
 //initialize routes
 app.use("/api", require("./routes/api"));
 app.use("/watchlistapi", require("./routes/watchlistapi"));
+app.use("/watchlistapi", require("./routes/dashBoardApi"));
+
+// userDashboard API
+app.use("/api", dashBoardApi)
 
 //listen for requests
-app.listen(process.env.port || 5000, function () {
-  console.log("now listening for requests");
+const port = 500;
+
+app.listen(process.env.port || port , function () {
+  console.log(`server started on port ${port}`);
 });
