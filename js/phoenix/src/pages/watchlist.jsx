@@ -35,8 +35,13 @@ const Watchlist = () => {
 
   return (
     <div className="container mx-auto px-4 sm:px-0">
+      <div className="mx-2 md:mx-5">
       <div>
         <FetchAllWatchlists setSelectedWatchlist={setSelectedWatchlist} />
+      </div>
+      <div className="flex justify-between my-5">
+        <h1 className=" md:text-2xl font-medium">Tata Mutual Shares</h1>
+        <button className="bg-red-500 text-white py-1 px-4 md:py-2 md:px-8 rounded-full">Delete</button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 ">
         {wlNavData &&
@@ -48,6 +53,7 @@ const Watchlist = () => {
               setDateRange={(e) => handleDateRange(e, mf)}
             />
           ))}
+      </div>
       </div>
     </div>
   );

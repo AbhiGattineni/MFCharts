@@ -23,7 +23,9 @@ export const DashboardWatchlist = () => {
         {watchListNames.map((e, index) => {
           return (
             <div>
+              <div class="flex flex-row-reverse">
               <Button text={e.label} classes={["rounded"]} />
+              </div>
             </div>
           );
         })}
