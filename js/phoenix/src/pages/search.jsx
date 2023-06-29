@@ -91,7 +91,7 @@ const Search = () => {
                 {options.map((option) => (
                   <label className="flex flex-nowrap items-center px-3 text-sm" htmlFor={option.id} key={option.id}>
                     <input
-                      className="mr-1"
+                      className="mr-1 cursor-pointer"
                       type="radio"
                       id={option.id}
                       value={option.value}

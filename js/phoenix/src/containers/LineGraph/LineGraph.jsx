@@ -9,6 +9,29 @@ export const LineGraph = ({ id, date, setDateRange }) => {
   const [nav, setNav] = useState([]);
   const [name, setName] = useState("");
   const [mfDataAvailability, setMfDataAvailability] = useState(true);
+  const [timeline, setTimeline] = useState(false);
+  const Timelinedata = [
+    {
+      id: 1,
+      date: "21-02-2023",
+      message: "Buy the Tata shares in it will increase periodically. And growing the shares and demand",
+    },
+    {
+      id: 2,
+      date: "21-02-2023",
+      message: "Buy the Tata shares in it will increase periodically. And growing the shares and demand",
+    },
+    {
+      id: 3,
+      date: "21-02-2023",
+      message: "Buy the Tata shares in it will increase periodically. And growing the shares and demand",
+    },
+    {
+      id: 4,
+      date: "21-02-2023",
+      message: "Buy the Tata shares in it will increase periodically. And growing the shares and demand",
+    },
+  ]
 
   useEffect(() => {
     fetch(
@@ -51,8 +74,21 @@ export const LineGraph = ({ id, date, setDateRange }) => {
             </div>
           </div>
           <div className="grid grid-cols-1 px-3">
-            <Button text="Timeline" classes="w-full" />
+            <Button handleClick={() => setTimeline(!timeline)} text="Timeline" classes="w-full" />
           </div>
+          {timeline ?
+            <div className="p-10">
+              <ol className="relative border-l border-black">
+                {Timelinedata.map((data) => (
+                  <li className="mb-10 ml-3">
+                    <div className="absolute w-3 h-3 bg-black rounded-full mt-1.5 -left-1.5 border border-white"></div>
+                    <time className="mb-1 text-sm font-semibold text-gray-400">{data.date}</time>
+                    <p className="mb-4 font-normal">{data.message}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+            : null}
         </div>
       ) : (
         <div className="font-bold p-3 text-red-600">
