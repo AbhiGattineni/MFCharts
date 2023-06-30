@@ -45,7 +45,7 @@ export const Navbar = () => {
     e.preventDefault();
 
     logout()
-      .then((authUser) => { })
+      .then((authUser) => {})
       .catch((error) => {
         console.log(error.message);
         alert("Logout Not successfull");
@@ -57,7 +57,7 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800">
+    <nav className="bg-white border-gray-600 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800 border-b-2">
       <div className="container flex flex-wrap justify-between items-center mx-auto relative">
         <Link href="/">
           <a href="https://flowbite.com" className="flex items-center">
@@ -80,7 +80,11 @@ export const Navbar = () => {
             onClick={() => setMenu(!menu)}
           >
             <span className="sr-only">Open user menu</span>
-            <img class="w-10 h-10 rounded-full bg-gray-500" src="https://www.html.am/images/html-codes/links/boracay-white-beach-sunset-300x225.jpg" alt="Rounded avatar" />
+            <img
+              class="w-10 h-10 rounded-full bg-gray-500"
+              src="https://www.html.am/images/html-codes/links/boracay-white-beach-sunset-300x225.jpg"
+              alt="Rounded avatar"
+            />
           </button>
 
           <div
