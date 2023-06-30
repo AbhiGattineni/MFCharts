@@ -1,19 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { auth } from "../config/firebase";
-import Data from "./data.json";
-
-const ExpandedRowDetail = ({ data }) => {
-  return (
-    <div className="p-4">
-      <p>Some data: {data.fund}</p>
-      <p>Shares: {data.shares}</p>
-      <p>Category: {data.category}</p>
-      <p>Profit/Loss: {data.profitLoss}</p>
-      <p>Price: {data.price}</p>
-    </div>
-  );
-};
+import Data from "../mockData/data.json";
+import PortfolioDropdown from "../containers/PortfolioDropdown/PortfolioDropdown";
 
 const Portfolio = () => {
   const [expandedRow, setExpandedRow] = useState(null);
@@ -152,7 +141,7 @@ const Portfolio = () => {
                   {expandedRow === index && (
                     <tr>
                       <td colSpan="6">
-                        <ExpandedRowDetail data={rowData} />
+                        <PortfolioDropdown data={rowData} />
                       </td>
                     </tr>
                   )}
