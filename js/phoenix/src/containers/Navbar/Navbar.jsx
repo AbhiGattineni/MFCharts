@@ -106,7 +106,7 @@ export const Navbar = () => {
               </span>
             </div>
             <ul className="py-1" aria-labelledby="dropdown">
-              <li>
+              <li onClick={() => setMenu(!menu)}>
                 <Link href="/profile">
                   <a
                     href="#"
@@ -143,7 +143,7 @@ export const Navbar = () => {
           id="mobile-menu-2"
         >
           <ul className="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
-            <li>
+            <li  onClick={() => setMenu(false)}>
               <Link href="/">
                 <div>
                   <button
@@ -160,7 +160,7 @@ export const Navbar = () => {
                 </div>
               </Link>
             </li>
-            <li>
+            <li  onClick={() => setMenu(false)}>
               <Link href="/portfolio">
                 <button
                   href="#"
@@ -175,7 +175,7 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
-            <li>
+            <li  onClick={() => setMenu(false)}>
               <Link href="/search">
                 <button
                   href=""
@@ -190,7 +190,7 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
-            <li>
+            <li  onClick={() => setMenu(false)}>
               <Link href="/watchlist">
                 <button
                   href=""
@@ -205,7 +205,7 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
-            <li>
+            <li  onClick={() => setMenu(false)}>
               <Link href="/contact">
                 <button
                   href=""
@@ -220,7 +220,7 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
-            <li>
+            <li  onClick={() => setMenu(false)}>
               <a
                 href="#"
                 className="block py-2 pr-4 pl-3 md:border-0  md:p-0 dark:text-gray-400 text-gray-700"
