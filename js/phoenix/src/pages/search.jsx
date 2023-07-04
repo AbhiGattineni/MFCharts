@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 
-import { FetchAllMf, ModalSave } from "../components";
+import { Button, FetchAllMf, ModalSave } from "../components";
 import { auth } from "../config/firebase";
 import { LineGraph } from "../containers";
-import { Radio } from "../components/Radio/Radio";
 
 const Search = () => {
   const [navData, setNavData] = useState({});
+  const [selectedOption, setSelectedOption] = useState('All');
+  const options = [
+    { id: '1', value: 'All' },
+    { id: '2', value: 'Mutual' },
+    { id: '3', value: 'Equity' },
+  ];
 
   const handleNavData = (e) => {
     let data = {};
@@ -18,6 +23,10 @@ const Search = () => {
       }
     });
     setNavData(data);
+  };
+  const handleOptionChange = (event) => {
+    const selectedValue = event.target.value;
+    setSelectedOption(selectedValue);
   };
 
   const handleDateRange = (e, mf) => {
@@ -71,17 +80,37 @@ const Search = () => {
   };
   return (
     <div className="container mx-auto md:mt-3 px-4 sm:px-0">
-      <div className="flex items-center">
-        <div className="w-10/12">
-      <FetchAllMf setNavData={(e) => handleNavData(e)} isMulti={true} />
-      </div>
-      <Radio styles="p-3"></Radio>
-      </div>
-      <div className=" mt-3">
-        {Object.keys(navData).length > 0 && (
-          <ModalSave saveData={(e) => saveData(e)} />
-        )}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-12 ml-2">
+      <div className="mx-2 md:mx-5">
+        <div className="flex flex-col md:flex-row">
+          <div className="md:basis-10/12">
+            <FetchAllMf setNavData={(e) => handleNavData(e)} isMulti={true} />
+          </div>
+          <div className="md:basis-2/12">
+            <div className="flex justify-between flex-row md:flex-col py-3">
+              <div className="flex flex-nowrap justify-evenly items-center">
+                {options.map((option) => (
+                  <label className="flex flex-nowrap items-center px-3 text-sm" htmlFor={option.id} key={option.id}>
+                    <input
+                      className="mr-1 cursor-pointer"
+                      type="radio"
+                      id={option.id}
+                      value={option.value}
+                      checked={selectedOption === option.value}
+                      onChange={handleOptionChange}
+                    />
+                    {option.value}
+                  </label>
+                ))}
+              </div>
+              <div className="md:mt-3 flex justify-end">
+                {Object.keys(navData).length > 0 && (
+                  <ModalSave saveData={(e) => saveData(e)} />
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {navData &&
             Object.keys(navData).map((mf) => (
               <LineGraph

@@ -5,8 +5,10 @@ import { Dropdown } from "../../components";
 
 export function FundsDropdown({ isMulti, allValues, setNavData }) {
   const [inputValue, setValue] = useState([]);
+  
 
   useEffect(() => {
+    // console.log("test ",inputValue)
     if ((inputValue.length != 0) & (isMulti == true)) {
       let dropDownValues = [];
       inputValue.map((value) => {
