@@ -12,9 +12,10 @@ export const Input = ({
   const inputClassNames = [
     "bg-gray-200",
     "appearance-none",
+    "font-semibold",
     "border-2",
-    `${error?"border-red-500":"border-gray-300"}`,
-    "rounded-full",
+    `${error?"border-red-500":"border-gray-600"}`,
+    "rounded-lg",
     "w-full",
     "py-2",
     "px-4",
@@ -25,6 +26,7 @@ export const Input = ({
     "focus:bg-white",
     "focus:border-bgColor",
     "mt-6",
+    "mb-3",
     classes,
   ].join(" ");
   return (
@@ -39,7 +41,7 @@ export const Input = ({
         value={value}
         disabled={disabled}
       />
-      <p className="text-red-500 px-3 text-sm">{error}</p>
+      <p className="text-red-500 px-3 text-sm ml-5">{error}</p>
     </div>
   );
 };
