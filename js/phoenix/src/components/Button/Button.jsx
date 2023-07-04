@@ -1,4 +1,4 @@
-export const Button = ({ text, handleClick, type, classes = [] }) => {
+export const Button = ({ text, handleClick, type, classes = [], disabled }) => {
   const inputClasses = [
     "shadow",
     "bg-bgColor",
@@ -13,7 +13,7 @@ export const Button = ({ text, handleClick, type, classes = [] }) => {
     ...classes,
   ].join(" ");
   return (
-    <button className={inputClasses} type={type} onClick={handleClick}>
+    <button disabled={disabled} className={inputClasses} type={type} onClick={handleClick}>
       {text}
     </button>
   );

@@ -3,9 +3,10 @@ import { DateRangePicker } from "react-date-range";
 import { addDays } from "date-fns";
 
 import MyChart from "../../components/MyChart/MyChart";
-import { Button, ModalDatepicker } from "../../components";
+import { Button, Input, ModalDatepicker } from "../../components";
+import { Timeline } from "../../components/Timeline/Timeline";
 
-export const LineGraph = ({ id, date, setDateRange }) => {
+export const LineGraph = ({ id, date, setDateRange, setId }) => {
   const [nav, setNav] = useState([]);
   const [name, setName] = useState("");
   const [mfDataAvailability, setMfDataAvailability] = useState(true);
@@ -15,11 +16,13 @@ export const LineGraph = ({ id, date, setDateRange }) => {
       id: 1,
       date: "21-02-2023",
       message: "Buy the Tata shares in it will increase periodically. And growing the shares and demand",
+      link: "https://github.com/"
     },
     {
       id: 2,
       date: "21-02-2023",
       message: "Buy the Tata shares in it will increase periodically. And growing the shares and demand",
+      link: "",
     },
     {
       id: 3,
@@ -73,21 +76,19 @@ export const LineGraph = ({ id, date, setDateRange }) => {
               />
             </div>
           </div>
-          <div className="grid grid-cols-1 px-3">
+          <div className="grid grid-cols-1 px-3 mb-3">
             <Button handleClick={() => setTimeline(!timeline)} text="Timeline" classes="w-full" />
           </div>
           {timeline ?
-            <div className="p-10">
-              <ol className="relative border-l border-black">
-                {Timelinedata.map((data) => (
-                  <li className="mb-10 ml-3">
-                    <div className="absolute w-3 h-3 bg-black rounded-full mt-1.5 -left-1.5 border border-white"></div>
-                    <time className="mb-1 text-sm font-semibold text-gray-400">{data.date}</time>
-                    <p className="mb-4 font-normal">{data.message}</p>
-                  </li>
-                ))}
-              </ol>
-            </div>
+            <>
+              <Timeline Timelinedata={Timelinedata} />
+              <div className="px-5 mb-3">
+                <Input placeholder="Add timeline ..." classes="w-full" />
+                <div className="flex flex-col items-center">
+                  <Button text="Add timeline" classes={["w-1/3 "]} />
+                </div>
+              </div>
+            </>
             : null}
         </div>
       ) : (
