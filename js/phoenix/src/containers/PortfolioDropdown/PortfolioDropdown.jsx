@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Timeline from "../../components/Timeline/Timeline";
+import TimelineData from "../../mockData/timelinedata";
 
 const PortfolioDropdown = ({ data }) => {
   const [inputValue, setInputValue] = useState("");
@@ -12,7 +14,8 @@ const PortfolioDropdown = ({ data }) => {
         Graph
       </div>
       <div className="col-span-6 flex justify-center items-center p-4">
-        Timeline
+        {/* <Timeline Timelinedata={Timelinedata} /> */}
+        <pre>{JSON.stringify(TimelineData)}</pre>
       </div>
       <div className="col-span-12 grid grid-cols-12 gap-4 p-4 items-center">
         <div className="col-span-12 sm:col-span-9 md:col-span-12 lg:col-span-12">
