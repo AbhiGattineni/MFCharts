@@ -1,0 +1,143 @@
+[
+    {
+      "fund": "Fund 1",
+      "shares": "100",
+      "category": "Category 1",
+      "profitLoss": "$1000",
+      "price": "$10"
+    },
+    {
+      "fund": "Fund 2",
+      "shares": "200",
+      "category": "Category 2",
+      "profitLoss": "$2000",
+      "price": "$20"
+    },
+    {
+      "fund": "Fund 3",
+      "shares": "150",
+      "category": "Category 1",
+      "profitLoss": "$500",
+      "price": "$15"
+    },
+    {
+      "fund": "Fund 4",
+      "shares": "250",
+      "category": "Category 3",
+      "profitLoss": "$1500",
+      "price": "$30"
+    },
+    {
+      "fund": "Fund 5",
+      "shares": "300",
+      "category": "Category 2",
+      "profitLoss": "$3000",
+      "price": "$10"
+    },
+    {
+      "fund": "Fund 6",
+      "shares": "200",
+      "category": "Category 1",
+      "profitLoss": "$2000",
+      "price": "$20"
+    },
+    {
+      "fund": "Fund 7",
+      "shares": "150",
+      "category": "Category 3",
+      "profitLoss": "$1000",
+      "price": "$25"
+    },
+    {
+      "fund": "Fund 8",
+      "shares": "100",
+      "category": "Category 2",
+      "profitLoss": "$500",
+      "price": "$5"
+    },
+    {
+      "fund": "Fund 9",
+      "shares": "300",
+      "category": "Category 1",
+      "profitLoss": "$1500",
+      "price": "$10"
+    },
+    {
+      "fund": "Fund 10",
+      "shares": "250",
+      "category": "Category 2",
+      "profitLoss": "$2500",
+      "price": "$10"
+    },
+    {
+      "fund": "Fund 11",
+      "shares": "200",
+      "category": "Category 3",
+      "profitLoss": "$2000",
+      "price": "$15"
+    },
+    {
+      "fund": "Fund 12",
+      "shares": "150",
+      "category": "Category 1",
+      "profitLoss": "$750",
+      "price": "$5"
+    },
+    {
+      "fund": "Fund 13",
+      "shares": "100",
+      "category": "Category 2",
+      "profitLoss": "$1000",
+      "price": "$10"
+    },
+    {
+      "fund": "Fund 14",
+      "shares": "300",
+      "category": "Category 3",
+      "profitLoss": "$3000",
+      "price": "$30"
+    },
+    {
+      "fund": "Fund 15",
+      "shares": "250",
+      "category": "Category 1",
+      "profitLoss": "$1500",
+      "price": "$15"
+    },
+    {
+      "fund": "Fund 16",
+      "shares": "200",
+      "category": "Category 2",
+      "profitLoss": "$2000",
+      "price": "$10"
+    },
+    {
+      "fund": "Fund 17",
+      "shares": "150",
+      "category": "Category 1",
+      "profitLoss": "$1000",
+      "price": "$20"
+    },
+    {
+      "fund": "Fund 18",
+      "shares": "100",
+      "category": "Category 3",
+      "profitLoss": "$500",
+      "price": "$5"
+    },
+    {
+      "fund": "Fund 19",
+      "shares": "300",
+      "category": "Category 2",
+      "profitLoss": "$3000",
+      "price": "$30"
+    },
+    {
+      "fund": "Fund 20",
+      "shares": "250",
+      "category": "Category 1",
+      "profitLoss": "$1250",
+      "price": "$5"
+    }
+  ]
+  
