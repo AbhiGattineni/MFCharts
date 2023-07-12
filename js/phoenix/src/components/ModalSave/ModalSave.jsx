@@ -3,28 +3,32 @@ import { BsSave } from "react-icons/bs";
 
 import { BareIcon, Button, FetchAllWatchlists, Input } from "../../components";
 
-export function ModalSave({ saveData }) {
+export function ModalSave({ saveData, saveExistingData }) {
   const [showModal, setShowModal] = React.useState(false);
   const [showNew, setShowNew] = React.useState(false);
   const [showExisting, setShowExisting] = React.useState(false);
   const [saveLabel, setSaveLabel] = useState("");
+  const [selectedWatchlist, setSelectedWatchlist] = useState("");
+  const [wlNavData, setWlNavData] = useState([]);
 
   const handleSave = () => {
-    setShowModal(false);
+    setShowModal(false)
     setShowNew(false);
     setShowExisting(false);
     saveData(saveLabel);
+    saveExistingData(selectedWatchlist);
+    setSaveLabel("");
+    setSelectedWatchlist("");
   };
 
   const handleClose = () => {
     setShowNew(false);
     setShowExisting(false);
     setShowModal(false);
+    setSaveLabel("");
+    setSelectedWatchlist("");
   };
 
-  const [selectedWatchlist, setSelectedWatchlist] = useState("");
-  const [wlNavData, setWlNavData] = useState([]);
-  
   useEffect(() => {
     let wlNavData = [];
     fetch(`http://127.0.0.1:5000/api/wlnavdata/${selectedWatchlist}`)
@@ -62,8 +66,8 @@ export function ModalSave({ saveData }) {
                   </button>
                 </div>
                 <div className="p-3">
-                  <Button handleClick={() => { setShowNew(true); setShowExisting(false) }} disabled={showNew} text="New watchlist" classes={[`mx-3 ${showNew ? "cursor-not-allowed":null}`]} />
-                  <Button handleClick={() => { setShowExisting(true); setShowNew(false) }} disabled={showExisting} text="Add Existing" classes={[`mx-3 ${showExisting ? "cursor-not-allowed":null}`]} />
+                  <Button handleClick={() => { setShowNew(true); setShowExisting(false) }} disabled={showNew} text="New watchlist" classes={[`mx-3 ${showNew ? "cursor-not-allowed opacity-70 shadow-none" : null}`]} />
+                  <Button handleClick={() => { setShowExisting(true); setShowNew(false) }} disabled={showExisting} text="Add Existing" classes={[`mx-3 ${showExisting ? "cursor-not-allowed opacity-70 shadow-none" : null}`]} />
                 </div>
                 {/*body*/}
                 {showNew ? (
@@ -94,9 +98,10 @@ export function ModalSave({ saveData }) {
                       Close
                     </button>
                     <button
-                      className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                      className={`bg-emerald-500 text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 ${saveLabel.length > 0 || selectedWatchlist.length > 0 ? "active:bg-emerald-600" : "cursor-not-allowed opacity-60 shadow-none"}`}
                       type="button"
                       onClick={handleSave}
+                      disabled={saveLabel.length === 0 && selectedWatchlist.length === 0}
                     >
                       Save
                     </button>

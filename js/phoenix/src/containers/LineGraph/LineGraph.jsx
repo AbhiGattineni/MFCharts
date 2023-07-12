@@ -68,7 +68,7 @@ export const LineGraph = ({ id, date, setDateRange, setId }) => {
               <div className="px-5 mb-3">
                 <Input placeholder="Add timeline ..." classes="w-full" />
                 <div className="flex flex-col items-center">
-                  <Button text="Add timeline" classes={["w-1/3 "]} />
+                  <Button text="Add timeline" classes={["w-1/2"]} />
                 </div>
               </div>
             </>

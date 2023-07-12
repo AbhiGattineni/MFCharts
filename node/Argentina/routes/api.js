@@ -338,4 +338,44 @@ router.get("/overallPortfolioStat/:id", function (req, res) {
   });
 });
 
+// updating new watchlist to an existing watchlist
+router.put("/addWatchlist", async (req, res) => {
+  try {
+    Watchlist.findOne({ _id: req.body.wlId }).then((data) => {
+      let fundIds = data.watchlistFunds;
+      let messages = [];
+      Object.keys(req.body.navData).map((value) => {
+        if (value in fundIds) {
+          let dateDb = fundIds[value];
+          let dateNav = req.body.navData[value]
+          if (JSON.stringify(dateDb) === JSON.stringify(dateNav)) {
+            messages[0] = "Already exist";
+            messages[1] = "error";
+          }
+          else {
+            fundIds[value] = req.body.navData[value];
+            messages[0] = "Watchlist updated";
+            messages[1] = "success";
+          }
+        }
+        else {
+          fundIds[value] = req.body.navData[value];
+          messages[0] = "Added to watchlist";
+          messages[1] = "success";
+        }
+      });
+      Watchlist.updateOne(
+        { _id: req.body.wlId },
+        { $set: { watchlistFunds: fundIds } }
+      )
+        .then((data) => res.send(data))
+        .catch((error) => console.log(error.message));
+      res.send(messages);
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 module.exports = router;
