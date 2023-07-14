@@ -80,7 +80,7 @@ router.get("/watchlists/:userId", async function (req, res) {
 
         wlNames = records.map((record) => ({
           value: record._id,
-          label: record.watchlistName
+          label: record.watchlistName,
         }));
       }
     }
@@ -91,7 +91,6 @@ router.get("/watchlists/:userId", async function (req, res) {
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 //post the watchlist into user watchlists
 router.post("/addwatchlist", function (req, res) {
@@ -132,19 +131,20 @@ router.get("/allmutualfunds", function (req, res) {
 
 //get mutual fund meta data based on mutual fund selection
 router.get("/mutualfund/:id/metadata", function (req, res) {
-  MutualFund.findOne({ scheme_code: req.params.id })
-    .then(function (mf) {
+  fetch(`https://api.mfapi.in/mf/${req.params.id}`)
+    .then((response) => response.json())
+    .then((response) => {
       let mutual = {
-        scheme_name: mf.scheme_name,
-        scheme_code: mf.scheme_code,
-        scheme_category: mf.scheme_category,
-        scheme_type: mf.scheme_type,
-        fund_house: mf.fund_house,
+        scheme_name: response.meta.scheme_name,
+        scheme_code: response.meta.scheme_code,
+        scheme_category: response.meta.scheme_category,
+        scheme_type: response.meta.scheme_type,
+        fund_house: response.meta.fund_house,
       };
       res.send(mutual);
     })
     .catch((error) => {
-      res.send("no data available on selected search 3" + error);
+      res.status(500).send("No data available on selected search: " + error);
     });
 });
 
@@ -172,10 +172,69 @@ router.get("/mutualfund/:id/navdata/:date", function (req, res) {
   });
 });
 
+// //get mutual fund navdata based on dropdown selection and dates
+// router.get("/mutualfund/:id/navdata", function (req, res) {
+//   let start_date = req.query.end || null;
+//   let end_date = req.query.start || null;
+//   let obj = {};
+
+//   function reverseDate(date) {
+//     return new Date(date);
+//   }
+
+//   if (start_date != null) {
+//     start_date = reverseDate(start_date);
+//     start_date = start_date.setUTCHours(0, 0, 0, 0);
+//   }
+//   if (end_date != null) {
+//     end_date = reverseDate(end_date);
+//     end_date = end_date.setUTCHours(0, 0, 0, 0);
+//   }
+
+//   MutualFund.findOne({ scheme_code: req.params.id }).then(function (mf) {
+//     if (mf) {
+//       mf.nav.map((m, index) => {
+//         const [day, month, year] = m.date.split("-");
+//         date = new Date(+year, +month - 1, +day);
+//         date = date.setUTCHours(0, 0, 0, 0);
+
+//         //start and end dates are null
+//         if ((start_date == null) & (end_date == null)) {
+//           obj[m.date] = parseFloat(m.nav);
+//         }
+//         //start and end dates are given
+//         if ((date <= start_date) & (date >= end_date)) {
+//           obj[m.date] = parseFloat(m.nav);
+//         }
+//         //only when start date is given
+//         if ((date <= start_date) & (end_date == null)) {
+//           obj[m.date] = parseFloat(m.nav);
+//         }
+//         //only when end date is given
+//         if ((start_date == null) & (date >= end_date)) {
+//           obj[m.date] = parseFloat(m.nav);
+//         }
+//         //only when end date is given
+//         if ((start_date == date) & (date == end_date)) {
+//           obj[m.date] = parseFloat(m.nav);
+//         }
+//       });
+//       let invert_obj = {};
+//       reverse_obj = Object.keys(obj).reverse();
+//       reverse_obj.forEach(function (x) {
+//         invert_obj[x] = obj[x];
+//       });
+//       res.send(invert_obj);
+//     } else {
+//       res.send({});
+//     }
+//   });
+// });
+
 //get mutual fund navdata based on dropdown selection and dates
 router.get("/mutualfund/:id/navdata", function (req, res) {
-  let start_date = req.query.end || null;
-  let end_date = req.query.start || null;
+  let start_date = req.query.start || null;
+  let end_date = req.query.end || null;
   let obj = {};
 
   function reverseDate(date) {
@@ -188,48 +247,63 @@ router.get("/mutualfund/:id/navdata", function (req, res) {
   }
   if (end_date != null) {
     end_date = reverseDate(end_date);
-    end_date = end_date.setUTCHours(0, 0, 0, 0);
+    end_date = end_date.setUTCHours(23, 59, 59, 999); //Set to end of day
   }
 
-  MutualFund.findOne({ scheme_code: req.params.id }).then(function (mf) {
-    if (mf) {
-      mf.nav.map((m, index) => {
-        const [day, month, year] = m.date.split("-");
-        date = new Date(+year, +month - 1, +day);
-        date = date.setUTCHours(0, 0, 0, 0);
+  fetch(`https://api.mfapi.in/mf/${req.params.id}`)
+    .then((response) => response.json())
+    .then((mf) => {
+      if (mf.status != "FAIL") {
+        mf.data.map((m) => {
+          const date = new Date(m.date);
+          date.setUTCHours(0, 0, 0, 0);
 
-        //start and end dates are null
-        if ((start_date == null) & (end_date == null)) {
-          obj[m.date] = parseFloat(m.nav);
-        }
-        //start and end dates are given
-        if ((date <= start_date) & (date >= end_date)) {
-          obj[m.date] = parseFloat(m.nav);
-        }
-        //only when start date is given
-        if ((date <= start_date) & (end_date == null)) {
-          obj[m.date] = parseFloat(m.nav);
-        }
-        //only when end date is given
-        if ((start_date == null) & (date >= end_date)) {
-          obj[m.date] = parseFloat(m.nav);
-        }
-        //only when end date is given
-        if ((start_date == date) & (date == end_date)) {
-          obj[m.date] = parseFloat(m.nav);
-        }
-      });
-      let invert_obj = {};
-      reverse_obj = Object.keys(obj).reverse();
-      reverse_obj.forEach(function (x) {
-        invert_obj[x] = obj[x];
-      });
-      res.send(invert_obj);
-    } else {
-      res.send({});
-    }
-  });
+          if (start_date == null && end_date == null) {
+            obj[m.date] = parseFloat(m.nav);
+          } else if (
+            start_date != null &&
+            date >= start_date &&
+            end_date == null
+          ) {
+            obj[m.date] = parseFloat(m.nav);
+          } else if (
+            end_date != null &&
+            date <= end_date &&
+            start_date == null
+          ) {
+            obj[m.date] = parseFloat(m.nav);
+          } else if (
+            start_date != null &&
+            end_date != null &&
+            date >= start_date &&
+            date <= end_date
+          ) {
+            obj[m.date] = parseFloat(m.nav);
+          }
+        });
+
+        let invert_obj = {};
+        let reverse_obj = Object.keys(obj).reverse();
+        reverse_obj.forEach(function (x) {
+          invert_obj[x] = obj[x];
+        });
+        res.send(invert_obj);
+      } else {
+        res.send({});
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error retrieving mutual fund data");
+    });
 });
+
+// router.get("/mutualfund/:id/navdata", async function (req, res) {
+//   const response = await fetch(`https://api.mfapi.in/mf/${req.params.id}`);
+//   const jsonData = await response.json();
+//   console.log(jsonData);
+//   res.send(jsonData);
+// });
 
 //get single mutual fund data from DB
 router.get("/mutualfund/:id", function (req, res) {
@@ -347,18 +421,16 @@ router.put("/addWatchlist", async (req, res) => {
       Object.keys(req.body.navData).map((value) => {
         if (value in fundIds) {
           let dateDb = fundIds[value];
-          let dateNav = req.body.navData[value]
+          let dateNav = req.body.navData[value];
           if (JSON.stringify(dateDb) === JSON.stringify(dateNav)) {
             messages[0] = "Already exist";
             messages[1] = "error";
-          }
-          else {
+          } else {
             fundIds[value] = req.body.navData[value];
             messages[0] = "Watchlist updated";
             messages[1] = "success";
           }
-        }
-        else {
+        } else {
           fundIds[value] = req.body.navData[value];
           messages[0] = "Added to watchlist";
           messages[1] = "success";
@@ -376,6 +448,5 @@ router.put("/addWatchlist", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 module.exports = router;
