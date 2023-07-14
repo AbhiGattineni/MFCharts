@@ -4,8 +4,7 @@ import { addDays } from "date-fns";
 
 import MyChart from "../../components/MyChart/MyChart";
 import { Button, Input, ModalDatepicker } from "../../components";
-import { Timeline } from "../../components/Timeline/Timeline";
-import Timelinedata from "../../mockData/timelinedata";
+import { TimelineContainer } from "../TimelineContainer/TimelineContainer";
 
 export const LineGraph = ({ id, date, setDateRange, setId }) => {
   const [nav, setNav] = useState([]);
@@ -64,13 +63,7 @@ export const LineGraph = ({ id, date, setDateRange, setId }) => {
           </div>
           {timeline ? (
             <>
-              <Timeline Timelinedata={Timelinedata} />
-              <div className="px-5 mb-3">
-                <Input placeholder="Add timeline ..." classes="w-full" />
-                <div className="flex flex-col items-center">
-                  <Button text="Add timeline" classes={["w-1/2"]} />
-                </div>
-              </div>
+              <TimelineContainer id={id}/>
             </>
           ) : null}
         </div>

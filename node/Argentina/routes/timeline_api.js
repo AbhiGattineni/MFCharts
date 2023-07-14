@@ -34,10 +34,9 @@ router.get("/user/:userId", async (req, res) => {
 
 // GET endpoint to fetch timeline based on userId and schemeCode
 router.get("/:userId/:schemeCode", async (req, res) => {
-  console.log("UserId: ", req.params.userId);
   try {
     const timelines = await Timeline.find({
-      userId: mongoose.Types.ObjectId(req.params.userId),
+      userId: req.params.userId,
       schemeCode: req.params.schemeCode,
     });
 
@@ -46,7 +45,6 @@ router.get("/:userId/:schemeCode", async (req, res) => {
         message: "No timelines found for the provided userId and schemeCode.",
       });
     }
-
     res.json(timelines);
   } catch (err) {
     res.status(500).json({ message: err.message });
