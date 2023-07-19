@@ -6,15 +6,17 @@ import PortfolioDropdown from "../containers/PortfolioDropdown/PortfolioDropdown
 
 const Portfolio = () => {
   const [expandedRow, setExpandedRow] = useState(null);
+  const [portfolioData, setPortfolioData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const pageSize = 10;
-  const totalPages = Math.ceil(Data.length / pageSize);
 
   useEffect(() => {
     fetch(`http://127.0.0.1:5000/api/userPortfolio/${auth.currentUser.uid}`)
       .then((response) => response.json())
       .then((data) => {
-        // setPortfolioData(data); (Removed for brevity)
+        setTotalPages(Math.ceil(data.length / pageSize)); // Set total pages based on data length
+        setPortfolioData(data);
       });
   }, []);
 
@@ -120,14 +122,20 @@ const Portfolio = () => {
               </tr>
             </thead>
             <tbody className="bg-gray-200">
-              {visibleData.map((rowData, index) => (
+              {Object.keys(portfolioData).map((key, index) => (
                 <React.Fragment key={index}>
                   <tr className="bg-white border-4 border-gray-200 text-xs sm:text-sm md:text-base">
-                    <td className="px-2 py-2">{rowData.fund}</td>
-                    <td className="px-2 py-2">{rowData.shares}</td>
-                    <td className="px-2 py-2">{rowData.category}</td>
-                    <td className="px-2 py-2">{rowData.profitLoss}</td>
-                    <td className="px-2 py-2">{rowData.price}</td>
+                    <td className="px-2 py-2">
+                      {portfolioData[key].schemeName}
+                    </td>
+                    <td className="px-2 py-2">{portfolioData[key].quantity}</td>
+                    <td className="px-2 py-2">{portfolioData[key].category}</td>
+                    <td className="px-2 py-2">
+                      {portfolioData[key].tProfitLoss}
+                    </td>
+                    <td className="px-2 py-2">
+                      {portfolioData[key].holdingValue}
+                    </td>
                     <td className="px-2 py-2">
                       <button onClick={() => toggleRow(index)}>
                         {expandedRow === index ? (
@@ -141,7 +149,7 @@ const Portfolio = () => {
                   {expandedRow === index && (
                     <tr>
                       <td colSpan="6">
-                        <PortfolioDropdown data={rowData} />
+                        <PortfolioDropdown data={portfolioData[key]} />
                       </td>
                     </tr>
                   )}

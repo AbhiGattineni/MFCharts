@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Timeline from "../../components/Timeline/Timeline";
-import TimelineData from "../../mockData/timelinedata";
 import { TimelineContainer } from "../TimelineContainer/TimelineContainer";
 
 const PortfolioDropdown = ({ data }) => {
