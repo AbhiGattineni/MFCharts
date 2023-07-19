@@ -324,39 +324,51 @@ router.get("/mutualfund/:id", function (req, res) {
 });
 
 router.get("/userPortfolio/:id", async function (req, res) {
-  let portfolioFunds = {};
   try {
-    const data = await User.findOne({ userId: req.params.id });
-    if (data.portfolios.length) {
-      for (const portfolio of data.portfolios) {
-        const portfolioData = await Portfolio.findOne({
-          _id: mongoose.Types.ObjectId(portfolio),
-        });
-        // const mutualFundData = await MutualFund.findOne({
-        //   scheme_code: portfolioData.schemeCode,
-        // });
+    const user = await User.findOne({ userId: req.params.id });
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
 
+    const portfolioFunds = {};
+    const portfolioIds = user.portfolios;
+
+    if (portfolioIds.length) {
+      const portfolios = await Portfolio.find({
+        _id: { $in: portfolioIds.map((id) => mongoose.Types.ObjectId(id)) },
+      });
+
+      for (const portfolio of portfolios) {
         const response = await fetch(
-          `https://api.mfapi.in/mf/${portfolioData.schemeCode}`
+          `https://api.mfapi.in/mf/${portfolio.schemeCode}`
         );
-        const jsonData = await response.json();
 
-        portfolioFunds[portfolioData.schemeCode] = {
+        if (!response.ok) {
+          console.log(
+            `Failed to fetch data for scheme code: ${portfolio.schemeCode}`
+          );
+          continue;
+        }
+
+        const jsonData = await response.json();
+        const fundData = {
           schemeCode: jsonData.meta.scheme_code,
           schemeName: jsonData.meta.scheme_name,
-          quantity: portfolioData.quantity,
-          holdingValue: portfolioData.holdingValue,
-          averageValue: portfolioData.averageFundValue,
-          marketValue: portfolioData.marketValue,
-          tProfitLoss: portfolioData.totalProfitAndLoss,
-          transactions: portfolioData.transactions,
+          quantity: portfolio.quantity,
+          holdingValue: portfolio.holdingValue,
+          averageValue: portfolio.averageFundValue,
+          marketValue: portfolio.marketValue,
+          tProfitLoss: portfolio.totalProfitAndLoss,
+          transactions: portfolio.transactions,
         };
+        portfolioFunds[portfolio.schemeCode] = fundData;
       }
     }
+
     res.send(portfolioFunds);
   } catch (err) {
     console.error(err);
-    res.status(500).send(err);
+    res.status(500).send("Internal server error");
   }
 });
 
