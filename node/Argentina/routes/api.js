@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-
+let fetch;
+(async () => {
+  const fetchModule = await import('node-fetch');
+  fetch = fetchModule.default;
+})();
 const MutualFund = require("../models/mutualFund");
 const AllMutualFunds = require("../models/allmutualFunds");
 const User = require("../models/user");
