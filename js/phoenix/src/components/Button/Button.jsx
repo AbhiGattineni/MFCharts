@@ -12,7 +12,6 @@ export const Button = ({ text, handleClick, type, classes = [], disabled }) => {
     "pl-10",
     "pr-10",
     "rounded-xl",
-    "mt-4",
     ...classes,
   ].join(" ");
   return (

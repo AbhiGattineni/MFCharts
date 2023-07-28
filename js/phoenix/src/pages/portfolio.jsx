@@ -3,8 +3,11 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { auth } from "../config/firebase";
 import Data from "../mockData/data.json";
 import PortfolioDropdown from "../containers/PortfolioDropdown/PortfolioDropdown";
+import { Button } from "../components";
 
 const Portfolio = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [dropValue,setDropValue] =useState("All")
   const [expandedRow, setExpandedRow] = useState(null);
   const [portfolioData, setPortfolioData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,58 +54,77 @@ const Portfolio = () => {
   );
 
   return (
-    <div className="container mx-auto md:mt-3">
-      <div className="border-gray-600 border-2 rounded-md">
-        <div className="flex flex-wrap items-center justify-between p-4 border-b-2">
-          <div className="w-full sm:w-auto mb-4 sm:mb-0 sm:mr-4">
+    <div className="container mx-auto p-3 md:mt-3">
+      <div className="border-gray-600 border-2 rounded-xl">
+        <div className="grid lg:grid-cols-4 md:grid-cols-4 grid-cols-2 gap-3 p-4 border-b-2 place-items-center justify-items-end">
+          <div className="w-full flex justify-center">
             <span className="font-semibold">All Funds:</span>
             <span>{totalFunds}</span>
           </div>
-          <div className="w-full sm:w-auto mb-4 sm:mb-0">
+          <div className="w-full flex justify-center">
             <span className="font-semibold">Amount:</span>
             <span>${totalAmount.toFixed(2)}</span>
           </div>
-          <div className="w-full sm:w-auto">
-            <button className="px-3 py-1 bg-blue-500 text-white rounded-md">
-              Add Transaction
-            </button>
+          <div className="w-full">
+            <button className="bg-bgColor px-4 py-2 rounded-xl font-semibold float-right">Add Transaction</button>
           </div>
-          <div className="w-full sm:w-auto">
-            <div className="relative inline-block text-left">
-              <div>
-                <button
-                  type="button"
-                  className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  id="options-menu"
-                  aria-haspopup="true"
-                  aria-expanded="true"
+          <div className="w-full relative inline-block">
+            <div>
+              <button
+                type="button"
+                className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 float-right"
+                id="options-menu"
+                aria-haspopup="true"
+                aria-expanded="true"
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                {dropValue}
+                <svg
+                  className="-mr-1 ml-2 h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
                 >
-                  All
-                  <svg
-                    className="-mr-1 ml-2 h-5 w-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm0 14a1 1 0 01-.707-.293l-3-3a1 1 0 111.414-1.414L10 14.586l2.293-2.293a1 1 0 111.414 1.414l-3 3A1 1 0 0110 17z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              </div>
-              {/* Dropdown menu */}
-              {/* Add your dropdown menu content here */}
+                  <path
+                    fillRule="evenodd"
+                    d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm0 14a1 1 0 01-.707-.293l-3-3a1 1 0 111.414-1.414L10 14.586l2.293-2.293a1 1 0 111.414 1.414l-3 3A1 1 0 0110 17z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
             </div>
+            {isOpen && (
+              <div className="origin-top-right absolute right-0 mt-12 w-24 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                  <a
+                    onClick={() => {setDropValue("All");setIsOpen(!isOpen)}}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                  >
+                    All
+                  </a>
+                  <a
+                    onClick={() => {setDropValue("Mutual");setIsOpen(!isOpen)}}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                  >
+                    Mutual
+                  </a>
+                  <a
+                    onClick={() => {setDropValue("Equity");setIsOpen(!isOpen)}}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                  >
+                    Equity
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
         <div className="overflow-x-auto p-2">
           <table className="min-w-full table-auto">
             <thead className="justify-between">
-              <tr className="bg-customBlue">
+              <tr className="bg-bgColor">
                 <th className="px-2 py-2 text-xs text-black sm:text-sm md:text-base text-left">
                   Funds
                 </th>
@@ -158,9 +180,9 @@ const Portfolio = () => {
             </tbody>
           </table>
         </div>
-        <div className="flex justify-end mt-3">
+        <div className="flex justify-center p-3 mt-3">
           <button
-            className="px-3 py-1 bg-blue-500 text-white rounded-md mr-2"
+            className="px-3 py-1 bg-bgColor text-white rounded-md mr-2"
             onClick={handlePrevPage}
             disabled={currentPage === 1}
           >
@@ -168,11 +190,10 @@ const Portfolio = () => {
           </button>
           {Array.from({ length: totalPages }, (_, index) => (
             <button
-              className={`px-3 py-1 rounded-md mr-2 ${
-                currentPage === index + 1
-                  ? "bg-blue-500 text-white"
+              className={`px-3 py-1 rounded-md mr-2 ${currentPage === index + 1
+                  ? "bg-bgColor text-white"
                   : "bg-gray-200 text-black"
-              }`}
+                }`}
               key={index + 1}
               onClick={() => handlePageClick(index + 1)}
             >
@@ -180,7 +201,7 @@ const Portfolio = () => {
             </button>
           ))}
           <button
-            className="px-3 py-1 bg-blue-500 text-white rounded-md"
+            className="px-3 py-1 bg-bgColor text-white rounded-md"
             onClick={handleNextPage}
             disabled={currentPage === totalPages}
           >
