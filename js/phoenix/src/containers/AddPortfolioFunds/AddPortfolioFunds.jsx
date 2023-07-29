@@ -8,10 +8,12 @@ export const AddPortfolioFunds = ({
   setNavData,
   setQuantity,
   setValue,
+  setType,
   quantity,
   date,
   setDate,
   value,
+  type,
   transactionType,
   onOptionChange,
 }) => {
@@ -26,6 +28,40 @@ export const AddPortfolioFunds = ({
             dateFormat="dd/MM/yyyy"
             className="border-2 border-gray-300 rounded-md text-center"
           />
+        </div>
+        <div className="flex justify-around">
+          <div className="flex justify-around items-center">
+            <div onClick={()=>setType("Mutual")} className={`p-2 border-black border-2 rounded-l-lg border-r-0 cursor-pointer ${type==="Mutual" ? "bg-bgColor": null}`}>
+              Mutual
+            </div>
+            <div onClick={()=>setType("Equity")} className={`p-2 border-black border-2 rounded-r-lg cursor-pointer ${type==="Equity" ? "bg-bgColor": null}`}>
+              Equity
+            </div>
+          </div>
+          <div className="flex justify-around items-center">
+            <div className="px-3">
+              <input
+                type="radio"
+                name="transactionType"
+                value="Buy"
+                id="Buy"
+                checked={transactionType === "Buy"}
+                onChange={onOptionChange}
+              />
+              <label className="ml-3" htmlFor="buy">Buy</label>
+            </div>
+            <div className="px-3">
+              <input
+                type="radio"
+                name="transactionType"
+                value="Sell"
+                id="Sell"
+                checked={transactionType === "Sell"}
+                onChange={onOptionChange}
+              />
+              <label className="ml-3" htmlFor="sell">Sell</label>
+            </div>
+          </div>
         </div>
         <div className="row-span-2">
           <FetchAllMf setNavData={setNavData} isMulti={false} />
@@ -47,27 +83,6 @@ export const AddPortfolioFunds = ({
               />
             </div>
           </div>
-        </div>
-        <div className=" row-span-1">
-          <input
-            type="radio"
-            name="transactionType"
-            value="Buy"
-            id="Buy"
-            checked={transactionType === "Buy"}
-            onChange={onOptionChange}
-          />
-          <label htmlFor="buy">Buy</label>
-
-          <input
-            type="radio"
-            name="transactionType"
-            value="Sell"
-            id="Sell"
-            checked={transactionType === "Sell"}
-            onChange={onOptionChange}
-          />
-          <label htmlFor="sell">Sell</label>
         </div>
       </form>
     </div>

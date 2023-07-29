@@ -3,11 +3,11 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { auth } from "../config/firebase";
 import Data from "../mockData/data.json";
 import PortfolioDropdown from "../containers/PortfolioDropdown/PortfolioDropdown";
-import { Button } from "../components";
+import { Button, ModalAddFund } from "../components";
 
 const Portfolio = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [dropValue,setDropValue] =useState("All")
+  const [dropValue, setDropValue] = useState("All")
   const [expandedRow, setExpandedRow] = useState(null);
   const [portfolioData, setPortfolioData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,8 +65,8 @@ const Portfolio = () => {
             <span className="font-semibold">Amount:</span>
             <span>${totalAmount.toFixed(2)}</span>
           </div>
-          <div className="w-full">
-            <button className="bg-bgColor px-4 py-2 rounded-xl font-semibold float-right">Add Transaction</button>
+          <div className="w-full flex justify-center">
+            <ModalAddFund />
           </div>
           <div className="w-full relative inline-block">
             <div>
@@ -98,19 +98,19 @@ const Portfolio = () => {
               <div className="origin-top-right absolute right-0 mt-12 w-24 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                 <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                   <a
-                    onClick={() => {setDropValue("All");setIsOpen(!isOpen)}}
+                    onClick={() => { setDropValue("All"); setIsOpen(!isOpen) }}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                   >
                     All
                   </a>
                   <a
-                    onClick={() => {setDropValue("Mutual");setIsOpen(!isOpen)}}
+                    onClick={() => { setDropValue("Mutual"); setIsOpen(!isOpen) }}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                   >
                     Mutual
                   </a>
                   <a
-                    onClick={() => {setDropValue("Equity");setIsOpen(!isOpen)}}
+                    onClick={() => { setDropValue("Equity"); setIsOpen(!isOpen) }}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                   >
                     Equity
@@ -191,8 +191,8 @@ const Portfolio = () => {
           {Array.from({ length: totalPages }, (_, index) => (
             <button
               className={`px-3 py-1 rounded-md mr-2 ${currentPage === index + 1
-                  ? "bg-bgColor text-white"
-                  : "bg-gray-200 text-black"
+                ? "bg-bgColor text-white"
+                : "bg-gray-200 text-black"
                 }`}
               key={index + 1}
               onClick={() => handlePageClick(index + 1)}
