@@ -31,10 +31,10 @@ export const AddPortfolioFunds = ({
         </div>
         <div className="flex justify-around">
           <div className="flex justify-around items-center">
-            <div onClick={()=>setType("Mutual")} className={`p-2 border-black border-2 rounded-l-lg border-r-0 cursor-pointer ${type==="Mutual" ? "bg-bgColor": null}`}>
+            <div onClick={()=>setType("mutual fund")} className={`p-2 border-black border-2 rounded-l-lg border-r-0 cursor-pointer ${type==="mutual fund" ? "bg-bgColor": null}`}>
               Mutual
             </div>
-            <div onClick={()=>setType("Equity")} className={`p-2 border-black border-2 rounded-r-lg cursor-pointer ${type==="Equity" ? "bg-bgColor": null}`}>
+            <div onClick={()=>setType("equity fund")} className={`p-2 border-black border-2 rounded-r-lg cursor-pointer ${type==="equity fund" ? "bg-bgColor": null}`}>
               Equity
             </div>
           </div>

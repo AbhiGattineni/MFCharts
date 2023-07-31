@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dashBoardApi = require('./routes/dashBoardApi')
+const transactionRouter = require('./routes/portfolio_apis'); 
 
 //dotenv configured
 require("dotenv").config();
@@ -30,6 +31,7 @@ app.use("/api/user", require("./routes/userdataapi"));
 
 // userDashboard API
 app.use("/api", dashBoardApi)
+app.use("/api", transactionRouter)
 
 //listen for requests
 const port = 5000;

@@ -10,6 +10,7 @@ const Portfolio = () => {
   const [dropValue, setDropValue] = useState("All")
   const [expandedRow, setExpandedRow] = useState(null);
   const [portfolioData, setPortfolioData] = useState({});
+  const [filterData, setFilterData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 10;
@@ -18,10 +19,33 @@ const Portfolio = () => {
     fetch(`http://127.0.0.1:5000/api/userPortfolio/${auth.currentUser.uid}`)
       .then((response) => response.json())
       .then((data) => {
-        setTotalPages(Math.ceil(data.length / pageSize)); // Set total pages based on data length
+        let pages = Object.keys(data).length;
+        setTotalPages(Math.ceil(pages / pageSize));
         setPortfolioData(data);
+        setFilterData(data);
       });
   }, []);
+  useEffect(() => {
+    let filter = {};
+    if (dropValue === "All") {
+      filter=portfolioData;
+    }
+    else if (dropValue === "Mutual") {
+      Object.keys(portfolioData).map((data) => {
+        if (portfolioData[data].category == "mutual fund") {
+          filter[data] = portfolioData[data];
+        }
+      })
+    }
+    else{
+      Object.keys(portfolioData).map((data) => {
+        if (portfolioData[data].category == "equity fund") {
+          filter[data] = portfolioData[data];
+        }
+      })
+    }
+    setFilterData(filter);
+  }, [dropValue])
 
   const toggleRow = (index) => {
     if (expandedRow === index) {
@@ -144,11 +168,11 @@ const Portfolio = () => {
               </tr>
             </thead>
             <tbody className="bg-gray-200">
-              {Object.keys(portfolioData).map((key, index) => (
+              {Object.keys(filterData).map((key, index) => (
                 <React.Fragment key={index}>
                   <tr className="bg-white border-4 border-gray-200 text-xs sm:text-sm md:text-base">
                     <td className="px-2 py-2">
-                      {portfolioData[key].schemeName}
+                      {filterData[key].schemeName}
                     </td>
                     <td className="px-2 py-2">{portfolioData[key].quantity}</td>
                     <td className="px-2 py-2">{portfolioData[key].category}</td>
