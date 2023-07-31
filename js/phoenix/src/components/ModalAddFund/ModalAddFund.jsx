@@ -12,13 +12,14 @@ export function ModalAddFund() {
   const [quantity, setQuantity] = useState(0);
   const [date, setDate] = useState(new Date());
   const [transactionType, setTransactionType] = useState("Buy");
+  const [type, setType] = useState("mutual fund");
 
   useEffect(() => {
     if (Object.keys(navData).length) {
       fetch(
-        `http://127.0.0.1:5000/api/mutualfund/${navData.value}/navdata/${date}`
+        `http://127.0.0.1:5000/api/mutualfund/${navData.value}/navdata/${formatDate(date)}`
       )
-        .then((response) => response.json())
+        .then((response) => response.json())  
         .then((data) => {
           setValue(data), setNavValue(data);
         })
@@ -27,6 +28,15 @@ export function ModalAddFund() {
         });
     }
   }, [navData, date]);
+  
+  // console.log("Q ", quantity, " n ", navValue," v ",value);
+  function formatDate(date) {
+    let d = new Date(date);
+    let day = ("0" + d.getDate()).slice(-2);
+    let month = ("0" + (d.getMonth() + 1)).slice(-2);
+    let year = d.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
 
   useEffect(() => {
     if (Object.keys(navData).length) {
@@ -63,6 +73,7 @@ export function ModalAddFund() {
       headers: myHeaders,
       body: JSON.stringify({
         userId: auth.currentUser.uid,
+        category:type,
         schemeCode: navData.value,
         quantity: quantity,
         transactionType: transactionType,
@@ -83,7 +94,7 @@ export function ModalAddFund() {
     <>
       <Button
         type="button"
-        classes={["w-1/2", "blue", "text-black", "rounded"]}
+        classes={["text-sm", "md:text-lg", "pl-5", "pr-5", "md:pl-10", "md:pr-10"]}
         handleClick={() => setShowModal(true)}
         text="Add Transaction"
       />
@@ -97,12 +108,12 @@ export function ModalAddFund() {
                 <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
                   <h3 className="text-3xl font-semibold">Add Transaction</h3>
                   <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    className="p-1 ml-auto border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={() => setShowModal(false)}
                   >
-                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      ×
-                    </span>
+                    <div className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                      X
+                    </div>
                   </button>
                 </div>
                 {/*body*/}
@@ -112,9 +123,11 @@ export function ModalAddFund() {
                     setQuantity={setQuantity}
                     setValue={setValue}
                     setDate={setDate}
+                    setType={setType}
                     quantity={quantity}
                     date={date}
                     value={value}
+                    type={type}
                     transactionType={transactionType}
                     onOptionChange={(e) => {
                       onOptionChange(e);
