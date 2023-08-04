@@ -19,8 +19,9 @@ export const AddPortfolioFunds = ({
 }) => {
   return (
     <div className="container mx-auto">
-      <form className="grid grid-rows-4 ">
-        <div className="grid grid-cols-6 md:grid-cols-12 row-span-1">
+      <form className="grid grid-rows-3 gap-3">
+        <FetchAllMf setNavData={setNavData} isMulti={false} />
+        <div className="grid grid-cols-6 md:grid-cols-12">
           <Label text="Date:" />
           <DatePicker
             selected={date}
@@ -31,10 +32,10 @@ export const AddPortfolioFunds = ({
         </div>
         <div className="flex justify-around">
           <div className="flex justify-around items-center">
-            <div onClick={()=>setType("mutual fund")} className={`p-2 border-black border-2 rounded-l-lg border-r-0 cursor-pointer ${type==="mutual fund" ? "bg-bgColor": null}`}>
+            <div onClick={() => setType("mutual fund")} className={`p-2 border-black border-2 rounded-l-lg border-r-0 cursor-pointer ${type === "mutual fund" ? "bg-bgColor" : null}`}>
               Mutual
             </div>
-            <div onClick={()=>setType("equity fund")} className={`p-2 border-black border-2 rounded-r-lg cursor-pointer ${type==="equity fund" ? "bg-bgColor": null}`}>
+            <div onClick={() => setType("equity fund")} className={`p-2 border-black border-2 rounded-r-lg cursor-pointer ${type === "equity fund" ? "bg-bgColor" : null}`}>
               Equity
             </div>
           </div>
@@ -64,20 +65,21 @@ export const AddPortfolioFunds = ({
           </div>
         </div>
         <div className="row-span-2">
-          <FetchAllMf setNavData={setNavData} isMulti={false} />
           <div className="grid grid-cols-2 mt-3">
             <div className="">
+              <div className="">No of Shares</div>
               <Input
                 placeholder={"Enter quantity"}
-                classes={["rounded"]}
+                classes={["rounded","mt-0"]}
                 setValue={setQuantity}
                 value={quantity}
               />
             </div>
             <div className="">
+              <div className="">Amount</div>
               <Input
                 placeholder={"Enter Value"}
-                classes={["rounded"]}
+                classes={["rounded","mt-0"]}
                 setValue={setValue}
                 value={value}
               />

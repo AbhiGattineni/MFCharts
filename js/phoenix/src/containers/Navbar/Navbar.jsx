@@ -82,7 +82,7 @@ export const Navbar = () => {
             <span className="sr-only">Open user menu</span>
             <img
               class="w-10 h-10 rounded-full bg-gray-500"
-              src="https://www.html.am/images/html-codes/links/boracay-white-beach-sunset-300x225.jpg"
+              src={auth.currentUser.photoURL?auth.currentUser.photoURL:'https://www.html.am/images/html-codes/links/boracay-white-beach-sunset-300x225.jpg'}
               alt="Rounded avatar"
             />
           </button>

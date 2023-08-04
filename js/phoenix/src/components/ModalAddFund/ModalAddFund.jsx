@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-
 import { Button, Datepicker } from "../../components";
 import { AddPortfolioFunds } from "../../containers";
 import { auth } from "../../config/firebase";
+import { BASE_URL } from "../Constant";
 
 export function ModalAddFund() {
   const [showModal, setShowModal] = React.useState(false);
@@ -17,9 +17,9 @@ export function ModalAddFund() {
   useEffect(() => {
     if (Object.keys(navData).length) {
       fetch(
-        `http://127.0.0.1:5000/api/mutualfund/${navData.value}/navdata/${formatDate(date)}`
+        `${BASE_URL}/mutualfund/${navData.value}/navdata/${formatDate(date)}`
       )
-        .then((response) => response.json())  
+        .then((response) => response.json())
         .then((data) => {
           setValue(data), setNavValue(data);
         })
@@ -29,7 +29,6 @@ export function ModalAddFund() {
     }
   }, [navData, date]);
   
-  // console.log("Q ", quantity, " n ", navValue," v ",value);
   function formatDate(date) {
     let d = new Date(date);
     let day = ("0" + d.getDate()).slice(-2);
@@ -73,7 +72,7 @@ export function ModalAddFund() {
       headers: myHeaders,
       body: JSON.stringify({
         userId: auth.currentUser.uid,
-        category:type,
+        category: type,
         schemeCode: navData.value,
         quantity: quantity,
         transactionType: transactionType,
@@ -135,21 +134,13 @@ export function ModalAddFund() {
                   />
                 </div>
                 {/*footer*/}
-                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
-                  <button
-                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={handleClose}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={handleAddFund}
-                  >
-                    Add Fund
-                  </button>
+                <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b">
+                  <Button
+                    classes={navData.length===0 ? ["cursor-not-allowed","opacity-80"]: ""}
+                    handleClick={handleAddFund}
+                    disabled={navData.length === 0}
+                    text={transactionType}
+                  />
                 </div>
               </div>
             </div>
