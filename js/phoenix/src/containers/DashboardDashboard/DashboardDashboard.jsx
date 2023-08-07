@@ -19,8 +19,6 @@ export const DashboardDashboard = () => {
         const uid = user.uid;
         setUserName(user.displayName);
         setEmail(user.email);
-      } else {
-        console.log("user is logged out");
       }
     });
   }, []);
@@ -38,6 +36,35 @@ export const DashboardDashboard = () => {
   useEffect(() => {
     console.log("dd", dashboardData);
   }, [dashboardData]);
+  const [activeindex, setActiveIndex] = useState(1);
+  const handleClick = (index) => { setActiveIndex(index) };
+  const checkActive = (index, className) =>
+    activeindex === index ? className : "w-20";
+
+  const [task, setTask] = useState("");
+  const [todos, setTodos] = useState([]);
+  const changeHandler = e => {
+    setTask(e.target.value)
+  }
+
+  const submitHandler = e => {
+    e.preventDefault();
+    console.log("todos", todos)
+    setTodos(todos => [...todos, task]);
+    setTask("");
+  }
+
+  const deleteHandler = (indexValue) => {
+    const newTodos = todos.filter((todo, index) => index !== indexValue);
+    setTodos(newTodos);
+  }
+
+  const todosdata = [
+    'Once check the Apple shares',
+    'Sell the Tata shares by 12/05/2023',
+    'Check ICICI watchlist again',
+    'shares',
+  ];
 
   const Menu = [
     {
@@ -52,36 +79,8 @@ export const DashboardDashboard = () => {
       id: 3,
       title: "Equity",
     },
-
   ];
-  const [activeindex, setActiveIndex] = useState(1);
-  const handleClick = (index) => { setActiveIndex(index) };
-  const checkActive = (index, className) =>
-    activeindex === index ? className : "w-20";
 
-  const [task, setTask] = useState("");
-  const [todos, setTodos] = useState([]);
-  const changeHandler = e => {
-    setTask(e.target.value)
-  }
-  const submitHandler = e => {
-    e.preventDefault();
-    console.log("todos", todos)
-    setTodos(todos => [...todos, task]);
-    setTask("");
-  }
-  const deleteHandler = (indexValue) => {
-    const newTodos = todos.filter((todo, index) => index !== indexValue);
-    setTodos(newTodos);
-  }
-  // const TodoList = () => {
-  const todosdata = [
-    'Once check the Apple shares',
-    'Sell the Tata shares by 12/05/2023',
-    'Check ICICI watchlist again',
-    'shares',
-  ];
-  // }
   return (
     <div>
       <div className="flex flex-col md:flex-row justify-between items-center my-5 ml-3 mr-3">
@@ -145,10 +144,12 @@ export const DashboardDashboard = () => {
           </div>
         </div>
       </div>
-      <div className="border-2 border-gray-600 max-w-lg ml-5 mr-4 mt-1 ">
-        {todos.map((data) =>
-          <div className="border-2 border-black">{data} </div>
-        )}
+      <div className="border-2 border-gray-600 max-w-lg ml-5 mr-4 mt-1">
+        {todos.map((data) => (
+          <div key={data} className="border-2 border-black">
+            {data}
+          </div>
+        ))}
       </div>
     </div>
   );
