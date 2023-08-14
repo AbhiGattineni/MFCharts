@@ -4,48 +4,94 @@ import { auth } from "../config/firebase";
 import Data from "../mockData/data.json";
 import PortfolioDropdown from "../containers/PortfolioDropdown/PortfolioDropdown";
 import { Button, ModalAddFund } from "../components";
+import { FundType, BASE_URL, formatDate } from "../components/Constant";
 
 const Portfolio = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [dropValue, setDropValue] = useState("All")
+  const [dropValue, setDropValue] = useState(FundType.ALL)
   const [expandedRow, setExpandedRow] = useState(null);
   const [portfolioData, setPortfolioData] = useState({});
   const [filterData, setFilterData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 10;
+  const [totalAmount, setTotalAmount] = useState(0);
+  const indexOfLastRecord = currentPage * pageSize;
+  const indexOfFirstRecord = indexOfLastRecord - pageSize;
+  const currentRecords = Object.keys(filterData).slice(indexOfFirstRecord, indexOfLastRecord);
+  const [fundData, setFundData] = useState({});
 
-  useEffect(() => {
-    fetch(`http://127.0.0.1:5000/api/userPortfolio/${auth.currentUser.uid}`)
+  const updateField = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    var requestOptionsPut = {
+      method: "PUT",
+      headers: myHeaders
+    }
+    fetch(`${BASE_URL}/deleteTransaction/${auth.currentUser.uid}`, requestOptionsPut)
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error(error));
+  }
+  const UserData = () => {
+    fetch(`${BASE_URL}/userPortfolio/${auth.currentUser.uid}`)
       .then((response) => response.json())
       .then((data) => {
         let pages = Object.keys(data).length;
         setTotalPages(Math.ceil(pages / pageSize));
         setPortfolioData(data);
         setFilterData(data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
       });
+  }
+  useEffect(() => {
+    Object.keys(portfolioData).map((id) => {
+      fetch(`https://api.mfapi.in/mf/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          const funds = fundData;
+          funds[id] = data.data[0].nav;
+          setFundData(funds);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    })
+
   }, []);
+
+  useEffect(() => {
+    updateField();
+    UserData();
+  }, []);
+  // console.log(fundData);
+
   useEffect(() => {
     let filter = {};
-    if (dropValue === "All") {
-      filter=portfolioData;
+    if (dropValue === FundType.ALL) {
+      filter = portfolioData;
     }
-    else if (dropValue === "Mutual") {
+    else if (dropValue === FundType.MUTUAL) {
       Object.keys(portfolioData).map((data) => {
-        if (portfolioData[data].category == "mutual fund") {
+        if (portfolioData[data].category.toLowerCase() === "mutual fund") {
           filter[data] = portfolioData[data];
         }
-      })
+      });
     }
-    else{
+    else {
       Object.keys(portfolioData).map((data) => {
-        if (portfolioData[data].category == "equity fund") {
+        if (portfolioData[data].category.toLowerCase() === "equity fund") {
           filter[data] = portfolioData[data];
         }
-      })
+      });
     }
     setFilterData(filter);
-  }, [dropValue])
+    let pages = Object.keys(filter).length;
+    setTotalPages(Math.ceil(pages / pageSize));
+  }, [dropValue, portfolioData])
+
 
   const toggleRow = (index) => {
     if (expandedRow === index) {
@@ -67,27 +113,32 @@ const Portfolio = () => {
     setCurrentPage(page);
   };
 
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const visibleData = Data.slice(startIndex, endIndex);
+  useEffect(() => {
+    let total = Object.keys(filterData).reduce((sum, key) => {
+      let dataF = filterData[key].transactions;
+      return sum + dataF.reduce((total, transaction) => {
+        if (transaction.transactionType === "Buy") {
+          return total + transaction.navValue;
+        } else {
+          return total - transaction.navValue;
+        }
+      }, 0);
+    }, 0);
 
-  const totalFunds = Data.length;
-  const totalAmount = Data.reduce(
-    (acc, curr) => acc + parseFloat(curr.price.slice(1)),
-    0
-  );
+    setTotalAmount(total);
+  }, [filterData]);
 
   return (
     <div className="container mx-auto p-3 md:mt-3">
       <div className="border-gray-600 border-2 rounded-xl">
         <div className="grid lg:grid-cols-4 md:grid-cols-4 grid-cols-2 gap-3 p-4 border-b-2 place-items-center justify-items-end">
           <div className="w-full flex justify-center">
-            <span className="font-semibold">All Funds:</span>
-            <span>{totalFunds}</span>
+            <span className="font-semibold mr-1">All Funds:</span>
+            <span>{Object.keys(filterData).length}</span>
           </div>
           <div className="w-full flex justify-center">
-            <span className="font-semibold">Amount:</span>
-            <span>${totalAmount.toFixed(2)}</span>
+            <span className="font-semibold">Amount: ₹</span>
+            <span>{totalAmount.toFixed(2)}</span>
           </div>
           <div className="w-full flex justify-center">
             <ModalAddFund />
@@ -125,19 +176,19 @@ const Portfolio = () => {
                     onClick={() => { setDropValue("All"); setIsOpen(!isOpen) }}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                   >
-                    All
+                    {FundType.ALL}
                   </a>
                   <a
                     onClick={() => { setDropValue("Mutual"); setIsOpen(!isOpen) }}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                   >
-                    Mutual
+                    {FundType.MUTUAL}
                   </a>
                   <a
                     onClick={() => { setDropValue("Equity"); setIsOpen(!isOpen) }}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                   >
-                    Equity
+                    {FundType.EQUITY}
                   </a>
                 </div>
               </div>
@@ -168,7 +219,7 @@ const Portfolio = () => {
               </tr>
             </thead>
             <tbody className="bg-gray-200">
-              {Object.keys(filterData).map((key, index) => (
+              {currentRecords.map((key, index) => (
                 <React.Fragment key={index}>
                   <tr className="bg-white border-4 border-gray-200 text-xs sm:text-sm md:text-base">
                     <td className="px-2 py-2">
@@ -177,7 +228,7 @@ const Portfolio = () => {
                     <td className="px-2 py-2">{portfolioData[key].quantity}</td>
                     <td className="px-2 py-2">{portfolioData[key].category}</td>
                     <td className="px-2 py-2">
-                      {portfolioData[key].tProfitLoss}
+                      {fundData[key] ? (portfolioData[key].holdingValue - fundData[key]).toFixed(2) : "loading..."}
                     </td>
                     <td className="px-2 py-2">
                       {portfolioData[key].holdingValue}
