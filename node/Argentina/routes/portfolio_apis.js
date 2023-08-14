@@ -136,7 +136,7 @@ router.post("/transaction", async function (req, res) {
     if (!portfolioCreated) {
       let portfolio = new Portfolio({
         schemeCode: req.body.schemeCode,
-        category : req.body.category,
+        category: req.body.category,
         quantity: transaction.quantity,
         holdingValue: (transaction.quantity * transaction.navValue).toFixed(2),
         averageFundValue: transaction.navValue,
@@ -176,6 +176,35 @@ router.post("/addtimeline", async (req, res) => {
     res.status(201).json(savedTimeline);
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+});
+
+router.put("/deleteTransaction/:id", async (req, res) => {
+  try {
+    const user = await User.findOne({ userId: req.params.id });
+    // let portfolioFunds;
+    const portfolioId =[];
+    const portfolioIds = user.portfolios;
+
+    if (portfolioIds.length) {
+      const portfolios = await Portfolio.find({
+        _id: { $in: portfolioIds.map((id) => mongoose.Types.ObjectId(id)) },
+      });
+      for (let portfolioFund in portfolios) {
+        if (portfolios[portfolioFund].quantity) {
+          portfolioId.push(portfolios[portfolioFund].id);
+        }
+        else{
+          await Portfolio.findByIdAndDelete(portfolios[portfolioFund].id);
+        }
+      }
+      await User.updateOne({ userId: req.params.id }, { $set: { portfolios: portfolioId } });
+      return res.send(portfolioId);
+    }
+  }
+  catch (err) {
+    console.log(err);
+    res.send(err.message);
   }
 });
 

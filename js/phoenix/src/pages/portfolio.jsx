@@ -4,7 +4,7 @@ import { auth } from "../config/firebase";
 import Data from "../mockData/data.json";
 import PortfolioDropdown from "../containers/PortfolioDropdown/PortfolioDropdown";
 import { Button, ModalAddFund } from "../components";
-import { FundType, BASE_URL } from "../components/Constant";
+import { FundType, BASE_URL, formatDate } from "../components/Constant";
 
 const Portfolio = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,11 +15,24 @@ const Portfolio = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 10;
-  const [totalAmount,setTotalAmount] =useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
   const indexOfLastRecord = currentPage * pageSize;
   const indexOfFirstRecord = indexOfLastRecord - pageSize;
   const currentRecords = Object.keys(filterData).slice(indexOfFirstRecord, indexOfLastRecord);
+  const [fundData, setFundData] = useState({});
 
+  const updateField = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    var requestOptionsPut = {
+      method: "PUT",
+      headers: myHeaders
+    }
+    fetch(`${BASE_URL}/deleteTransaction/${auth.currentUser.uid}`, requestOptionsPut)
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error(error));
+  }
   const UserData = () => {
     fetch(`${BASE_URL}/userPortfolio/${auth.currentUser.uid}`)
       .then((response) => response.json())
@@ -28,13 +41,32 @@ const Portfolio = () => {
         setTotalPages(Math.ceil(pages / pageSize));
         setPortfolioData(data);
         setFilterData(data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
       });
   }
+  useEffect(() => {
+    Object.keys(portfolioData).map((id) => {
+      fetch(`https://api.mfapi.in/mf/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          const funds = fundData;
+          funds[id] = data.data[0].nav;
+          setFundData(funds);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    })
+
+  }, []);
 
   useEffect(() => {
+    updateField();
     UserData();
   }, []);
-  console.log(filterData);
+  // console.log(fundData);
 
   useEffect(() => {
     let filter = {};
@@ -196,7 +228,7 @@ const Portfolio = () => {
                     <td className="px-2 py-2">{portfolioData[key].quantity}</td>
                     <td className="px-2 py-2">{portfolioData[key].category}</td>
                     <td className="px-2 py-2">
-                      {portfolioData[key].tProfitLoss}
+                      {fundData[key] ? (portfolioData[key].holdingValue - fundData[key]).toFixed(2) : "loading..."}
                     </td>
                     <td className="px-2 py-2">
                       {portfolioData[key].holdingValue}

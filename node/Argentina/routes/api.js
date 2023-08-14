@@ -77,9 +77,11 @@ router.get("/watchlists/:userId", async function (req, res) {
 
     if (user) {
       if (user.watchlists.length) {
+        const watchlistIds = user.watchlists.map(wl => wl.watchlistid);  // extracting watchlistids
+
         const records = await Watchlist.find()
           .where("_id")
-          .in(user.watchlists)
+          .in(watchlistIds)
           .exec();
 
         wlNames = records.map((record) => ({
@@ -95,6 +97,7 @@ router.get("/watchlists/:userId", async function (req, res) {
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 //post the watchlist into user watchlists
 router.post("/addwatchlist", function (req, res) {
@@ -359,7 +362,7 @@ router.get("/userPortfolio/:id", async function (req, res) {
         const jsonData = await response.json();
         const fundData = {
           schemeCode: jsonData.meta.scheme_code,
-          category:portfolio.category,
+          category: portfolio.category,
           schemeName: jsonData.meta.scheme_name,
           quantity: portfolio.quantity,
           holdingValue: portfolio.holdingValue,

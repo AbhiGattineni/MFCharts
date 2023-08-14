@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Datepicker } from "../../components";
 import { AddPortfolioFunds } from "../../containers";
 import { auth } from "../../config/firebase";
-import { BASE_URL } from "../Constant";
+import { BASE_URL, formatDate } from "../Constant";
 
 export function ModalAddFund() {
   const [showModal, setShowModal] = React.useState(false);
@@ -11,8 +11,10 @@ export function ModalAddFund() {
   const [navValue, setNavValue] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const [date, setDate] = useState(new Date());
+  const [navDate, setNavDate] = useState(new Date());
   const [transactionType, setTransactionType] = useState("Buy");
   const [type, setType] = useState("mutual fund");
+  const [navType, setNavType] = useState(type);
 
   useEffect(() => {
     if (Object.keys(navData).length) {
@@ -26,16 +28,12 @@ export function ModalAddFund() {
         .catch((error) => {
           console.log("no data available on selected search" + error);
         });
+      if (navData.date) {
+        setNavDate(navData.date[0].date);
+        setNavType(navData.category);
+      }
     }
-  }, [navData, date]);
-  
-  function formatDate(date) {
-    let d = new Date(date);
-    let day = ("0" + d.getDate()).slice(-2);
-    let month = ("0" + (d.getMonth() + 1)).slice(-2);
-    let year = d.getFullYear();
-    return `${day}-${month}-${year}`;
-  }
+  }, [navData, date, navType]);
 
   useEffect(() => {
     if (Object.keys(navData).length) {
@@ -52,7 +50,10 @@ export function ModalAddFund() {
   const handleClose = () => {
     setShowModal(false);
     setQuantity(0);
+    setValue(0);
     setDate(new Date());
+    setNavDate(new Date());
+    setNavData({});
   };
 
   const handleNavData = (data) => {
@@ -61,6 +62,11 @@ export function ModalAddFund() {
   };
   const onOptionChange = (e) => {
     setTransactionType(e.target.value);
+    setQuantity(0);
+    setValue(0);
+    setDate(new Date());
+    setNavDate(new Date());
+    setNavData({});
   };
 
   const handleAddFund = () => {
@@ -108,7 +114,7 @@ export function ModalAddFund() {
                   <h3 className="text-3xl font-semibold">Add Transaction</h3>
                   <button
                     className="p-1 ml-auto border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => setShowModal(false)}
+                    onClick={handleClose}
                   >
                     <div className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
                       X
@@ -125,8 +131,10 @@ export function ModalAddFund() {
                     setType={setType}
                     quantity={quantity}
                     date={date}
+                    navDate={new Date(navDate)}
                     value={value}
                     type={type}
+                    navType={navType}
                     transactionType={transactionType}
                     onOptionChange={(e) => {
                       onOptionChange(e);
@@ -136,7 +144,7 @@ export function ModalAddFund() {
                 {/*footer*/}
                 <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b">
                   <Button
-                    classes={navData.length===0 ? ["cursor-not-allowed","opacity-80"]: ""}
+                    classes={navData.length === 0 || Object.keys(navData).length === 0 ? ["cursor-not-allowed", "opacity-80"] : ""}
                     handleClick={handleAddFund}
                     disabled={navData.length === 0}
                     text={transactionType}
