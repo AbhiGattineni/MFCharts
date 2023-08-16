@@ -10,7 +10,7 @@ const PortfolioDropdown = ({ data }) => {
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="flex items-center justify-center">Graph</div>
-      <TimelineContainer id="100414" />
+      <TimelineContainer id={data.schemeCode} />
     </div>
   );
 };

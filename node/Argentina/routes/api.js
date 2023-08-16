@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-
+let fetch;
+(async () => {
+  const fetchModule = await import('node-fetch');
+  fetch = fetchModule.default;
+})();
 const MutualFund = require("../models/mutualFund");
 const AllMutualFunds = require("../models/allmutualFunds");
 const User = require("../models/user");
@@ -73,9 +77,11 @@ router.get("/watchlists/:userId", async function (req, res) {
 
     if (user) {
       if (user.watchlists.length) {
+        const watchlistIds = user.watchlists.map(wl => wl.watchlistid);  // extracting watchlistids
+
         const records = await Watchlist.find()
           .where("_id")
-          .in(user.watchlists)
+          .in(watchlistIds)
           .exec();
 
         wlNames = records.map((record) => ({
@@ -91,6 +97,7 @@ router.get("/watchlists/:userId", async function (req, res) {
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 //post the watchlist into user watchlists
 router.post("/addwatchlist", function (req, res) {
@@ -150,27 +157,29 @@ router.get("/mutualfund/:id/metadata", function (req, res) {
 
 //get single nav value based on date
 router.get("/mutualfund/:id/navdata/:date", function (req, res) {
-  let reqDate = req.params.date || null;
+  fetch(`https://api.mfapi.in/mf/${req.params.id}`)
+    .then((response) => response.json())
+    .then((response) => {
+      let navValue;
+      response.data.map((data) => {
+        if (data.date === req.params.date) {
+          navValue = data.nav;
+        }
+      })
 
-  function reverseDate(date) {
-    return new Date(date);
-  }
-
-  if (reqDate != null) reqDate = reverseDate(req.params.date);
-  reqDate = reqDate.setUTCHours(0, 0, 0, 0);
-  MutualFund.findOne({ scheme_code: req.params.id }).then(function (mf) {
-    mf.nav.map((m) => {
-      const [day, month, year] = m.date.split("-");
-      date = new Date(+year, +month - 1, +day);
-      date = date.setUTCHours(0, 0, 0, 0);
-
-      //start and end dates are equal
-      if (reqDate == date) {
-        res.send(m.nav);
+      if (navValue === undefined) {
+        res.status(404).send("No NAV data found for the given date");
+      } else {
+        res.send(navValue);
       }
+
+    })
+    .catch(function (error) {
+      // Add some error handling for the database query
+      res.status(500).send("Database error: " + error);
     });
-  });
 });
+
 
 // //get mutual fund navdata based on dropdown selection and dates
 // router.get("/mutualfund/:id/navdata", function (req, res) {
@@ -353,6 +362,7 @@ router.get("/userPortfolio/:id", async function (req, res) {
         const jsonData = await response.json();
         const fundData = {
           schemeCode: jsonData.meta.scheme_code,
+          category: portfolio.category,
           schemeName: jsonData.meta.scheme_name,
           quantity: portfolio.quantity,
           holdingValue: portfolio.holdingValue,
