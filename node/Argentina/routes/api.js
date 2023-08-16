@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const yahooFinance = require("yahoo-finance");
 const mongoose = require("mongoose");
+mongoose.set("strictQuery", true);
+// const fetch = require("node-fetch");
 let fetch;
 (async () => {
-  const fetchModule = await import('node-fetch');
+  const fetchModule = await import("node-fetch");
   fetch = fetchModule.default;
 })();
 const MutualFund = require("../models/mutualFund");
@@ -69,6 +72,22 @@ router.get("/wlnavdata/:id", function (req, res) {
   });
 });
 
+//example for equity data
+router.get("/equitydata", function (req, res) {
+  yahooFinance.historical(
+    {
+      symbol: "ZEEL.NS",
+      from: "2020-01-01",
+      to: "2023-12-31",
+      // period: 'd'  // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only)
+    },
+    function (err, quotes) {
+      console.log("quotes", quotes);
+      res.send(quotes);
+    }
+  );
+});
+
 //get all the watchlists of specific user
 router.get("/watchlists/:userId", async function (req, res) {
   try {
@@ -77,7 +96,7 @@ router.get("/watchlists/:userId", async function (req, res) {
 
     if (user) {
       if (user.watchlists.length) {
-        const watchlistIds = user.watchlists.map(wl => wl.watchlistid);  // extracting watchlistids
+        const watchlistIds = user.watchlists.map((wl) => wl.watchlistid); // extracting watchlistids
 
         const records = await Watchlist.find()
           .where("_id")
@@ -97,7 +116,6 @@ router.get("/watchlists/:userId", async function (req, res) {
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 //post the watchlist into user watchlists
 router.post("/addwatchlist", function (req, res) {
@@ -165,21 +183,19 @@ router.get("/mutualfund/:id/navdata/:date", function (req, res) {
         if (data.date === req.params.date) {
           navValue = data.nav;
         }
-      })
+      });
 
       if (navValue === undefined) {
         res.status(404).send("No NAV data found for the given date");
       } else {
         res.send(navValue);
       }
-
     })
     .catch(function (error) {
       // Add some error handling for the database query
       res.status(500).send("Database error: " + error);
     });
 });
-
 
 // //get mutual fund navdata based on dropdown selection and dates
 // router.get("/mutualfund/:id/navdata", function (req, res) {
