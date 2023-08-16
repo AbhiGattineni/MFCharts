@@ -34,7 +34,8 @@ export const Navbar = () => {
   }, []);
   const [tabs, setTabs] = useState({
     dashboard: pathname == "/" ? true : false,
-    portfolio: pathname == "/portfolio" ? true : false,
+    portfolio: pathname == "/portfolio" ? true : false, 
+    timeline: pathname == "/timeline" ? true : false,
     watchlist: pathname == "/watchlist" ? true : false,
     search: pathname == "/search" ? true : false,
     contact: pathname == "/contact" ? true : false,
@@ -172,6 +173,21 @@ export const Navbar = () => {
                   onClick={(e) => handleClick(e)}
                 >
                   Portfolio
+                </button>
+              </Link>
+            </li>
+            <li  onClick={() => setMenu(false)}>
+              <Link href="/timeline">
+                <button
+                  href=""
+                  value="timeline"
+                  className={
+                    "block py-2 pr-4 pl-3   md:border-0  md:p-0 dark:text-gray-400 " +
+                    (tabs.timeline ? "text-blue-700" : "text-gray-700")
+                  }
+                  onClick={(e) => handleClick(e)}
+                >
+                  Timeline
                 </button>
               </Link>
             </li>

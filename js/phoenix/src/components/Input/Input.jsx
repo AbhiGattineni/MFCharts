@@ -24,7 +24,7 @@ export const Input = ({
     "leading-tight",
     "focus:outline-none",
     "focus:bg-white",
-    "focus:border-bgColor",
+    "focus:border-bgcolor",
     "mt-6",
     "mb-3",
     classes,
