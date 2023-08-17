@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const yahooFinance = require("yahoo-finance");
 const mongoose = require("mongoose");
+// import { yahooEquity } from "./yahooFinance2/yahooFinance2";
 mongoose.set("strictQuery", true);
 // const fetch = require("node-fetch");
 let fetch;
@@ -74,18 +74,15 @@ router.get("/wlnavdata/:id", function (req, res) {
 
 //example for equity data
 router.get("/equitydata", function (req, res) {
-  yahooFinance.historical(
-    {
-      symbol: "ZEEL.NS",
-      from: "2020-01-01",
-      to: "2023-12-31",
-      // period: 'd'  // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only)
-    },
-    function (err, quotes) {
-      console.log("quotes", quotes);
+  yahooEquity()
+    .then((quotes) => {
+      console.log(quotes);
       res.send(quotes);
-    }
-  );
+    })
+    .catch((error) => {
+      console.error("Failed to fetch data:", error);
+      res.send(error);
+    });
 });
 
 //get all the watchlists of specific user
