@@ -2,6 +2,8 @@ import { useRouter } from "next/router";
 import { onAuthStateChanged } from "firebase/auth";
 import { useAuth } from "../../../src/context/AuthContext";
 import { BsGraphUp } from "react-icons/bs";
+import { FaBars } from "react-icons/fa";
+import { AiOutlineClose } from "react-icons/ai";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -19,6 +21,7 @@ export const Navbar = () => {
   const [userName, setUserName] = useState(null);
   const [email, setEmail] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -34,7 +37,7 @@ export const Navbar = () => {
   }, []);
   const [tabs, setTabs] = useState({
     dashboard: pathname == "/" ? true : false,
-    portfolio: pathname == "/portfolio" ? true : false, 
+    portfolio: pathname == "/portfolio" ? true : false,
     timeline: pathname == "/timeline" ? true : false,
     watchlist: pathname == "/watchlist" ? true : false,
     search: pathname == "/search" ? true : false,
@@ -46,7 +49,7 @@ export const Navbar = () => {
     e.preventDefault();
 
     logout()
-      .then((authUser) => {})
+      .then((authUser) => { })
       .catch((error) => {
         console.log(error.message);
         alert("Logout Not successfull");
@@ -58,8 +61,14 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white border-gray-600 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800 border-b-2">
+    <nav className="bg-white border-gray-600 sm:px-4 py-2.5 rounded dark:bg-gray-800 border-b-2">
       <div className="container flex flex-wrap justify-between items-center mx-auto relative">
+        <div onClick={() => setShowNavbar(!showNavbar)} className="md:hidden px-3 \">
+          <BareIcon
+            IconComponent={showNavbar ? <AiOutlineClose /> : <FaBars />}
+            classes={["h-4 my-0 mx-0"]}
+          />
+        </div>
         <Link href="/">
           <a href="https://flowbite.com" className="flex items-center">
             <BareIcon
@@ -83,7 +92,7 @@ export const Navbar = () => {
             <span className="sr-only">Open user menu</span>
             <img
               class="w-10 h-10 rounded-full bg-gray-500"
-              src={auth.currentUser.photoURL?auth.currentUser.photoURL:'https://www.html.am/images/html-codes/links/boracay-white-beach-sunset-300x225.jpg'}
+              src={auth.currentUser.photoURL ? auth.currentUser.photoURL : 'https://www.html.am/images/html-codes/links/boracay-white-beach-sunset-300x225.jpg'}
               alt="Rounded avatar"
             />
           </button>
@@ -140,18 +149,18 @@ export const Navbar = () => {
           </div>
         </div>
         <div
-          className="hidden justify-between items-center w-full md:flex md:w-auto md:order-1"
-          id="mobile-menu-2"
+          className={`${showNavbar ? "left-0 drop-shadow-xl hidden":"left-[-1000px]"} justify-between transition-all duration-500 ease-in md:static absolute top-12 bg-white items-center w-full md:flex md:w-auto md:order-1"
+          id="mobile-menu-2`}
         >
-          <ul className="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
-            <li  onClick={() => setMenu(false)}>
+          <ul className="flex flex-col md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
+            <li onClick={() => {setMenu(false);setShowNavbar(false)}}>
               <Link href="/">
                 <div>
                   <button
                     href=""
                     value="dashboard"
                     className={
-                      "block py-2 pr-4 pl-3   md:border-0  md:p-0 dark:text-gray-400 " +
+                      "block py-2 pr-4 pl-3 md:border-0  md:p-0 dark:text-gray-400 " +
                       (tabs.dashboard ? "text-blue-700" : "text-gray-700")
                     }
                     onClick={(e) => handleClick(e)}
@@ -161,7 +170,7 @@ export const Navbar = () => {
                 </div>
               </Link>
             </li>
-            <li  onClick={() => setMenu(false)}>
+            <li onClick={() => {setMenu(false);setShowNavbar(false)}}>
               <Link href="/portfolio">
                 <button
                   href="#"
@@ -176,7 +185,7 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
-            <li  onClick={() => setMenu(false)}>
+            <li onClick={() => {setMenu(false);setShowNavbar(false)}}>
               <Link href="/timeline">
                 <button
                   href=""
@@ -191,7 +200,7 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
-            <li  onClick={() => setMenu(false)}>
+            <li onClick={() => {setMenu(false);setShowNavbar(false)}}>
               <Link href="/search">
                 <button
                   href=""
@@ -206,7 +215,7 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
-            <li  onClick={() => setMenu(false)}>
+            <li onClick={() => {setMenu(false);setShowNavbar(false)}}>
               <Link href="/watchlist">
                 <button
                   href=""
@@ -221,7 +230,7 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
-            <li  onClick={() => setMenu(false)}>
+            <li onClick={() => {setMenu(false);setShowNavbar(false)}}>
               <Link href="/contact">
                 <button
                   href=""
@@ -236,7 +245,7 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
-            <li  onClick={() => setMenu(false)}>
+            <li onClick={() => {setMenu(false);setShowNavbar(false)}}>
               <a
                 href="#"
                 className="block py-2 pr-4 pl-3 md:border-0  md:p-0 dark:text-gray-400 text-gray-700"
