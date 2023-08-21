@@ -1,9 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const yahooFinance = require("yahoo-finance");
+const { yahooEquityDayToDay } = require("./yahooFinance2/yahooFinance2");
 const mongoose = require("mongoose");
+mongoose.set("strictQuery", true);
+// const fetch = require("node-fetch");
 let fetch;
 (async () => {
-  const fetchModule = await import('node-fetch');
+  const fetchModule = await import("node-fetch");
   fetch = fetchModule.default;
 })();
 const MutualFund = require("../models/mutualFund");
@@ -69,6 +73,31 @@ router.get("/wlnavdata/:id", function (req, res) {
   });
 });
 
+//example for equity data from yahoo finance 2
+router.get("/equitydata", function (req, res) {
+  let equityData = {};
+  yahooEquityDayToDay("2000-01-01", "2023-12-31")
+    .then((data) => {
+      data.map((nav) => {
+        // Create a Date object
+        let dateObj = new Date(nav.date);
+
+        // Extract day, month, and year
+        let day = String(dateObj.getDate()).padStart(2, "0");
+        let month = String(dateObj.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+        let year = dateObj.getFullYear();
+
+        // Construct the desired format
+        let formattedDate = `${day}-${month}-${year}`;
+        equityData[formattedDate] = nav.close;
+      });
+      res.send(equityData);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+});
+
 //get all the watchlists of specific user
 router.get("/watchlists/:userId", async function (req, res) {
   try {
@@ -77,7 +106,7 @@ router.get("/watchlists/:userId", async function (req, res) {
 
     if (user) {
       if (user.watchlists.length) {
-        const watchlistIds = user.watchlists.map(wl => wl.watchlistid);  // extracting watchlistids
+        const watchlistIds = user.watchlists.map((wl) => wl.watchlistid); // extracting watchlistids
 
         const records = await Watchlist.find()
           .where("_id")
@@ -97,7 +126,6 @@ router.get("/watchlists/:userId", async function (req, res) {
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 //post the watchlist into user watchlists
 router.post("/addwatchlist", function (req, res) {
@@ -165,80 +193,19 @@ router.get("/mutualfund/:id/navdata/:date", function (req, res) {
         if (data.date === req.params.date) {
           navValue = data.nav;
         }
-      })
+      });
 
       if (navValue === undefined) {
         res.status(404).send("No NAV data found for the given date");
       } else {
         res.send(navValue);
       }
-
     })
     .catch(function (error) {
       // Add some error handling for the database query
       res.status(500).send("Database error: " + error);
     });
 });
-
-
-// //get mutual fund navdata based on dropdown selection and dates
-// router.get("/mutualfund/:id/navdata", function (req, res) {
-//   let start_date = req.query.end || null;
-//   let end_date = req.query.start || null;
-//   let obj = {};
-
-//   function reverseDate(date) {
-//     return new Date(date);
-//   }
-
-//   if (start_date != null) {
-//     start_date = reverseDate(start_date);
-//     start_date = start_date.setUTCHours(0, 0, 0, 0);
-//   }
-//   if (end_date != null) {
-//     end_date = reverseDate(end_date);
-//     end_date = end_date.setUTCHours(0, 0, 0, 0);
-//   }
-
-//   MutualFund.findOne({ scheme_code: req.params.id }).then(function (mf) {
-//     if (mf) {
-//       mf.nav.map((m, index) => {
-//         const [day, month, year] = m.date.split("-");
-//         date = new Date(+year, +month - 1, +day);
-//         date = date.setUTCHours(0, 0, 0, 0);
-
-//         //start and end dates are null
-//         if ((start_date == null) & (end_date == null)) {
-//           obj[m.date] = parseFloat(m.nav);
-//         }
-//         //start and end dates are given
-//         if ((date <= start_date) & (date >= end_date)) {
-//           obj[m.date] = parseFloat(m.nav);
-//         }
-//         //only when start date is given
-//         if ((date <= start_date) & (end_date == null)) {
-//           obj[m.date] = parseFloat(m.nav);
-//         }
-//         //only when end date is given
-//         if ((start_date == null) & (date >= end_date)) {
-//           obj[m.date] = parseFloat(m.nav);
-//         }
-//         //only when end date is given
-//         if ((start_date == date) & (date == end_date)) {
-//           obj[m.date] = parseFloat(m.nav);
-//         }
-//       });
-//       let invert_obj = {};
-//       reverse_obj = Object.keys(obj).reverse();
-//       reverse_obj.forEach(function (x) {
-//         invert_obj[x] = obj[x];
-//       });
-//       res.send(invert_obj);
-//     } else {
-//       res.send({});
-//     }
-//   });
-// });
 
 //get mutual fund navdata based on dropdown selection and dates
 router.get("/mutualfund/:id/navdata", function (req, res) {
@@ -306,13 +273,6 @@ router.get("/mutualfund/:id/navdata", function (req, res) {
       res.status(500).send("Error retrieving mutual fund data");
     });
 });
-
-// router.get("/mutualfund/:id/navdata", async function (req, res) {
-//   const response = await fetch(`https://api.mfapi.in/mf/${req.params.id}`);
-//   const jsonData = await response.json();
-//   console.log(jsonData);
-//   res.send(jsonData);
-// });
 
 //get single mutual fund data from DB
 router.get("/mutualfund/:id", function (req, res) {

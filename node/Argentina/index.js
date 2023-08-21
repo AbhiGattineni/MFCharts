@@ -2,8 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const dashBoardApi = require('./routes/dashBoardApi')
-const transactionRouter = require('./routes/portfolio_apis'); 
+const dashBoardApi = require("./routes/dashBoardApi");
+const transactionRouter = require("./routes/portfolio_apis");
 
 //dotenv configured
 require("dotenv").config();
@@ -22,7 +22,6 @@ app.use("/api", require("./routes/api"));
 app.use("/watchlistapi", require("./routes/watchlistapi"));
 app.use("/watchlistapi", require("./routes/dashBoardApi"));
 
-
 app.use("/searchapi", require("./routes/search_api"));
 app.use("/api/portfolio", require("./routes/portfolio_apis"));
 app.use("/api/timeline", require("./routes/timeline_api"));
@@ -30,12 +29,12 @@ app.use("/api/contact", require("./routes/contactapi"));
 app.use("/api/user", require("./routes/userdataapi"));
 
 // userDashboard API
-app.use("/api", dashBoardApi)
-app.use("/api", transactionRouter)
+app.use("/api", dashBoardApi);
+app.use("/api", transactionRouter);
 
 //listen for requests
 const port = 5000;
 
-app.listen(process.env.port || port , function () {
+app.listen(process.env.port || port, function () {
   console.log(`server started on port ${port}`);
 });
