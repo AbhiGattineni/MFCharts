@@ -43,7 +43,7 @@ export const TimelineContainer = ({ id }) => {
         console.log("data", data);
         setTimlelineDisplay(data);
       });
-  }, []);
+  }, [id]);
 
   return (
     <div className="">

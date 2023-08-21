@@ -14,7 +14,6 @@ const Search = () => {
     { id: '2', value: 'Mutual' },
     { id: '3', value: 'Equity' },
   ];
-
   const showToast = (message, type) => {
     const newToast = { message, type, id: Date.now() };
     setToasts((prevToasts) => [...prevToasts, newToast]);
