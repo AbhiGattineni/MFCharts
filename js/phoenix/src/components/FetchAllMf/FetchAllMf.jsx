@@ -11,8 +11,13 @@ export const FetchAllMf = ({ setNavData, isMulti }) => {
     fetch("http://127.0.0.1:5000/api/allmutualfunds")
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         data[0].all_mutual_funds.map((mf) => {
-          names.push({ value: mf.schemeCode, label: mf.schemeName });
+          names.push({
+            value: mf.schemeCode,
+            label: mf.schemeName,
+            type: "EQ",
+          });
         });
         setAllMutualFunds(names);
       });

@@ -160,6 +160,7 @@ router.post("/addwatchlist", function (req, res) {
 //get all mutual funds from DB which is stored with scheme name and scheme code
 router.get("/allmutualfunds", function (req, res) {
   AllMutualFunds.find({}).then(function (mutualfunds) {
+    console.log("mutualFunds", mutualfunds);
     res.send(mutualfunds);
   });
 });

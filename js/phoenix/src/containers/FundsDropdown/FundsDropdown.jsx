@@ -5,7 +5,6 @@ import { Dropdown } from "../../components";
 
 export function FundsDropdown({ isMulti, allValues, setNavData }) {
   const [inputValue, setValue] = useState([]);
-  
 
   useEffect(() => {
     // console.log("test ",inputValue)
@@ -37,12 +36,22 @@ export function FundsDropdown({ isMulti, allValues, setNavData }) {
     }
   };
 
+  const formatOptionLabel = (option) => (
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <span style={{ marginRight: "10px", fontWeight: "bold" }}>
+        {option.type}
+      </span>
+      {option.label}
+    </div>
+  );
+
   return (
     <div>
       <AsyncSelect
         loadOptions={loadOptions}
         onChange={(event) => setValue(event)}
         isMulti={isMulti}
+        formatOptionLabel={formatOptionLabel}
       />
     </div>
   );
