@@ -12,3 +12,6 @@ export const formatDate = (date) => {
     let year = d.getFullYear();
     return `${day}-${month}-${year}`;
 }
+const today = new Date();
+export const yesterday = new Date(today);
+yesterday.setDate(today.getDate() - 1);

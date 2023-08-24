@@ -30,7 +30,7 @@ export const Timeline = ({ Timelinedata, onDelete }) => {
           ))}
         </ol>
       ) : (
-        <div>No timedata</div>
+        <div className="">Add timeline to display</div>
       )}
     </div>
   );

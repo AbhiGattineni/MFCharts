@@ -21,7 +21,7 @@ export const Navbar = () => {
   const [userName, setUserName] = useState(null);
   const [email, setEmail] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [showNavbar, setShowNavbar] = useState(true);
+  const [showNavbar, setShowNavbar] = useState(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -29,7 +29,7 @@ export const Navbar = () => {
         const uid = user.uid;
         setUserName(user.displayName);
         setEmail(user.email);
-        console.log("uid", user.displayName);
+        // console.log("uid", user.displayName);
       } else {
         console.log("user is logged out");
       }
@@ -61,7 +61,7 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white border-gray-600 sm:px-4 py-2.5 rounded dark:bg-gray-800 border-b-2">
+    <nav className="bg-white border-gray-600 sm:px-4 py-2.5 rounded dark:bg-gray-800 border-b-2 z-50 relative">
       <div className="container flex flex-wrap justify-between items-center mx-auto relative">
         <div
           onClick={() => setShowNavbar(!showNavbar)}
@@ -69,7 +69,7 @@ export const Navbar = () => {
         >
           <BareIcon
             IconComponent={showNavbar ? <AiOutlineClose /> : <FaBars />}
-            classes={["h-4 my-0 mx-0"]}
+            classes={["h-4 my-0 mx-0 cursor-pointer"]}
           />
         </div>
         <Link href="/">
@@ -141,7 +141,7 @@ export const Navbar = () => {
                 >
                   Sign out
                 </a>
-                {showModal ? (
+                {/* {showModal ? (
                   <Modal
                     confirmMsg={handleLogout}
                     head="Confirm Sign Out?"
@@ -150,12 +150,19 @@ export const Navbar = () => {
                   >
                     Are you sure you want to sign out?
                   </Modal>
-                ) : null}
+                ) : null} */}
               </li>
             </ul>
           </div>
         </div>
         <div
+<<<<<<< HEAD
+          className={`${showNavbar ? "left-0 drop-shadow-xl" : "left-[-1000px] hidden"} z-100 justify-between md:static md:drop-shadow-none absolute top-12 bg-white items-center w-full md:flex md:w-auto md:order-1"
+          id="mobile-menu-2`}
+        >
+          <ul className="flex flex-col md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
+            <li onClick={() => { setMenu(false); setShowNavbar(false) }}>
+=======
           className={`${
             showNavbar ? "left-0 hidden" : "left-[-1000px]"
           } justify-between transition-all duration-500 ease-in md:static absolute top-12 bg-white items-center w-full md:flex md:w-auto md:order-1"
@@ -168,6 +175,7 @@ export const Navbar = () => {
                 setShowNavbar(false);
               }}
             >
+>>>>>>> main
               <Link href="/">
                 <div>
                   <button
@@ -184,12 +192,16 @@ export const Navbar = () => {
                 </div>
               </Link>
             </li>
+<<<<<<< HEAD
+            <li onClick={() => { setMenu(false); setShowNavbar(false) }}>
+=======
             <li
               onClick={() => {
                 setMenu(false);
                 setShowNavbar(false);
               }}
             >
+>>>>>>> main
               <Link href="/portfolio">
                 <button
                   href="#"
@@ -204,12 +216,16 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
+<<<<<<< HEAD
+            <li onClick={() => { setMenu(false); setShowNavbar(false) }}>
+=======
             <li
               onClick={() => {
                 setMenu(false);
                 setShowNavbar(false);
               }}
             >
+>>>>>>> main
               <Link href="/timeline">
                 <button
                   href=""
@@ -224,12 +240,16 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
+<<<<<<< HEAD
+            <li onClick={() => { setMenu(false); setShowNavbar(false) }}>
+=======
             <li
               onClick={() => {
                 setMenu(false);
                 setShowNavbar(false);
               }}
             >
+>>>>>>> main
               <Link href="/search">
                 <button
                   href=""
@@ -244,12 +264,16 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
+<<<<<<< HEAD
+            <li onClick={() => { setMenu(false); setShowNavbar(false) }}>
+=======
             <li
               onClick={() => {
                 setMenu(false);
                 setShowNavbar(false);
               }}
             >
+>>>>>>> main
               <Link href="/watchlist">
                 <button
                   href=""
@@ -264,12 +288,16 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
+<<<<<<< HEAD
+            <li onClick={() => { setMenu(false); setShowNavbar(false) }}>
+=======
             <li
               onClick={() => {
                 setMenu(false);
                 setShowNavbar(false);
               }}
             >
+>>>>>>> main
               <Link href="/contact">
                 <button
                   href=""
@@ -284,12 +312,16 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
+<<<<<<< HEAD
+            <li onClick={() => { setMenu(false) }}>
+=======
             <li
               onClick={() => {
                 setMenu(false);
                 setShowNavbar(false);
               }}
             >
+>>>>>>> main
               <a
                 href="#"
                 className="block py-2 pr-4 pl-3 md:border-0  md:p-0 dark:text-gray-400 text-gray-700"
@@ -297,19 +329,20 @@ export const Navbar = () => {
               >
                 Sign out
               </a>
-              {showModal ? (
-                <Modal
-                  confirmMsg={handleLogout}
-                  head="Confirm Sign Out?"
-                  visible={showModal}
-                  onClose={() => setShowModal(false)}
-                >
-                  Are you sure you want to sign out?
-                </Modal>
-              ) : null}
+
             </li>
           </ul>
         </div>
+        {showModal ? (
+          <Modal
+            confirmMsg={handleLogout}
+            head="Confirm Sign Out?"
+            visible={showModal}
+            onClose={() => setShowModal(false)}
+          >
+            Are you sure you want to sign out?
+          </Modal>
+        ) : null}
       </div>
     </nav>
   );
