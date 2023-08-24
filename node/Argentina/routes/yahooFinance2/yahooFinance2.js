@@ -1,9 +1,9 @@
 const yahooFinance = require("yahoo-finance2").default;
 
 // yahoo equity method to get equity names
-const yahooEquitySearch = async (fromDate, toDate) => {
+const yahooEquitySearch = async (searchTerm) => {
   try {
-    const results = await yahooFinance.search("ZEEL");
+    const results = await yahooFinance.search(searchTerm);
     return results;
   } catch (error) {
     console.error("Error fetching data from Yahoo Finance:", error);
@@ -30,4 +30,4 @@ const yahooEquityDayToDay = async (fromDate, toDate) => {
   }
 };
 
-module.exports = { yahooEquityDayToDay };
+module.exports = { yahooEquityDayToDay, yahooEquitySearch };

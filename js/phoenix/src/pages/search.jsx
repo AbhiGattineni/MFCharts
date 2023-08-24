@@ -7,18 +7,20 @@ import Notification from "../components/Notification/Notification";
 
 const Search = () => {
   const [navData, setNavData] = useState({});
-  const [selectedOption, setSelectedOption] = useState('All');
+  const [selectedOption, setSelectedOption] = useState("All");
   const [toasts, setToasts] = useState([]);
   const options = [
-    { id: '1', value: 'All' },
-    { id: '2', value: 'Mutual' },
-    { id: '3', value: 'Equity' },
+    { id: "1", value: "All" },
+    { id: "2", value: "Mutual" },
+    { id: "3", value: "Equity" },
   ];
   const showToast = (message, type) => {
     const newToast = { message, type, id: Date.now() };
     setToasts((prevToasts) => [...prevToasts, newToast]);
     setTimeout(() => {
-      setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== newToast.id));
+      setToasts((prevToasts) =>
+        prevToasts.filter((toast) => toast.id !== newToast.id)
+      );
     }, 3000);
   };
   const handleNavData = (e) => {
@@ -30,6 +32,7 @@ const Search = () => {
         data[value] = { startDate: "", endDate: "" };
       }
     });
+    console.log("data", data);
     setNavData(data);
   };
   const handleOptionChange = (event) => {
@@ -55,7 +58,6 @@ const Search = () => {
 
   const saveExistingData = (e) => {
     if (e.length) {
-      
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
       let wlId = e.toString();
@@ -64,7 +66,7 @@ const Search = () => {
         navData,
       };
       const requestOptions = {
-        method: 'PUT',
+        method: "PUT",
         headers: myHeaders,
         body: JSON.stringify(requestBody),
       };
@@ -73,8 +75,7 @@ const Search = () => {
         .then((data) => showToast(data[0], data[1]))
         .catch((error) => console.error(error));
     }
-  }
-
+  };
 
   const saveData = (e) => {
     if (e.length) {
@@ -90,7 +91,7 @@ const Search = () => {
             }
           });
           if (labelExists) {
-            showToast('Watchlist name already exists', 'error');
+            showToast("Watchlist name already exists", "error");
           } else {
             var requestOptions = {
               method: "POST",
@@ -104,7 +105,7 @@ const Search = () => {
             fetch("http://127.0.0.1:5000/api/addwatchlist", requestOptions)
               .then((response) => response.json())
               .then((data) => {
-                showToast('Watchlist successfully created', 'success');
+                showToast("Watchlist successfully created", "success");
               })
               .catch((error) => console.error(error));
           }
@@ -123,7 +124,11 @@ const Search = () => {
             <div className="flex justify-between flex-row md:flex-col py-3">
               <div className="flex flex-nowrap justify-evenly items-center">
                 {options.map((option) => (
-                  <label className="flex flex-nowrap items-center cursor-pointer px-3 text-sm" htmlFor={option.id} key={option.id}>
+                  <label
+                    className="flex flex-nowrap items-center cursor-pointer px-3 text-sm"
+                    htmlFor={option.id}
+                    key={option.id}
+                  >
                     <input
                       className="mr-1 cursor-pointer"
                       type="radio"
@@ -138,7 +143,10 @@ const Search = () => {
               </div>
               <div className="md:mt-3 flex justify-end">
                 {Object.keys(navData).length > 0 && (
-                  <ModalSave saveData={(e) => saveData(e)} saveExistingData={(e) => saveExistingData(e)} />
+                  <ModalSave
+                    saveData={(e) => saveData(e)}
+                    saveExistingData={(e) => saveExistingData(e)}
+                  />
                 )}
               </div>
             </div>
@@ -158,7 +166,11 @@ const Search = () => {
       </div>
       <div>
         {toasts.map((toast) => (
-          <Notification key={toast.id} message={toast.message} type={toast.type} />
+          <Notification
+            key={toast.id}
+            message={toast.message}
+            type={toast.type}
+          />
         ))}
       </div>
     </div>

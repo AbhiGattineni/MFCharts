@@ -12,7 +12,7 @@ export function ModalSave({ saveData, saveExistingData }) {
   const [wlNavData, setWlNavData] = useState([]);
 
   const handleSave = () => {
-    setShowModal(false)
+    setShowModal(false);
     setShowNew(false);
     setShowExisting(false);
     saveData(saveLabel);
@@ -30,20 +30,26 @@ export function ModalSave({ saveData, saveExistingData }) {
   };
 
   useEffect(() => {
-    let wlNavData = [];
-    fetch(`http://127.0.0.1:5000/api/wlnavdata/${selectedWatchlist}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setWlNavData(data);
-      })
-      .catch((error) => console.error(error));
+    if (selectedWatchlist) {
+      // Check if selectedWatchlist is not an empty string
+      fetch(`http://127.0.0.1:5000/api/wlnavdata/${selectedWatchlist}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setWlNavData(data);
+        })
+        .catch((error) => console.error(error));
+    }
   }, [selectedWatchlist]);
-
 
   return (
     <>
       <div>
-        <div onClick={() => setShowModal(true)} className="bg-bgColor rounded-md py-2 px-2 cursor-pointer text-sm md:text-base font-medium text-center md:w-40">Add Watchlist</div>
+        <div
+          onClick={() => setShowModal(true)}
+          className="bg-bgColor rounded-md py-2 px-2 cursor-pointer text-sm md:text-base font-medium text-center md:w-40"
+        >
+          Add Watchlist
+        </div>
       </div>
       {showModal ? (
         <>
@@ -53,9 +59,7 @@ export function ModalSave({ saveData, saveExistingData }) {
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
                 <div className="flex items-start justify-between p-2 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-3xl font-semibold">
-                    Add to watchlist
-                  </h3>
+                  <h3 className="text-3xl font-semibold">Add to watchlist</h3>
                   <button
                     className="p-1 ml-auto border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={handleClose}
@@ -66,8 +70,36 @@ export function ModalSave({ saveData, saveExistingData }) {
                   </button>
                 </div>
                 <div className="p-3">
-                  <Button handleClick={() => { setShowNew(true); setShowExisting(false) }} disabled={showNew} text="New watchlist" classes={[`mx-3 ${showNew ? "cursor-not-allowed opacity-70 shadow-none" : null}`]} />
-                  <Button handleClick={() => { setShowExisting(true); setShowNew(false) }} disabled={showExisting} text="Add Existing" classes={[`mx-3 ${showExisting ? "cursor-not-allowed opacity-70 shadow-none" : null}`]} />
+                  <Button
+                    handleClick={() => {
+                      setShowNew(true);
+                      setShowExisting(false);
+                    }}
+                    disabled={showNew}
+                    text="New watchlist"
+                    classes={[
+                      `mx-3 ${
+                        showNew
+                          ? "cursor-not-allowed opacity-70 shadow-none"
+                          : null
+                      }`,
+                    ]}
+                  />
+                  <Button
+                    handleClick={() => {
+                      setShowExisting(true);
+                      setShowNew(false);
+                    }}
+                    disabled={showExisting}
+                    text="Add Existing"
+                    classes={[
+                      `mx-3 ${
+                        showExisting
+                          ? "cursor-not-allowed opacity-70 shadow-none"
+                          : null
+                      }`,
+                    ]}
+                  />
                 </div>
                 {/*body*/}
                 {showNew ? (
@@ -78,15 +110,17 @@ export function ModalSave({ saveData, saveExistingData }) {
                       onChange={(e) => setSaveLabel(e.target.value)}
                       autoFocus={true}
                     />
-                  </div>) : null
-                }
+                  </div>
+                ) : null}
                 {showExisting ? (
                   <div className="relative p-6 flex-auto">
                     <div>
-                      <FetchAllWatchlists setSelectedWatchlist={setSelectedWatchlist} />
+                      <FetchAllWatchlists
+                        setSelectedWatchlist={setSelectedWatchlist}
+                      />
                     </div>
-                  </div>) : null
-                }
+                  </div>
+                ) : null}
                 {/*footer*/}
                 {showNew || showExisting ? (
                   <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
@@ -98,15 +132,21 @@ export function ModalSave({ saveData, saveExistingData }) {
                       Close
                     </button>
                     <button
-                      className={`bg-emerald-500 text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 ${saveLabel.length > 0 || selectedWatchlist.length > 0 ? "active:bg-emerald-600" : "cursor-not-allowed opacity-60 shadow-none"}`}
+                      className={`bg-emerald-500 text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 ${
+                        saveLabel.length > 0 || selectedWatchlist.length > 0
+                          ? "active:bg-emerald-600"
+                          : "cursor-not-allowed opacity-60 shadow-none"
+                      }`}
                       type="button"
                       onClick={handleSave}
-                      disabled={saveLabel.length === 0 && selectedWatchlist.length === 0}
+                      disabled={
+                        saveLabel.length === 0 && selectedWatchlist.length === 0
+                      }
                     >
                       Save
                     </button>
-                  </div>) : null
-                }
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>

@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const yahooFinance = require("yahoo-finance");
-const { yahooEquityDayToDay } = require("./yahooFinance2/yahooFinance2");
+const {
+  yahooEquityDayToDay,
+  yahooEquitySearch,
+} = require("./yahooFinance2/yahooFinance2");
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", true);
 // const fetch = require("node-fetch");
@@ -158,15 +161,64 @@ router.post("/addwatchlist", function (req, res) {
 });
 
 //get all mutual funds from DB which is stored with scheme name and scheme code
-router.get("/allmutualfunds", function (req, res) {
-  AllMutualFunds.find({}).then(function (mutualfunds) {
-    console.log("mutualFunds", mutualfunds);
-    res.send(mutualfunds);
-  });
+router.get("/allmutualfunds/:searchTerm", async (req, res) => {
+  try {
+    // Fetching equities from Yahoo based on search term
+    const yahooData = await yahooEquitySearch(req.params.searchTerm);
+
+    // Extract relevant details from the Yahoo data
+    const validExchanges = [
+      "NSI",
+      "NSE",
+      "BSE",
+      "Bombay",
+      "NMS",
+      "NASDAQ",
+      "NYQ",
+      "NYSE",
+    ];
+
+    const yahooEquities = yahooData.quotes
+      .filter(
+        (quote) =>
+          quote.isYahooFinance && validExchanges.includes(quote.exchange)
+      )
+      .map((quote) => ({
+        schemeCode: quote.symbol,
+        schemeName: quote.longname || quote.shortname,
+        exchange: quote.exchDisp,
+        type: "EQ",
+      }));
+
+    // Fetching all mutual funds from DB
+    const mutualfunds = await AllMutualFunds.find({});
+    if (!mutualfunds || !mutualfunds[0] || !mutualfunds[0].all_mutual_funds) {
+      return res.status(404).send({ message: "Mutual funds not found." });
+    }
+
+    // Extracting the mutual funds that match the searchTerm
+    const searchTerm = req.params.searchTerm.toLowerCase();
+    const mfData = mutualfunds[0].all_mutual_funds
+      .filter((mf) => mf.schemeName.toLowerCase().includes(searchTerm))
+      .map((mf) => ({
+        schemeCode: mf.schemeCode,
+        schemeName: mf.schemeName,
+        type: "MF",
+      }));
+
+    // Combine both Yahoo data and mutual funds data
+    const combinedData = [...mfData, ...yahooEquities];
+
+    res.send(combinedData);
+  } catch (error) {
+    console.error("Error fetching mutual funds:", error);
+    res.status(500).send({ message: "Failed to fetch mutual funds." });
+  }
 });
 
 //get mutual fund meta data based on mutual fund selection
 router.get("/mutualfund/:id/metadata", function (req, res) {
+  console.log("id", typeof req.params.id);
   fetch(`https://api.mfapi.in/mf/${req.params.id}`)
     .then((response) => response.json())
     .then((response) => {
