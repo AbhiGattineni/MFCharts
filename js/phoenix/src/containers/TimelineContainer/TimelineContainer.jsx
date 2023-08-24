@@ -3,7 +3,7 @@ import { Timeline } from "../../components/Timeline/Timeline";
 import { Button, Input } from "../../components";
 import { auth } from "../../config/firebase";
 
-export const TimelineContainer = ({ id }) => {
+export const TimelineContainer = ({ id, showToast }) => {
   const [timelineData, setTimelineData] = useState("");
   const [timelineUrl, setTimelineUrl] = useState("");
   const [timlelineDisplay, setTimlelineDisplay] = useState([]);
@@ -64,6 +64,7 @@ export const TimelineContainer = ({ id }) => {
         // Here, 'updatedData' contains the updated list of timelines
         // after the selected one was deleted.
         setTimlelineDisplay(updatedData);
+        showToast("Timeline deleted successfully", "success");
       })
       .catch((error) => console.error(error));
   };
