@@ -157,7 +157,7 @@ export const Navbar = () => {
         </div>
         <div
           className={`${
-            showNavbar ? "left-0 drop-shadow-xl hidden" : "left-[-1000px]"
+            showNavbar ? "left-0 hidden" : "left-[-1000px]"
           } justify-between transition-all duration-500 ease-in md:static absolute top-12 bg-white items-center w-full md:flex md:w-auto md:order-1"
           id="mobile-menu-2`}
         >
