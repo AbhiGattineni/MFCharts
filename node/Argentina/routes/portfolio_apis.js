@@ -110,8 +110,16 @@ router.post("/transaction", async function (req, res) {
       if (portfolioData) {
         portfolioData.transactions.push(transaction);
 
-        let quantity = (portfolioData.quantity + (transaction.transactionType === "Buy" ? 1 : -1) * transaction.quantity).toFixed(2);
-        let holdingValue = (portfolioData.holdingValue + (transaction.transactionType === "Buy" ? 1 : -1) * transaction.transactionValue).toFixed(2);
+        let quantity = (
+          portfolioData.quantity +
+          (transaction.transactionType === "Buy" ? 1 : -1) *
+            transaction.quantity
+        ).toFixed(2);
+        let holdingValue = (
+          portfolioData.holdingValue +
+          (transaction.transactionType === "Buy" ? 1 : -1) *
+            transaction.transactionValue
+        ).toFixed(2);
         let averageFundValue = (holdingValue / quantity).toFixed(2);
         let marketValue = (quantity * transaction.navValue).toFixed(2);
 
@@ -163,26 +171,65 @@ router.post("/transaction", async function (req, res) {
 router.post("/addtimeline", async (req, res) => {
   const { schemeCode, userId, date, description, url } = req.body;
 
-  const newTimeline = new Timeline({
-    schemeCode,
-    userId,
-    date,
-    description,
-    url,
-  });
-
   try {
-    const savedTimeline = await newTimeline.save();
-    res.status(201).json(savedTimeline);
+    // Create and save new timeline
+    const newTimeline = new Timeline({
+      schemeCode,
+      userId,
+      date,
+      description,
+      url,
+    });
+    await newTimeline.save();
+
+    // Fetch timelines matching userId and schemeCode
+    const timelines = await Timeline.find({ userId, schemeCode });
+
+    // If no timelines are found, return an error
+    if (timelines.length === 0) {
+      return res.status(404).json({
+        message: "No timelines found for the provided userId and schemeCode.",
+      });
+    }
+
+    // Return the fetched timelines
+    res.json(timelines);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    // Check the type of error and send appropriate status code
+    if (err.name === "ValidationError") {
+      res.status(400).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: err.message });
+    }
+  }
+});
+
+// DELETE endpoint to delete a timeline record
+router.delete("/deletetimeline/:id", async (req, res) => {
+  try {
+    const timeline = await Timeline.findByIdAndDelete(req.params.id);
+    if (!timeline) {
+      return res.status(404).json({
+        message: "No timeline found with the provided ID.",
+      });
+    }
+
+    const timelines = await Timeline.find({
+      userId: timeline.userId,
+      schemeCode: timeline.schemeCode,
+    });
+
+    res.json(timelines);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
 router.put("/deleteTransaction/:id", async (req, res) => {
   try {
     const user = await User.findOne({ userId: req.params.id });
-    const portfolioId = [];
+    // let portfolioFunds;
+    const portfolioId =[];
     const portfolioIds = user.portfolios;
 
     if (portfolioIds.length) {
@@ -197,11 +244,13 @@ router.put("/deleteTransaction/:id", async (req, res) => {
           await Portfolio.findByIdAndDelete(portfolios[portfolioFund].id);
         }
       }
-      await User.updateOne({ userId: req.params.id }, { $set: { portfolios: portfolioId } });
+      await User.updateOne(
+        { userId: req.params.id },
+        { $set: { portfolios: portfolioId } }
+      );
       return res.send(portfolioId);
     }
-  }
-  catch (err) {
+  } catch (err) {
     console.log(err);
     res.send(err.message);
   }

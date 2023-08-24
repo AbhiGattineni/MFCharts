@@ -1,41 +1,61 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import AsyncSelect from "react-select/async";
-import { Dropdown } from "../../components";
 
-export function FundsDropdown({ isMulti, allValues, setNavData }) {
+export function FundsDropdown({ isMulti, setNavData }) {
   const [inputValue, setValue] = useState([]);
-  
 
   useEffect(() => {
-    // console.log("test ",inputValue)
-    if ((inputValue.length != 0) & (isMulti == true)) {
-      let dropDownValues = [];
-      inputValue.map((value) => {
-        dropDownValues.push(value.value);
-      });
+    if (inputValue.length !== 0 && isMulti) {
+      let dropDownValues = inputValue.map((value) => value.value);
       setNavData(dropDownValues);
-    } else if (isMulti == true) {
-      setNavData(inputValue); //added else condition if no values in search then set navData to empty
-    }
-    if (isMulti == false) {
+    } else if (isMulti) {
+      setNavData([]); // Reset navData to empty if no values in search
+    } else {
       setNavData(inputValue);
     }
   }, [inputValue]);
 
-  const filterOptions = (searchTerm) => {
-    return allValues.filter((mf) =>
-      mf.label.toLowerCase().includes(searchTerm)
-    );
-  };
+  const fetchOptions = async (searchTerm) => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:5000/api/allmutualfunds/${searchTerm}`
+      );
+      const data = await response.json();
 
-  const loadOptions = (inputValue, callback) => {
-    if (inputValue.length > 3) {
-      setTimeout(() => {
-        callback(filterOptions(inputValue));
-      }, 1000);
+      if (!Array.isArray(data)) {
+        console.error("Unexpected data shape from backend:", data);
+        return [];
+      }
+
+      return data.map((mf) => ({
+        value: mf.schemeCode,
+        label: mf.schemeName,
+        type: mf.type,
+      }));
+    } catch (error) {
+      console.error("Error fetching options:", error);
+      return [];
     }
   };
+
+  const loadOptions = async (inputValue, callback) => {
+    if (inputValue.length > 3) {
+      const options = await fetchOptions(inputValue);
+      callback(options);
+    }
+  };
+
+  const formatOptionLabel = (option) => (
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <span style={{ marginRight: "10px", fontWeight: "bold" }}>
+        {option.type}
+      </span>
+      <span style={{ marginRight: "10px", fontWeight: "bold" }}>
+        {option.value}
+      </span>
+      {option.label}
+    </div>
+  );
 
   return (
     <div>
@@ -43,6 +63,7 @@ export function FundsDropdown({ isMulti, allValues, setNavData }) {
         loadOptions={loadOptions}
         onChange={(event) => setValue(event)}
         isMulti={isMulti}
+        formatOptionLabel={formatOptionLabel}
       />
     </div>
   );

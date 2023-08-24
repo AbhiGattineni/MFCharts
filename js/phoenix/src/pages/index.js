@@ -41,15 +41,15 @@ const Home = () => {
           <DashboardDashboard />
         </div>
         <div className="grid row-span-1 w-full">
-          <DashboardSearch setNavData={(e) => handleNavData(e)} />
+          {/* <DashboardSearch setNavData={(e) => handleNavData(e)} /> */}
         </div>
         <div className="grid row-span-1 w-full">
-          <DashboardPortfolio
+          {/* <DashboardPortfolio
             setDashboardPortfolio={(e) => setDashboardPortfolio(e)}
-          />
+          /> */}
         </div>
         <div className="grid row-span-1 w-full">
-          <DashboardWatchlist />
+          {/* <DashboardWatchlist /> */}
         </div>
       </div>
       {Object.keys(navData).length != 0 && (
