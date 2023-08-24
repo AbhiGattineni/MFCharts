@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import { auth } from "../config/firebase";
 import Data from "../mockData/data.json";
 import PortfolioDropdown from "../containers/PortfolioDropdown/PortfolioDropdown";
@@ -33,21 +34,26 @@ const Portfolio = () => {
       .then((data) => console.log(data))
       .catch((error) => console.error(error));
   }
-  const UserData = () => {
-    fetch(`${BASE_URL}/userPortfolio/${auth.currentUser.uid}`)
+  const UserData = async () => {
+    await fetch(`${BASE_URL}/userPortfolio/${auth.currentUser.uid}`)
       .then((response) => response.json())
       .then((data) => {
         let pages = Object.keys(data).length;
         setTotalPages(Math.ceil(pages / pageSize));
         setPortfolioData(data);
         setFilterData(data);
+        fundCurrentData(data);
       })
       .catch((error) => {
         console.error('Error:', error);
       });
   }
   useEffect(() => {
-    Object.keys(portfolioData).map((id) => {
+    UserData();
+    updateField();
+  }, []);
+  function fundCurrentData(data) {
+    Object.keys(data).map((id) => {
       fetch(`https://api.mfapi.in/mf/${id}`)
         .then((response) => response.json())
         .then((data) => {
@@ -59,14 +65,24 @@ const Portfolio = () => {
           console.error('Error:', error);
         });
     })
-
-  }, []);
-
-  useEffect(() => {
-    updateField();
-    UserData();
-  }, []);
-  // console.log(fundData);
+  }
+  function deletetranscation(fundid,FundDate) {
+    console.log(fundid,FundDate);
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    var requestOptionsPut = {
+      method: "PUT",
+      headers: myHeaders,
+      body: JSON.stringify({
+        id: fundid,
+        date: FundDate
+      })
+    }
+    fetch(`${BASE_URL}/removetransaction/${auth.currentUser.uid}`, requestOptionsPut)
+      .then((response) => response.json())
+      .then((data) => {UserData();})
+      .catch((error) => console.error(error));
+  }
 
   useEffect(() => {
     let filter = {};
@@ -127,6 +143,7 @@ const Portfolio = () => {
 
     setTotalAmount(total);
   }, [filterData]);
+  console.log(portfolioData);
 
   return (
     <div className="container mx-auto p-3 md:mt-3">
@@ -227,11 +244,11 @@ const Portfolio = () => {
                     </td>
                     <td className="px-2 py-2">{portfolioData[key].quantity}</td>
                     <td className="px-2 py-2">{portfolioData[key].category}</td>
-                    <td className="px-2 py-2">
+                    <td className={`px-2 py-2 ${portfolioData[key].holdingValue >= fundData[key] ? "text-green-500" : "text-red-500"}`}>
                       {fundData[key] ? (portfolioData[key].holdingValue - fundData[key]).toFixed(2) : "loading..."}
                     </td>
-                    <td className="px-2 py-2">
-                      {portfolioData[key].holdingValue}
+                    <td className="px-2 py-2 w-24">
+                      ₹ {portfolioData[key].holdingValue}
                     </td>
                     <td className="px-2 py-2">
                       <button onClick={() => toggleRow(index)}>
@@ -244,11 +261,31 @@ const Portfolio = () => {
                     </td>
                   </tr>
                   {expandedRow === index && (
-                    <tr>
-                      <td colSpan="6">
-                        <PortfolioDropdown data={portfolioData[key]} />
-                      </td>
-                    </tr>
+                    <>
+                      <tr className="text-center">
+                        <th className="px-2 py-2 text-xs text-black sm:text-sm md:text-base text-left">Date</th>
+                        <th className="px-2 py-2 text-xs text-black sm:text-sm md:text-base text-left">Price</th>
+                        <th className="px-2 py-2 text-xs text-black sm:text-sm md:text-base text-left">Quantity</th>
+                        <th className="px-2 py-2 text-xs text-black sm:text-sm md:text-base text-left">Type</th>
+                        <th className="px-2 py-2 text-xs text-black sm:text-sm md:text-base text-left" colSpan="2">value</th>
+                      </tr>
+                      {portfolioData[key].transactions.map((transaction, index) => (
+                        <tr key={index} className="bg-white border-2 border-gray-200 text-xs sm:text-sm md:text-base">
+                          <td className="py-3 pl-3">{formatDate(transaction.date)}</td>
+                          <td className="py-3 pl-3">{transaction.transactionValue.toFixed(2)}</td>
+                          <td className="py-3 pl-3">{transaction.quantity}</td>
+                          <td className="py-3 pl-3">{transaction.transactionType}</td>
+                          <td className="py-3 pl-3">{transaction.transactionValue.toFixed(2)}</td>
+                          <td className="py-3 pl-3"><RiDeleteBin6Line onClick={() => deletetranscation(portfolioData[key].id,transaction.date)} className="cursor-pointer" /></td>
+                        </tr>
+                      ))
+                      }
+                      <tr>
+                        <td colSpan="6">
+                          <PortfolioDropdown data={portfolioData[key]} />
+                        </td>
+                      </tr>
+                    </>
                   )}
                 </React.Fragment>
               ))}

@@ -3,6 +3,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import { Dropdown, FetchAllMf, FetchAllPortfolios, FetchAllWatchlists, Input, Label } from "../../components";
 import { useEffect, useState } from "react";
+import { yesterday } from "../../components/Constant";
 
 export const AddPortfolioFunds = ({
   setNavData,
@@ -19,12 +20,12 @@ export const AddPortfolioFunds = ({
   transactionType,
   onOptionChange,
 }) => {
-  function handleType(navType) {
-    if (transactionType == "Buy") {
-      console.log(transactionType, navType);
-      setType(navType);
-    }
-  }
+  // function handleType(navType) {
+  //   if (transactionType == "Buy") {
+  //     console.log(transactionType, navType);
+  //     setType(navType);
+  //   }
+  // }
   return (
     <div className="container mx-auto">
       <form className="grid grid-rows-3 gap-3">
@@ -39,6 +40,7 @@ export const AddPortfolioFunds = ({
             selected={date}
             onChange={setDate}
             minDate={transactionType == "Sell" ? navDate : null}
+            maxDate={transactionType == "Buy" ? yesterday : yesterday}
             dateFormat="dd/MM/yyyy"
             className="border-2 border-gray-300 rounded-md text-center"
           />
