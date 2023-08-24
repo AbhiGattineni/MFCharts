@@ -13,35 +13,64 @@ export const LineGraph = ({ id, date, setDateRange, setId }) => {
   const [timeline, setTimeline] = useState(false);
 
   useEffect(() => {
-    fetch(
-      `http://127.0.0.1:5000/api/mutualfund/${id}/navdata?start=${date.startDate}&end=${date.endDate}`
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            "Server responded with an error: " + response.statusText
-          );
-        }
-        const contentType = response.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new Error("Invalid content type, expected application/json");
-        }
-        return response.json();
-      })
-      .then((data) => setNav(data))
-      .catch((error) => {
-        console.log("no mf data available on selected search", error);
-      });
+    if (date.type === "MF") {
+      fetch(
+        `http://127.0.0.1:5000/api/mutualfund/${id}/navdata?start=${date.startDate}&end=${date.endDate}`
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(
+              "Server responded with an error: " + response.statusText
+            );
+          }
+          const contentType = response.headers.get("content-type");
+          if (!contentType || !contentType.includes("application/json")) {
+            throw new Error("Invalid content type, expected application/json");
+          }
+          return response.json();
+        })
+        .then((data) => setNav(data))
+        .catch((error) => {
+          console.log("no mf data available on selected search", error);
+        });
+    }
+    if (date.type === "EQ") {
+      console.log("date", date);
+      fetch(
+        `http://127.0.0.1:5000/api/equityfund/${id}/navdata?start=${date.startDate}&end=${date.endDate}`
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(
+              "Server responded with an error: " + response.statusText
+            );
+          }
+          const contentType = response.headers.get("content-type");
+          if (!contentType || !contentType.includes("application/json")) {
+            throw new Error("Invalid content type, expected application/json");
+          }
+          return response.json();
+        })
+        .then((data) => setNav(data))
+        .catch((error) => {
+          console.log("no equity data available on selected search", error);
+        });
+    }
   }, [date]);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:5000/api/mutualfund/${id}/metadata`)
-      .then((response) => response.json())
-      .then((data) => setName(data.scheme_name))
-      .catch((error) => {
-        console.log("no meta data available on selected search" + error);
-        setMfDataAvailability(false);
-      });
+    if (date.type === "MF") {
+      fetch(`http://127.0.0.1:5000/api/mutualfund/${id}/metadata`)
+        .then((response) => response.json())
+        .then((data) => setName(data.scheme_name))
+        .catch((error) => {
+          console.log("no meta data available on selected search" + error);
+          setMfDataAvailability(false);
+        });
+    }
+    if (date.type === "EQ") {
+      setName(id);
+    }
   }, []);
 
   return (
