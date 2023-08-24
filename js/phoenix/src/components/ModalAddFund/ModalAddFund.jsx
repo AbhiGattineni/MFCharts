@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Datepicker } from "../../components";
 import { AddPortfolioFunds } from "../../containers";
 import { auth } from "../../config/firebase";
-import { BASE_URL, formatDate } from "../Constant";
+import { BASE_URL, formatDate, yesterday } from "../Constant";
+import Notification from "../Notification/Notification";
 
 export function ModalAddFund() {
   const [showModal, setShowModal] = React.useState(false);
@@ -10,11 +11,12 @@ export function ModalAddFund() {
   const [value, setValue] = useState(0);
   const [navValue, setNavValue] = useState(0);
   const [quantity, setQuantity] = useState(0);
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(yesterday);
   const [navDate, setNavDate] = useState(new Date());
   const [transactionType, setTransactionType] = useState("Buy");
   const [type, setType] = useState("mutual fund");
   const [navType, setNavType] = useState(type);
+  const [toasts, setToasts] = useState([]);
 
   useEffect(() => {
     if (Object.keys(navData).length) {
@@ -26,6 +28,7 @@ export function ModalAddFund() {
           setValue(data), setNavValue(data);
         })
         .catch((error) => {
+          showToast("no data available on selected search","error");
           console.log("no data available on selected search" + error);
         });
       if (navData.date) {
@@ -46,12 +49,19 @@ export function ModalAddFund() {
       setQuantity(value / navValue);
     }
   }, [value]);
+  const showToast = (message, type) => {
+    const newToast = { message, type, id: Date.now() };
+    setToasts((prevToasts) => [...prevToasts, newToast]);
+    setTimeout(() => {
+      setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== newToast.id));
+    }, 3000);
+  };
 
   const handleClose = () => {
     setShowModal(false);
     setQuantity(0);
     setValue(0);
-    setDate(new Date());
+    setDate(yesterday);
     setNavDate(new Date());
     setNavData({});
   };
@@ -64,7 +74,7 @@ export function ModalAddFund() {
     setTransactionType(e.target.value);
     setQuantity(0);
     setValue(0);
-    setDate(new Date());
+    setDate(yesterday);
     setNavDate(new Date());
     setNavData({});
   };
@@ -89,8 +99,8 @@ export function ModalAddFund() {
     };
     fetch("http://127.0.0.1:5000/api/transaction", requestOptions)
       .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.error(error));
+      .then((data) => {console.log(data)})
+      .catch((error) => {console.log(error.message)});
 
     setShowModal(false);
   };
@@ -156,6 +166,9 @@ export function ModalAddFund() {
           <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
         </>
       ) : null}
+      {toasts.map((toast) => (
+        <Notification key={toast.id} message={toast.message} type={toast.type} />
+      ))}
     </>
   );
 }

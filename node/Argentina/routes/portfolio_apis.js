@@ -182,8 +182,7 @@ router.post("/addtimeline", async (req, res) => {
 router.put("/deleteTransaction/:id", async (req, res) => {
   try {
     const user = await User.findOne({ userId: req.params.id });
-    // let portfolioFunds;
-    const portfolioId =[];
+    const portfolioId = [];
     const portfolioIds = user.portfolios;
 
     if (portfolioIds.length) {
@@ -194,7 +193,7 @@ router.put("/deleteTransaction/:id", async (req, res) => {
         if (portfolios[portfolioFund].quantity) {
           portfolioId.push(portfolios[portfolioFund].id);
         }
-        else{
+        else {
           await Portfolio.findByIdAndDelete(portfolios[portfolioFund].id);
         }
       }
@@ -205,6 +204,55 @@ router.put("/deleteTransaction/:id", async (req, res) => {
   catch (err) {
     console.log(err);
     res.send(err.message);
+  }
+});
+
+router.put("/removetransaction/:userId", async (req, res) => {
+  try {
+    const portfolio = await Portfolio.findById(req.body.id);
+    const user = await User.findOne({userId : req.params.userId});
+    const portfolios = user.portfolios;
+    const transaction = portfolio.transactions;
+    let Quantity = portfolio.quantity;
+    let hValue = portfolio.holdingValue;
+    let mValue = portfolio.marketValue;
+    let transactionType;
+    let Amount;
+    for (let fund in transaction) {
+      if (transaction[fund].date === req.body.date) {
+        Amount = transaction[fund].transactionValue;
+        transactionType = transaction[fund].transactionType;
+        transaction.splice(fund, 1);
+        break;
+      }
+    }
+    if (transaction.length === 0) {
+      portfolios.remove(req.body.id);
+      await User.findOneAndUpdate({userId:req.params.userId},{$set: {portfolios : portfolios}});
+      await Portfolio.findOneAndDelete({ _id: mongoose.Types.ObjectId(req.body.id) });
+    }
+    else {
+      if (transactionType === "Buy") {
+        Quantity -= 1;
+        hValue -= Amount;
+        mValue -= Amount;
+      } else {
+        Quantity += 1;
+        hValue += Amount;
+        mValue += Amount;
+      }
+
+      const result = await Portfolio.findOneAndUpdate(
+        { _id: mongoose.Types.ObjectId(req.body.id) },
+        { $set: { quantity: Quantity, holdingValue: hValue.toFixed(2), marketValue: mValue.toFixed(2) } },
+        { new: true }
+      );
+
+    }
+    await Portfolio.updateOne({ _id: mongoose.Types.ObjectId(req.body.id) }, { $set: { transactions: transaction } });
+    res.status(400).send(transaction);
+  } catch (error) {
+    res.status(500).send(error.message);
   }
 });
 

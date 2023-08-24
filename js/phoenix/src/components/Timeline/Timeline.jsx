@@ -20,7 +20,7 @@ export const Timeline = ({ Timelinedata }) => {
           ))}
         </ol>
       ) : (
-        <div className="">No timedata</div>
+        <div className="">Add timeline to display</div>
       )}
     </div>
   );

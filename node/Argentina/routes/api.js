@@ -361,6 +361,7 @@ router.get("/userPortfolio/:id", async function (req, res) {
 
         const jsonData = await response.json();
         const fundData = {
+          id : portfolio._id,
           schemeCode: jsonData.meta.scheme_code,
           category: portfolio.category,
           schemeName: jsonData.meta.scheme_name,
