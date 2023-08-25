@@ -5,9 +5,10 @@ export function FundsDropdown({ isMulti, setNavData }) {
   const [inputValue, setValue] = useState([]);
 
   useEffect(() => {
+    console.log("input value", inputValue);
     if (inputValue.length !== 0 && isMulti) {
-      let dropDownValues = inputValue.map((value) => value.value);
-      setNavData(dropDownValues);
+      // let dropDownValues = inputValue.map((value) => value.value);
+      setNavData(inputValue);
     } else if (isMulti) {
       setNavData([]); // Reset navData to empty if no values in search
     } else {

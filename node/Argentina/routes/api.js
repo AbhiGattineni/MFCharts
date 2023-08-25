@@ -326,6 +326,61 @@ router.get("/mutualfund/:id/navdata", function (req, res) {
       res.status(500).send("Error retrieving mutual fund data");
     });
 });
+//get mutual fund navdata based on dropdown selection and dates
+router.get("/equityfund/:id/navdata", function (req, res) {
+  let start_date = req.query.start || null;
+  let end_date = req.query.end || null;
+  let obj = {};
+
+  function formatDate(date) {
+    return new Date(date).toISOString().slice(0, 10);
+  }
+  if (start_date != null) {
+    start_date = new Date(start_date);
+    start_date.setUTCHours(0, 0, 0, 0);
+    start_date = formatDate(start_date);
+  }
+
+  if (end_date != null) {
+    end_date = new Date(end_date);
+    end_date.setUTCHours(23, 59, 59, 999); //Set to end of day
+    end_date = formatDate(end_date);
+  }
+
+  console.log(start_date, end_date);
+  if (start_date === null) start_date = "1990-01-01";
+  if (end_date === null) {
+    // Get today's date
+    const today = new Date();
+
+    // Format today's date as "YYYY-MM-DD"
+    end_date = today.toISOString().slice(0, 10);
+  }
+  console.log(start_date, end_date);
+
+  let equityData = {};
+  yahooEquityDayToDay(start_date, end_date)
+    .then((data) => {
+      data.map((nav) => {
+        // Create a Date object
+        let dateObj = new Date(nav.date);
+
+        // Extract day, month, and year
+        let day = String(dateObj.getDate()).padStart(2, "0");
+        let month = String(dateObj.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+        let year = dateObj.getFullYear();
+
+        // Construct the desired format
+        let formattedDate = `${day}-${month}-${year}`;
+        equityData[formattedDate] = nav.close;
+      });
+      console.log(equityData);
+      res.send(equityData);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+});
 
 //get single mutual fund data from DB
 router.get("/mutualfund/:id", function (req, res) {

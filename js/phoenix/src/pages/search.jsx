@@ -24,12 +24,13 @@ const Search = () => {
     }, 3000);
   };
   const handleNavData = (e) => {
+    console.log("e", e);
     let data = {};
     e.map((value, index) => {
-      if (value in navData) {
-        data[value] = navData[value];
+      if (value.value in navData) {
+        data[value.value] = navData[value.value];
       } else {
-        data[value] = { startDate: "", endDate: "" };
+        data[value.value] = { startDate: "", endDate: "", type: value.type };
       }
     });
     console.log("data", data);

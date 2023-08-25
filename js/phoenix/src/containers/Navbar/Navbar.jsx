@@ -297,7 +297,6 @@ export const Navbar = () => {
               >
                 Sign out
               </a>
-
             </li>
           </ul>
         </div>
