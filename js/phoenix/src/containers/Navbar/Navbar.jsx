@@ -156,13 +156,6 @@ export const Navbar = () => {
           </div>
         </div>
         <div
-<<<<<<< HEAD
-          className={`${showNavbar ? "left-0 drop-shadow-xl" : "left-[-1000px] hidden"} z-100 justify-between md:static md:drop-shadow-none absolute top-12 bg-white items-center w-full md:flex md:w-auto md:order-1"
-          id="mobile-menu-2`}
-        >
-          <ul className="flex flex-col md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
-            <li onClick={() => { setMenu(false); setShowNavbar(false) }}>
-=======
           className={`${
             showNavbar ? "left-0 hidden" : "left-[-1000px]"
           } justify-between transition-all duration-500 ease-in md:static absolute top-12 bg-white items-center w-full md:flex md:w-auto md:order-1"
@@ -175,7 +168,6 @@ export const Navbar = () => {
                 setShowNavbar(false);
               }}
             >
->>>>>>> main
               <Link href="/">
                 <div>
                   <button
@@ -192,16 +184,12 @@ export const Navbar = () => {
                 </div>
               </Link>
             </li>
-<<<<<<< HEAD
-            <li onClick={() => { setMenu(false); setShowNavbar(false) }}>
-=======
             <li
               onClick={() => {
                 setMenu(false);
                 setShowNavbar(false);
               }}
             >
->>>>>>> main
               <Link href="/portfolio">
                 <button
                   href="#"
@@ -216,16 +204,12 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
-<<<<<<< HEAD
-            <li onClick={() => { setMenu(false); setShowNavbar(false) }}>
-=======
             <li
               onClick={() => {
                 setMenu(false);
                 setShowNavbar(false);
               }}
             >
->>>>>>> main
               <Link href="/timeline">
                 <button
                   href=""
@@ -240,16 +224,12 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
-<<<<<<< HEAD
-            <li onClick={() => { setMenu(false); setShowNavbar(false) }}>
-=======
             <li
               onClick={() => {
                 setMenu(false);
                 setShowNavbar(false);
               }}
             >
->>>>>>> main
               <Link href="/search">
                 <button
                   href=""
@@ -264,16 +244,12 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
-<<<<<<< HEAD
-            <li onClick={() => { setMenu(false); setShowNavbar(false) }}>
-=======
             <li
               onClick={() => {
                 setMenu(false);
                 setShowNavbar(false);
               }}
             >
->>>>>>> main
               <Link href="/watchlist">
                 <button
                   href=""
@@ -288,16 +264,12 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
-<<<<<<< HEAD
-            <li onClick={() => { setMenu(false); setShowNavbar(false) }}>
-=======
             <li
               onClick={() => {
                 setMenu(false);
                 setShowNavbar(false);
               }}
             >
->>>>>>> main
               <Link href="/contact">
                 <button
                   href=""
@@ -312,16 +284,12 @@ export const Navbar = () => {
                 </button>
               </Link>
             </li>
-<<<<<<< HEAD
-            <li onClick={() => { setMenu(false) }}>
-=======
             <li
               onClick={() => {
                 setMenu(false);
                 setShowNavbar(false);
               }}
             >
->>>>>>> main
               <a
                 href="#"
                 className="block py-2 pr-4 pl-3 md:border-0  md:p-0 dark:text-gray-400 text-gray-700"

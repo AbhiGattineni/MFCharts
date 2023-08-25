@@ -28,7 +28,7 @@ export function ModalAddFund() {
           setValue(data), setNavValue(data);
         })
         .catch((error) => {
-          showToast("no data available on selected search","error");
+          showToast("no data available on selected search", "error");
           console.log("no data available on selected search" + error);
         });
       if (navData.date) {
@@ -37,6 +37,28 @@ export function ModalAddFund() {
       }
     }
   }, [navData, date, navType]);
+  console.log(navData);
+
+  const addTimeline = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    const current = new Date();
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: JSON.stringify({
+        schemeCode: navData.value,
+        userId: auth.currentUser.uid,
+        date: `${current.getFullYear()}-${current.getMonth() + 1
+          }-${current.getDate()}`,
+        description: transactionType+" - the transaction with amount - "+navValue
+      }),
+    };
+    fetch("http://127.0.0.1:5000/api/portfolio/addtimeline", requestOptions)
+      .then((response) => response.json())
+      .then((data) => {console.log(data)})
+      .catch((error) => console.error(error));
+  };
 
   useEffect(() => {
     if (Object.keys(navData).length) {
@@ -99,9 +121,10 @@ export function ModalAddFund() {
     };
     fetch("http://127.0.0.1:5000/api/transaction", requestOptions)
       .then((response) => response.json())
-      .then((data) => {console.log(data)})
-      .catch((error) => {console.log(error.message)});
+      .then((data) => { console.log(data) })
+      .catch((error) => { console.log(error.message) });
 
+    addTimeline()
     setShowModal(false);
   };
 

@@ -66,8 +66,8 @@ const Portfolio = () => {
         });
     })
   }
-  function deletetranscation(fundid,FundDate) {
-    console.log(fundid,FundDate);
+  function deletetranscation(fundid, FundDate) {
+    console.log(fundid, FundDate);
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     var requestOptionsPut = {
@@ -80,7 +80,7 @@ const Portfolio = () => {
     }
     fetch(`${BASE_URL}/removetransaction/${auth.currentUser.uid}`, requestOptionsPut)
       .then((response) => response.json())
-      .then((data) => {UserData();})
+      .then((data) => { UserData(); })
       .catch((error) => console.error(error));
   }
 
@@ -276,7 +276,7 @@ const Portfolio = () => {
                           <td className="py-3 pl-3">{transaction.quantity}</td>
                           <td className="py-3 pl-3">{transaction.transactionType}</td>
                           <td className="py-3 pl-3">{transaction.transactionValue.toFixed(2)}</td>
-                          <td className="py-3 pl-3"><RiDeleteBin6Line onClick={() => deletetranscation(portfolioData[key].id,transaction.date)} className="cursor-pointer" /></td>
+                          <td className="py-3 pl-3"><RiDeleteBin6Line onClick={() => deletetranscation(portfolioData[key].id, transaction.date)} className="cursor-pointer" /></td>
                         </tr>
                       ))
                       }
