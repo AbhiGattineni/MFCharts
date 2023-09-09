@@ -9,11 +9,15 @@ const Search = () => {
   const [navData, setNavData] = useState({});
   const [selectedOption, setSelectedOption] = useState("All");
   const [toasts, setToasts] = useState([]);
+  const [close, setClose] = useState("");
   const options = [
     { id: "1", value: "All" },
     { id: "2", value: "Mutual" },
     { id: "3", value: "Equity" },
   ];
+  useEffect(() => {
+    setClose("");
+  }, [navData])
   const showToast = (message, type) => {
     const newToast = { message, type, id: Date.now() };
     setToasts((prevToasts) => [...prevToasts, newToast]);
@@ -24,7 +28,6 @@ const Search = () => {
     }, 3000);
   };
   const handleNavData = (e) => {
-    console.log("e", e);
     let data = {};
     e.map((value, index) => {
       if (value.value in navData) {
@@ -33,7 +36,6 @@ const Search = () => {
         data[value.value] = { startDate: "", endDate: "", type: value.type };
       }
     });
-    console.log("data", data);
     setNavData(data);
   };
   const handleOptionChange = (event) => {
@@ -99,16 +101,16 @@ const Search = () => {
               headers: myHeaders,
               body: JSON.stringify({
                 userId: auth.currentUser.uid,
-                watchlist_name: e,
-                navData,
+                watchlistName: e,
+                watchlistFunds: navData,
               }),
             };
-            fetch("http://127.0.0.1:5000/api/addwatchlist", requestOptions)
+            fetch("http://127.0.0.1:5000/searchapi/addWatchlist", requestOptions)
               .then((response) => response.json())
               .then((data) => {
                 showToast("Watchlist successfully created", "success");
               })
-              .catch((error) => console.error(error));
+              .catch((error) => console.error(error.message));
           }
         })
         .catch((error) => console.error(error));
@@ -119,7 +121,7 @@ const Search = () => {
       <div className="mx-2 md:mx-5">
         <div className="flex flex-col md:flex-row">
           <div className="md:basis-10/12">
-            <FetchAllMf setNavData={(e) => handleNavData(e)} isMulti={true} />
+            <FetchAllMf setNavData={(e) => handleNavData(e)} isMulti={true} close={close} />
           </div>
           <div className="md:basis-2/12">
             <div className="flex justify-between flex-row md:flex-col py-3">
@@ -161,6 +163,7 @@ const Search = () => {
                 id={mf}
                 date={navData[mf]}
                 setDateRange={(e) => handleDateRange(e, mf)}
+                setClose={setClose}
               />
             ))}
         </div>

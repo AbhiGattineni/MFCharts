@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from "react";
 import AsyncSelect from "react-select/async";
 
-export function FundsDropdown({ isMulti, setNavData }) {
+export function FundsDropdown({ isMulti, setNavData, close }) {
   const [inputValue, setValue] = useState([]);
 
   useEffect(() => {
-    console.log("input value", inputValue);
+    if (isMulti && Array.isArray(inputValue)) {
+      const updatedValue = inputValue.filter(option => String(option.value) !== close);
+      if (updatedValue.length !== inputValue.length) {
+        setValue(updatedValue);
+      }
+    } else if (!isMulti && inputValue && String(inputValue.value) === close) {
+      setValue(null);
+    }
+  }, [close]);
+
+  useEffect(() => {
     if (inputValue.length !== 0 && isMulti) {
       // let dropDownValues = inputValue.map((value) => value.value);
       setNavData(inputValue);
@@ -65,6 +75,7 @@ export function FundsDropdown({ isMulti, setNavData }) {
         onChange={(event) => setValue(event)}
         isMulti={isMulti}
         formatOptionLabel={formatOptionLabel}
+        value={inputValue}
       />
     </div>
   );

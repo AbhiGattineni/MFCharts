@@ -20,12 +20,6 @@ export const AddPortfolioFunds = ({
   transactionType,
   onOptionChange,
 }) => {
-  // function handleType(navType) {
-  //   if (transactionType == "Buy") {
-  //     console.log(transactionType, navType);
-  //     setType(navType);
-  //   }
-  // }
   return (
     <div className="container mx-auto">
       <form className="grid grid-rows-3 gap-3">
@@ -86,7 +80,8 @@ export const AddPortfolioFunds = ({
               <Input
                 placeholder={"Enter quantity"}
                 classes="mt-2"
-                setValue={setQuantity}
+                type={"number"}
+                onChange={(e) => setQuantity(e.target.value)}
                 value={quantity}
               />
             </div>

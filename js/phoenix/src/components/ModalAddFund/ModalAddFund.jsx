@@ -35,9 +35,9 @@ export function ModalAddFund() {
         setNavDate(navData.date[0].date);
         setNavType(navData.category);
       }
+      setQuantity(1);
     }
   }, [navData, date, navType]);
-  console.log(navData);
 
   const addTimeline = () => {
     var myHeaders = new Headers();
@@ -51,26 +51,21 @@ export function ModalAddFund() {
         userId: auth.currentUser.uid,
         date: `${current.getFullYear()}-${current.getMonth() + 1
           }-${current.getDate()}`,
-        description: transactionType+" - the transaction with amount - "+navValue
+        description: transactionType + " - the transaction with amount - " + navValue.toFixed(2)
       }),
     };
     fetch("http://127.0.0.1:5000/api/portfolio/addtimeline", requestOptions)
       .then((response) => response.json())
-      .then((data) => {console.log(data)})
+      .then((data) => { console.log(data) })
       .catch((error) => console.error(error));
   };
 
   useEffect(() => {
     if (Object.keys(navData).length) {
-      setValue(quantity * navValue);
+      setValue((quantity * navValue).toFixed(2));
     }
   }, [quantity]);
 
-  useEffect(() => {
-    if (Object.keys(navData).length) {
-      setQuantity(value / navValue);
-    }
-  }, [value]);
   const showToast = (message, type) => {
     const newToast = { message, type, id: Date.now() };
     setToasts((prevToasts) => [...prevToasts, newToast]);
@@ -81,7 +76,7 @@ export function ModalAddFund() {
 
   const handleClose = () => {
     setShowModal(false);
-    setQuantity(0);
+    setQuantity(1);
     setValue(0);
     setDate(yesterday);
     setNavDate(new Date());
@@ -94,7 +89,7 @@ export function ModalAddFund() {
   };
   const onOptionChange = (e) => {
     setTransactionType(e.target.value);
-    setQuantity(0);
+    setQuantity(1);
     setValue(0);
     setDate(yesterday);
     setNavDate(new Date());
@@ -127,6 +122,7 @@ export function ModalAddFund() {
     addTimeline()
     setShowModal(false);
   };
+  console.log("quantity ", quantity);
 
   return (
     <>
@@ -177,9 +173,9 @@ export function ModalAddFund() {
                 {/*footer*/}
                 <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b">
                   <Button
-                    classes={navData.length === 0 || Object.keys(navData).length === 0 ? ["cursor-not-allowed", "opacity-80"] : ""}
+                    classes={navData.length === 0 || Object.keys(navData).length === 0 || quantity<=0 ? ["cursor-not-allowed", "opacity-80"] : ""}
                     handleClick={handleAddFund}
-                    disabled={navData.length === 0}
+                    disabled={navData.length === 0 || quantity <= 0}
                     text={transactionType}
                   />
                 </div>
