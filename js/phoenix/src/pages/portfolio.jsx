@@ -143,7 +143,6 @@ const Portfolio = () => {
 
     setTotalAmount(total);
   }, [filterData]);
-  console.log(portfolioData);
 
   return (
     <div className="container mx-auto p-3 md:mt-3">
@@ -272,10 +271,10 @@ const Portfolio = () => {
                       {portfolioData[key].transactions.map((transaction, index) => (
                         <tr key={index} className="bg-white border-2 border-gray-200 text-xs sm:text-sm md:text-base">
                           <td className="py-3 pl-3">{formatDate(transaction.date)}</td>
-                          <td className="py-3 pl-3">{transaction.transactionValue.toFixed(2)}</td>
+                          <td className="py-3 pl-3">{transaction.transactionValue}</td>
                           <td className="py-3 pl-3">{transaction.quantity}</td>
                           <td className="py-3 pl-3">{transaction.transactionType}</td>
-                          <td className="py-3 pl-3">{transaction.transactionValue.toFixed(2)}</td>
+                          <td className="py-3 pl-3">{transaction.transactionValue}</td>
                           <td className="py-3 pl-3"><RiDeleteBin6Line onClick={() => deletetranscation(portfolioData[key].id, transaction.date)} className="cursor-pointer" /></td>
                         </tr>
                       ))

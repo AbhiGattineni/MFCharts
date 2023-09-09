@@ -6,7 +6,7 @@ import MyChart from "../../components/MyChart/MyChart";
 import { Button, Input, ModalDatepicker } from "../../components";
 import { TimelineContainer } from "../TimelineContainer/TimelineContainer";
 
-export const LineGraph = ({ id, date, setDateRange, setId }) => {
+export const LineGraph = ({ id, date, setDateRange, setId ,setClose}) => {
   const [nav, setNav] = useState([]);
   const [name, setName] = useState("");
   const [mfDataAvailability, setMfDataAvailability] = useState(true);
@@ -35,7 +35,6 @@ export const LineGraph = ({ id, date, setDateRange, setId }) => {
         });
     }
     if (date.type === "EQ") {
-      console.log("date", date);
       fetch(
         `http://127.0.0.1:5000/api/equityfund/${id}/navdata?start=${date.startDate}&end=${date.endDate}`
       )
@@ -78,7 +77,7 @@ export const LineGraph = ({ id, date, setDateRange, setId }) => {
       {mfDataAvailability ? (
         <div className="border-2 border-slate-300 my-2 md:mr-2 rounded-md relative">
           <div>
-            <div className="hover:bg-red-500 hover:text-white font-medium bg-gray-300 duration-200 cursor-pointer w-10 py-1 text-center rounded-tr-md absolute right-0 top-0">
+            <div onClick={() => setClose(id)} className="hover:bg-red-500 hover:text-white font-medium bg-gray-300 duration-200 cursor-pointer w-10 py-1 text-center rounded-tr-md absolute right-0 top-0">
               X
             </div>
             <div className=" w-full mt-2 md:mt-5">

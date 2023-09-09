@@ -49,7 +49,7 @@ export default function profile() {
             <div className="grid grid-cols-1 md:grid-cols-4 mx-10">
                 <div className="flex justify-center p-3">
                     <div className="relative">
-                        <img className='group rounded-full w-40 h-40 cursor-pointer' src={auth.currentUser.photoURL.length>0?auth.currentUser.photoURL:'https://www.html.am/images/html-codes/links/boracay-white-beach-sunset-300x225.jpg'} />
+                        <img className='group rounded-full w-40 h-40 cursor-pointer' src={auth.currentUser.photoURL?auth.currentUser.photoURL:'https://www.html.am/images/html-codes/links/boracay-white-beach-sunset-300x225.jpg'} />
                         {/* <Button text="edit picture" classes={["absolute bottom-0 align-center left-5"]} /> */}
                     </div>
                 </div>

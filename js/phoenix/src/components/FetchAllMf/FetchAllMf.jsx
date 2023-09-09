@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { FundsDropdown } from "../../containers";
 
-export const FetchAllMf = ({ setNavData, isMulti }) => {
+export const FetchAllMf = ({ setNavData, isMulti, close }) => {
   // const [allMutualFunds, setAllMutualFunds] = useState([]);
 
   //fetching all mutual funds names for user selection
@@ -25,6 +25,7 @@ export const FetchAllMf = ({ setNavData, isMulti }) => {
       isMulti={isMulti}
       // allValues={allMutualFunds}
       setNavData={setNavData}
+      close={close}
     />
   );
 };

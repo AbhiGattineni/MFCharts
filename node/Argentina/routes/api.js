@@ -131,34 +131,34 @@ router.get("/watchlists/:userId", async function (req, res) {
 });
 
 //post the watchlist into user watchlists
-router.post("/addwatchlist", function (req, res) {
-  let wlfunds = {};
+// router.post("/addwatchlist", function (req, res) {
+//   let wlfunds = {};
 
-  Object.keys(req.body.navData).map((value) => {
-    wlfunds[value] = req.body.navData[value];
-  });
+//   Object.keys(req.body.navData).map((value) => {
+//     wlfunds[value] = req.body.navData[value];
+//   });
 
-  //adding watchlist to user watchlists, if not data available in array
+//   //adding watchlist to user watchlists, if not data available in array
 
-  var watchlist = new Watchlist({
-    watchlistName: req.body.watchlist_name,
-    watchlistFunds: wlfunds,
-  });
+//   var watchlist = new Watchlist({
+//     watchlistName: req.body.watchlist_name,
+//     watchlistFunds: wlfunds,
+//   });
 
-  watchlist.save().then(function (wl) {
-    User.findOne({ userId: req.body.userId }).then((data) => {
-      let watchlistsIds = data.watchlists;
-      watchlistsIds.push(wl._id.toString());
+//   watchlist.save().then(function (wl) {
+//     User.findOne({ userId: req.body.userId }).then((data) => {
+//       let watchlistsIds = data.watchlists;
+//       watchlistsIds.push(wl._id.toString());
 
-      User.updateOne(
-        { userId: req.body.userId },
-        { $set: { watchlists: watchlistsIds } }
-      )
-        .then((data) => res.send(data))
-        .catch((error) => console.log(error));
-    });
-  });
-});
+//       User.updateOne(
+//         { userId: req.body.userId },
+//         { $set: { watchlists: watchlistsIds } }
+//       )
+//         .then((data) => res.send(data))
+//         .catch((error) => console.log(error));
+//     });
+//   });
+// });
 
 //get all mutual funds from DB which is stored with scheme name and scheme code
 router.get("/allmutualfunds/:searchTerm", async (req, res) => {
@@ -218,7 +218,6 @@ router.get("/allmutualfunds/:searchTerm", async (req, res) => {
 
 //get mutual fund meta data based on mutual fund selection
 router.get("/mutualfund/:id/metadata", function (req, res) {
-  console.log("id", typeof req.params.id);
   fetch(`https://api.mfapi.in/mf/${req.params.id}`)
     .then((response) => response.json())
     .then((response) => {
@@ -429,7 +428,7 @@ router.get("/userPortfolio/:id", async function (req, res) {
 
         const jsonData = await response.json();
         const fundData = {
-          id : portfolio._id,
+          id: portfolio._id,
           schemeCode: jsonData.meta.scheme_code,
           category: portfolio.category,
           schemeName: jsonData.meta.scheme_name,

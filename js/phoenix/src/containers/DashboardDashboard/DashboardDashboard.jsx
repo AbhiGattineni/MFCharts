@@ -7,64 +7,14 @@ import { useAuth } from "../../../src/context/AuthContext";
 import TodoList from "../../components/TodoList/TodoList";
 import { LineGraph } from "../LineGraph/LineGraph";
 import { RiDeleteBin5Line } from "react-icons/ri";
-// import { BareIcon } from "../components";
+import { BsCheckCircle, BsCheckCircleFill } from "react-icons/bs";
 
 export const DashboardDashboard = () => {
   const [dashboardData, setDashboardData] = useState({});
-  const [userName, setUserName] = useState(null);
-  const [email, setEmail] = useState(null);
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const uid = user.uid;
-        setUserName(user.displayName);
-        setEmail(user.email);
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    fetch(
-      `http://127.0.0.1:5000/api/overallPortfolioStat/${auth.currentUser.uid}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setDashboardData(data);
-      });
-  }, []);
-
-  useEffect(() => {
-    console.log("dd", dashboardData);
-  }, [dashboardData]);
   const [activeindex, setActiveIndex] = useState(1);
-  const handleClick = (index) => { setActiveIndex(index) };
-  const checkActive = (index, className) =>
-    activeindex === index ? className : "w-20";
-
   const [task, setTask] = useState("");
   const [todos, setTodos] = useState([]);
-  const changeHandler = e => {
-    setTask(e.target.value)
-  }
-
-  const submitHandler = e => {
-    e.preventDefault();
-    console.log("todos", todos)
-    setTodos(todos => [...todos, task]);
-    setTask("");
-  }
-
-  const deleteHandler = (indexValue) => {
-    const newTodos = todos.filter((todo, index) => index !== indexValue);
-    setTodos(newTodos);
-  }
-
-  const todosdata = [
-    'Once check the Apple shares',
-    'Sell the Tata shares by 12/05/2023',
-    'Check ICICI watchlist again',
-    'shares',
-  ];
+  const [checked, setChecked] = useState([]);
 
   const Menu = [
     {
@@ -81,10 +31,41 @@ export const DashboardDashboard = () => {
     },
   ];
 
+  useEffect(() => {
+    fetch(
+      `http://127.0.0.1:5000/api/overallPortfolioStat/${auth.currentUser.uid}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setDashboardData(data);
+      });
+  }, []);
+
+  const handleClick = (index) => { setActiveIndex(index) };
+  const checkActive = (index, className) =>
+    activeindex === index ? className : "w-20";
+
+  const handleCheck = (id) => {
+    if (checked.includes(id)) {
+      setChecked(checked.filter(function (e) { return e !== id }));
+    }
+    else {
+      setChecked(checked => [...checked, id]);
+    }
+  }
+  const submitHandler = () => {
+    let len = todos.length;
+    setTodos(todos => [...todos, { id: len, data: task }]);
+    setTask("");
+  }
+
+  const deleteHandler = () => {
+    setTodos(todos.filter(function(e) { return !checked.includes(e.id)}));
+  }
   return (
-    <div>
-      <div className="flex flex-col md:flex-row justify-between items-center my-5 ml-3 mr-3">
-        <h1 className="text-2xl font-bold mb-2 md:mb-0">Welcome {userName}</h1>
+    <div className="mx-5">
+      <div className="flex flex-col md:flex-row justify-between items-center my-5">
+        <h1 className="text-2xl font-bold mb-2 md:mb-0">Welcome {auth.currentUser.displayName}</h1>
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
           <div className="bg-white border border-gray-800 flex items-center rounded-full px-1 py-1 w-60 md:w-auto">
             {Menu.map((item) => (
@@ -102,52 +83,51 @@ export const DashboardDashboard = () => {
           </div>
         </div>
       </div>
-      <div className="bg-bgColor rounded-lg p-6 mr-4 ml-4 mb-5 h-72">
+      <div className="bg-bgColor rounded-lg p-6 mb-5 h-72">
         <h1 className="text-2xl font-bold mb-5 ml-4">Details</h1>
         <h3 className="text-xl font-medium mb-5 ml-4">Shares : 10</h3>
         <h3 className="text-xl font-medium mb-5 ml-4">Invested : ₹ 20000</h3>
         <h4 className="text-xl font-medium mb-5 ml-4">Profit/loss : ₹ 10000</h4>
         <h1 className="text-2xl font-bold ml-4">Total Amt : ₹ 30000</h1>
       </div>
-      <div className="ml-5 mt-2">
-        <h1 className="text-2xl font-bold">To-do's</h1>
-        <div className="flex flex-col md:flex-row md:items-center">
-          <div className="flex flex-col md:flex-row md:items-center md:space-x-3 mt-4 mr-3">
-            <select className="p-2 rounded md:w-32 bg-bgColor">
+      <div className="">
+        <h1 className="text-2xl font-bold my-3">To-do's</h1>
+        <div className="flex flex-col gap-3 md:flex-row">
+          <div className="">
+            <select className="p-2 rounded bg-bgColor w-28 border-2 border-black">
               <option className="bg-white">All</option>
               <option className="bg-white">Mutual</option>
               <option className="bg-white">Equity</option>
             </select>
           </div>
-          <div className="flex flex-col md:flex-row md:items-center md:space-x-3 mt-2">
-            <div className="flex ml-5">
-              <Input
-                type="text"
-                classes="rounded-full rounded-r-none border-r-0"
-                placeholder="Add todo"
-                value={task}
-                onChange={(e) => setTask(e.target.value)}
+          <div className="flex items-center">
+            <Input
+              type="text"
+              classes="mt-0 mb-0 rounded-r-none border-r-0 py-0 h-10"
+              placeholder="Add Todo"
+              value={task}
+              onChange={(e) => setTask(e.target.value)}
+            />
+            <Button
+              handleClick={submitHandler}
+              classes={["text-base", "border-2 border-gray-600", "pl-2", "pr-2", "border-l-0", "rounded-l-none", "py-0", "font-medium", "h-10", "shadow-none"]}
+              text="+Todo"
+            />
+            <div onClick={deleteHandler} className="bg-red-600 text-white rounded-full mx-2 hover:bg-red-700 drop-shadow-md cursor-pointer">
+              <BareIcon
+                IconComponent={<RiDeleteBin5Line />}
               />
-              <Input
-                onClick={submitHandler}
-                classes="bg-cyan-200 rounded-full rounded-l-none cursor-pointer border-l-0"
-                type="submit"
-                value="+Todo"
-              />
-              <div className="flex ml-2 mt-5 rounded-full logo text-white border-2 px-2 py-3 bg-red-600 h-12 mr-8">
-                <BareIcon
-                  IconComponent={<RiDeleteBin5Line />}
-                  classes={["h-5 my-0 mx-0"]}
-                />
-              </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="border-2 border-gray-600 max-w-lg ml-5 mr-4 mt-1">
+      <div className={`${todos.length ? "border-2" : null} border-gray-600 max-w-lg my-2 rounded-lg divide-y divide-black`}>
         {todos.map((data) => (
-          <div key={data} className="border-2 border-black">
-            {data}
+          <div key={data.id} className="p-2 flex items-center">
+            <div onClick={() => handleCheck(data.id)} className="mx-5 cursor-pointer">
+              {checked.includes(data.id) ? <BsCheckCircleFill className="text-green-500" /> : <BsCheckCircle />}
+            </div>
+            <p className={`${checked.includes(data.id)?"opacity-30":null}`}>{data.data}</p>
           </div>
         ))}
       </div>
